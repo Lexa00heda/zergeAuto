@@ -79,10 +79,10 @@ async function fetchData() {
         // console.log(result["productList"][0]["devices"]);
 
         // // fetch device
-        let did = 12474;
+        let did = 12245;
         let credit = 8;
         let cancel
-        // cancel = true
+        cancel = true
         let device
         let base_url
         let token
