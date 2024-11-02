@@ -8,9 +8,9 @@ export async function checkMining(deviceName) {
             const startUrl = `https://api2.nicehash.com/main/api/v2/mining/external/64159907-b518-4708-aa8c-00ae8080ae59/rigs2?path=&page=0&sort=NAME&size=${size}`;
             const rigsDetail = await fetch(startUrl, { method: 'GET' })
             const rigs = await rigsDetail.json()
-            // const index = rigs["miningRigs"].findIndex(rig => rig.rigId.split("-").slice(0,3).join("-") === deviceName)
+            // const index = rigs["miningRigs"].findIndex(rig => rig.rigId.split("-up")[0] === deviceName)
             const indexes = rigs["miningRigs"].reduce((acc, rig, index) => {
-                if (rig.rigId.split("-").slice(0, 3).join("-") === deviceName) {
+                if (rig.rigId.split("-up")[0] === deviceName) {
                     acc.push(index);
                 }
                 return acc;
@@ -19,6 +19,7 @@ export async function checkMining(deviceName) {
                 resolve(false)
             } else {
                 indexes.forEach(index => {
+                    // console.log(rigs["miningRigs"][index])
                     if (rigs["miningRigs"][index].minerStatus == "OFFLINE") {
                         // resolve(false)
                     } else {
@@ -31,6 +32,6 @@ export async function checkMining(deviceName) {
     });
 }
 
-// checkMining("SM-X818U-US05a").then((e) => {
+// checkMining("SM-A528N_KR5").then((e) => {
 //     console.log(e)
 // })

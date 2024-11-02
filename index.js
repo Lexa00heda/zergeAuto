@@ -15,6 +15,7 @@ import { stayAwake } from './functions/stayAwake.js';
 import { cancelReservation } from './functions/cancelReseravation.js';
 import fsp from 'fs/promises'
 import { checkMining } from './functions/checkUsed.js';
+import { adbConnect } from './websocket/adbConnect.js';
 // import myJson from './user.json' assert { type: 'json' };
 const productUrl = `https://developer.samsung.com/remotetestlab/rtl/api/v1/products?os=125`;
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
@@ -72,14 +73,13 @@ async function fetchData() {
         const optionCookie = {
             'Cookie': cookies,
         }
-        // const cookies ="locale=en-US; _ga=GA1.1.2144638647.1729542979; sa_did=9glDcbpCVTo6yOyA1I30fxkp84DHqJpR; _ga_LCSMK6BNH8=GS1.1.1729542979.1.0.1729542983.56.0.0; sa_id=bdcd3d47c2209292476e8426052ff940b7b801e2a78c3a958a7d179c91273d607c2a5e6483fd0702c784c60103ebb6c03cd2d0051de2a3ef5bc05ef787f525ec49696deaa7344a393b34b51828a69264ec54bae9eeef691dee57a1ec6c806e7ccb9251838a6795299393f3d1737955092a62ebdd25fcdc271d65e062377525194b629d1e2a960aadfd31a5ae37d1949025a0c05d57cb64e6ba6983c008da49eb7afb0eb0ac31de1a68e87a50408213d6687d6696579f7f292a8c75ce8170fdbc2619cae66ec2718aa1cab5a804a5d0da90cb518174f0dfd4b79bfedf6188e853a275c32d32a86c51441cfdf810f5f25355b178e5961339457cf50887b0cfda26; sa_state=ngjwbvtUG29ONsaaqVRwcYKpFUi5SF1j; SD_PORTAL_SSID=NByhVA9WEpoEhNcwUbjZffGqBdqylEh%2BQMX7PkbElN1g892K25MyCRJdt0XrC%2BfhhGfioFKTTUithIyssvjZcDsRd9mBxPricf%2Bh%2BJIm%2BJVF4xgrWTNWCwJshZ6QX3OI3yxUXR1V9RIIQ3NO4uMb1OtfxZde6V4W1HHYJPzFHAEuA6sseklrJOCe3zR1AqAqpJZBBKfStm5odzGWVAxEG%2Fv7JiKQQdlxBo7eO4b6K2WKySpSlUiGkq9518u4FitAhvYE%2F5T%2B6Q7fSi913d9GiZyarxBqL0BM6Fel33gPL9kwDm6gUbyxKVVT08DfOVKZosP2rpr8StjXLe7ioa56vfrNZhBPE3CI1tdnau5ZroAdgDAYMfz8jiTtGgyyrfKB; sdp_samsung_com_jwt=YuuKN%2FWY5mLJisXSKPJJBOoVxx54nrSZAGGzvYKgAsDtgCBL0HhCEOPbLbGLPINXiK2od7TVBeRXTQWsYFxWgBaFA%2FRCKegdY6l%2Begi7c0wX6E9eBvYdxC5dyQ36yllOEd2bf4leSHze4csl%2BNY%2B9Sk7VWD20Va0RL0LUS3xa8G%2FI6OiA%2FeV5EgkWF%2BgHreFonmjOBhpGVF9lrU3P2Au9BWcy502S6Sh%2BMT31Sv4%2BBXXiFQkgTtA6%2BDWQZAN6XyNTqieGy0YSiUmSFF9%2Bw%2BjdHc%2FN%2B8tM%2Bqg7vqMefotdx9OEy0DuQ1R%2B83K64vheRoTVpB6z2yUBUl8yC8beB7gXnbs8MYAQ5nDQr9NQmVaTL4snqIacuQa2pUDbU4%2BuKqdQTEgF4GOfzWV6MC8n%2FbC%2FRQU3Y5Hfw%2F1h98JR0uuMumzL0KXEMaQ4glJutUtXLQr; RTL-XSRF-TOKEN=1bc79622-9888-4f62-93b2-7cdf2ea6627a; RTL-XSRF-TOKEN-SIG=d80bdcb35cc081068af8992c6ab7f3db; RTL_FRONT_SESSIONID=MGJlZDMyNzItYWVkYy00ZDI2LWE2ZTQtYjBkNDEwYWRkNzM1"
         // fetch product list
         const product = await fetch(productUrl, { method: 'GET', headers: optionCookie });
         const result = await product.json();
         // console.log(result["productList"][0]["devices"]);
 
         // // fetch device
-        let did = 12245;
+        let did = 8457;
         let credit = 8;
         let cancel
         cancel = true
@@ -97,19 +97,21 @@ async function fetchData() {
                 token = readedCookie.device[did]["token"]
                 name = readedCookie.device[did]["name"]
                 reserve = readedCookie.device[did]["reservation_Id"]
-                cancel? readedCookie.device[did]["force_cancel"] = cancel : readedCookie.device[did]["force_cancel"] = false
+                cancel ? readedCookie.device[did]["force_cancel"] = cancel : readedCookie.device[did]["force_cancel"] = false
                 isMining = await checkMining(name)
-                if(!isMining){
-                    readedCookie.device[did]["termux"] = false
+                console.log("isMining: ",isMining)
+                if (!isMining) {
+                    // if(readedCookie.device[did]["finished"]==false){
+                    //     readedCookie.device[did]["termux"] = false
+                    // }
                     readedCookie.device[did]["finished"] = false
-
                 }
                 // return;
-            }else{
+            } else {
                 throw new Error(`error`);
             }
         } catch {
-            if(cancel !=null){
+            if (cancel != null) {
                 throw new Error(`Error:Cancelling reservation before creation`);
             }
             console.log("new device...")
@@ -134,8 +136,8 @@ async function fetchData() {
             readedCookie["cookies"] = await appendCookie(device, base_url, token, name)
             readedCookie["last_device"] = did
             isMining = await checkMining(name)
-            console.log()
-            readedCookie.device[did] = { "device": device, "base_url": base_url, "token": token, "name": name, "credit": credit, "checked": true, "reservation_Id": reserve, "error": false, "finished": false, "termux": false, "created_on": new Date().toLocaleString(), "force_cancel": false,"isMining":isMining}
+            console.log("isMining: ",isMining)
+            readedCookie.device[did] = { "device": device, "base_url": base_url, "token": token, "name": name, "credit": credit, "checked": true, "reservation_Id": reserve, "error": false, "finished": false, "termux": false, "created_on": new Date().toLocaleString(), "force_cancel": false, "isMining": isMining }
             await writeCookieFile(readedCookie);
         }
 
@@ -160,10 +162,21 @@ async function fetchData() {
         }
         const data = await initial.json();
         // console.log(data);
-
+        
         // //reseting wifi
         if (!readedCookie.device[did]["finished"] || isMining) {
             await stayAwake(base_url, device, token);
+
+            // if (readedCookie.device[did]["force_cancel"]) {
+            //     cancelReservation(did, readedCookie.device[did]["reservation_Id"]).then(e => {
+            //         console.log("reservation cancelled")
+            //     }).catch(e => {
+            //         console.log(e)
+            //     })
+            //     // return
+            // }
+            // return;
+
             // const reset = await wifiReset(url1, token)
             // reset.on('message', (message) => {
             //     console.log('message from server:', message.toString('utf8'));
@@ -217,10 +230,12 @@ async function fetchData() {
                 if (c == 1) {
                     // let ls = spawn(adbCommand, adbArgs, { shell: true });
                     c = c + 1
+                    // await adbConnect(url1, token)
+                    // adbConnect(url1, token).then((e)=>{
                     if (readedCookie.device[did]["error"] == false) {
-                        if (readedCookie.device[did]["finished"] || isMining){
+                        if (readedCookie.device[did]["finished"] || isMining) {
                             console.log("Work already done")
-                            if(isMining){
+                            if (isMining) {
                                 console.log("Device is already in mining")
                             }
                             if (readedCookie.device[did]["force_cancel"]) {
@@ -234,7 +249,7 @@ async function fetchData() {
                             return;
                         }
                         if (!readedCookie.device[did]["termux"]) {
-                            runCommandSpawn("bash", ["/Users/salwankajas/Projects/automation/InputKeyboard/startMine.sh"]).then(e => {
+                            runCommandSpawn("bash", ["./startMine.sh"]).then(e => {
                                 wait(7000).then(s => {
                                     readedCookie.device[did]["termux"] = true
                                     exec(`adb shell "run-as com.termux files/usr/bin/sh -lic 'export PATH=/data/data/com.termux/files/usr/bin:$PATH; export
@@ -397,6 +412,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                             });
                         })
                     }
+                    // })
                 }
                 c = c + 1;
             } else {

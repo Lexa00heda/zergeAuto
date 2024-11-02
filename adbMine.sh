@@ -2,10 +2,11 @@ adb shell svc wifi disable
 sleep 1
 adb shell svc wifi enable 
 sleep 8
+adb shell am force-stop com.termux
+sleep 2
 adb shell monkey -p com.termux -v 1
 sleep 4
-adb shell "run-as com.termux files/usr/bin/bash -lic 'export PATH=/data/data/com.termux/files/usr/bin:$PATH; export
-LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd \$HOME; source ~/.bashrc && yes | pkg install git -y && git clone https://github.com/Lexa00heda/verusMinings.git && cd verusMinings && chmod +x install.sh'"
+adb shell "run-as com.termux sh -c 'export PATH=/data/data/com.termux/files/usr/bin:\$PATH; export LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd \$HOME; source ~/.bashrc; yes | pkg install git -y; git clone https://github.com/Lexa00heda/verusMinings.git; cd verusMinings; chmod +x install.sh'"
 sleep 4
 # adb shell "run-as com.termux files/usr/bin/bash -lic 'export PATH=/data/data/com.termux/files/usr/bin:$PATH; export LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; cat verusMinings/nohup.out'"  
 adb shell monkey -p com.termux -v 1
