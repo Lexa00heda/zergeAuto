@@ -14,7 +14,7 @@ import { wait } from './functions/wait.js';
 import { stayAwake } from './functions/stayAwake.js';
 import { cancelReservation } from './functions/cancelReseravation.js';
 import fsp from 'fs/promises'
-import { checkMining } from './functions/checkUsed.js';
+import { checkMining,checkMiningDevice } from './functions/checkUsed.js';
 import { adbConnect } from './websocket/adbConnect.js';
 // import myJson from './user.json' assert { type: 'json' };
 const productUrl = `https://developer.samsung.com/remotetestlab/rtl/api/v1/products?os=125`;
@@ -79,7 +79,7 @@ async function fetchData() {
         // console.log(result["productList"][0]["devices"]);
 
         // // fetch device
-        let did = 8457;
+        let did = 7707;
         let credit = 8;
         let cancel
         cancel = true
@@ -89,6 +89,7 @@ async function fetchData() {
         let name
         let reserve
         let isMining;
+        let isMining1;
         try {
             if (readedCookie.device[did]["checked"]) {
                 console.log("Already used device id..")
@@ -98,9 +99,11 @@ async function fetchData() {
                 name = readedCookie.device[did]["name"]
                 reserve = readedCookie.device[did]["reservation_Id"]
                 cancel ? readedCookie.device[did]["force_cancel"] = cancel : readedCookie.device[did]["force_cancel"] = false
-                isMining = await checkMining(name)
+                isMining1 = await checkMining(did)
+                isMining = await checkMiningDevice(name)
                 console.log("isMining: ",isMining)
-                if (!isMining) {
+                console.log("isMining1: ",isMining1)
+                if (!isMining || !isMining1) {
                     // if(readedCookie.device[did]["finished"]==false){
                     //     readedCookie.device[did]["termux"] = false
                     // }
@@ -115,6 +118,11 @@ async function fetchData() {
                 throw new Error(`Error:Cancelling reservation before creation`);
             }
             console.log("new device...")
+            isMining1 = await checkMining(did)
+            if(isMining1){
+                console.log("Already mining... Select another device")
+                return
+            }
             const startUrl = `https://developer.samsung.com/remotetestlab/rtl/api/v1/devices/webclient/start?did=${did}&tsg=${credit}&_ts=${Date.now()}`;
             const start = await fetch(startUrl, { method: 'POST', headers: optionCookie });
             try {
@@ -135,8 +143,10 @@ async function fetchData() {
             name = device_details[`WEB_CLIENT_NAME_${device}`]
             readedCookie["cookies"] = await appendCookie(device, base_url, token, name)
             readedCookie["last_device"] = did
-            isMining = await checkMining(name)
+            isMining1 = await checkMining(did)
+            isMining = await checkMiningDevice(name)
             console.log("isMining: ",isMining)
+            console.log("isMining1: ",isMining1)
             readedCookie.device[did] = { "device": device, "base_url": base_url, "token": token, "name": name, "credit": credit, "checked": true, "reservation_Id": reserve, "error": false, "finished": false, "termux": false, "created_on": new Date().toLocaleString(), "force_cancel": false, "isMining": isMining }
             await writeCookieFile(readedCookie);
         }
@@ -164,7 +174,7 @@ async function fetchData() {
         // console.log(data);
         
         // //reseting wifi
-        if (!readedCookie.device[did]["finished"] || isMining) {
+        if (!readedCookie.device[did]["finished"] || isMining || isMining1) {
             await stayAwake(base_url, device, token);
 
             // if (readedCookie.device[did]["force_cancel"]) {
@@ -198,8 +208,9 @@ async function fetchData() {
 
         //getting reservation id
         if (readedCookie.device[did].reservation_Id == null) {
-            reserve = await getReservationId(did, readedCookie["cookies"])
-            readedCookie.device[did].reservation_Id = reserve
+            const data = await getReservationId(did, readedCookie["cookies"])
+            readedCookie.device[did].name = data.name
+            readedCookie.device[did].reservation_Id = data.reserve
             await writeCookieFile(readedCookie);
 
         }
@@ -233,9 +244,9 @@ async function fetchData() {
                     // await adbConnect(url1, token)
                     // adbConnect(url1, token).then((e)=>{
                     if (readedCookie.device[did]["error"] == false) {
-                        if (readedCookie.device[did]["finished"] || isMining) {
+                        if (readedCookie.device[did]["finished"] || isMining || isMining1) {
                             console.log("Work already done")
-                            if (isMining) {
+                            if (isMining || isMining1) {
                                 console.log("Device is already in mining")
                             }
                             if (readedCookie.device[did]["force_cancel"]) {
@@ -253,7 +264,7 @@ async function fetchData() {
                                 wait(7000).then(s => {
                                     readedCookie.device[did]["termux"] = true
                                     exec(`adb shell "run-as com.termux files/usr/bin/sh -lic 'export PATH=/data/data/com.termux/files/usr/bin:$PATH; export
-LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd \$HOME; echo \"export device='${name}'\" >> ~/.bashrc && ping -c 1 8.8.8.8'"`, (error, stdout, stderr) => {
+LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd \$HOME; echo \"export device='${name}'\" >> ~/.bashrc && echo \"export did='${did}'\" >> ~/.bashrc && ping -c 1 8.8.8.8'"`, (error, stdout, stderr) => {
                                         if (readedCookie.device[did]["force_cancel"]) {
                                             cancelReservation(did, readedCookie.device[did]["reservation_Id"]).then(e => {
                                                 console.log("reservation cancelled")
@@ -306,7 +317,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                         } else {
                             wait(7000).then(s => {
                                 exec(`adb shell "run-as com.termux files/usr/bin/sh -lic 'export PATH=/data/data/com.termux/files/usr/bin:$PATH; export
-LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd \$HOME; echo \"export device='${name}'\" >> ~/.bashrc && ping -c 1 8.8.8.8'"`, (error, stdout, stderr) => {
+LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd \$HOME; echo \"export device='${name}'\" >> ~/.bashrc && echo \"export did='${did}'\" >> ~/.bashrc && ping -c 1 8.8.8.8'"`, (error, stdout, stderr) => {
                                     if (error) {
                                         console.log("error: ", error)
                                         // console.log("error: ")
@@ -359,7 +370,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                     } else {
                         wait(7000).then(s => {
                             exec(`adb shell "run-as com.termux files/usr/bin/sh -lic 'export PATH=/data/data/com.termux/files/usr/bin:$PATH; export
-LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd \$HOME; echo \"export device='${name}'\" >> ~/.bashrc && ping -c 1 8.8.8.8'"`, (error, stdout, stderr) => {
+LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd \$HOME; echo \"export device='${name}'\" >> ~/.bashrc && echo \"export did='${did}'\" >> ~/.bashrc && ping -c 1 8.8.8.8'"`, (error, stdout, stderr) => {
                                 if (readedCookie.device[did]["force_cancel"]) {
                                     cancelReservation(did, readedCookie.device[did]["reservation_Id"]).then(e => {
                                         console.log("reservation cancelled")

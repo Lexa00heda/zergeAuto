@@ -7,9 +7,11 @@ export async function getReservationId(did,cookies) {
                     // console.log(re)
                     re.forEach(element => {
                         if(element.deviceId===did){
+                            // console.log(element)
                             const reserve = element["reservationId"]
+                            const name = element["deviceName"]
                             console.log(`reservation Id: ${reserve}`)
-                            resolve(reserve)
+                            resolve({reserve,name})
 
                         }
                     });

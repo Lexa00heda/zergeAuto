@@ -36,7 +36,8 @@ sleep 1
 adb shell input keyevent KEYCODE_DPAD_DOWN
 sleep 1
 adb shell input keyevent KEYCODE_ENTER
-
+sleep 1
+adb shell input keyevent KEYCODE_HOME
 # adb shell am force-stop com.termux
 # adb shell "run-as com.termux files/usr/bin/bash -lic 'export PATH=/data/data/com.termux/files/usr/bin:$PATH; export
 # LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home;cat ~/verusMinings/nohup.out;'"
