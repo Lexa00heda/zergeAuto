@@ -4,9 +4,9 @@ import { wifiReset } from './websocket/wifiReset.js';
 import { localWebsocket } from './websocket/localSocket.js';
 import { rdbSocket } from './websocket/rdbSocket.js';
 import { readCookies, parseCookies, readCookiesWithSession } from './functions/readCookie.js';
-import { readCookiesFile } from './cookies/readCookieFile.js';
-import { writeCookieFile } from './cookies/writeCookieFile.js';
-import { appendCookie } from './cookies/appendCookie.js';
+import { readCookiesFile } from './functions/cookies/readCookieFile.js';
+import { writeCookieFile } from './functions/cookies/writeCookieFile.js';
+import { appendCookie } from './functions/cookies/appendCookie.js';
 import { getReservationId } from './functions/reservationId.js';
 import { spawn, exec } from 'child_process';
 import { runCommandSpawn } from './functions/runSpawn.js';
@@ -32,21 +32,40 @@ const options = (token) => {
         agent: agent
     }
 };
+
+
 let credits;
 let totalCredit;
+
+// // fetch device
+let did = 9076;
+let credit = 8;
+let cancel
+// cancel = true
+let device
+let base_url
+let token
+let name
+let reserve
+let isMining;
+let isMining1;
+const readedCookie = await readCookiesFile()
+
 async function fetchData() {
     try {
-        let cookies = await readCookies();
+        let cookies = await readCookies(process.argv[2]);
         const user = await fetch("https://developer.samsung.com/remotetestlab/rtl/api/v1/users/me", { method: 'GET', headers: { 'Cookie': cookies }, });
         const userData = await user.json()
         console.log(userData)
-        const readedCookie = await readCookiesFile()
+        // const readedCookie = await readCookiesFile()
         // // checking new user
         if (readedCookie["user"] === userData["email"]) {
             console.log("User already exist")
             cookies = readedCookie["cookies"]
             credits = readedCookie["credit"]
             totalCredit = userData["point"]
+            readedCookie["cookies"] = await readCookiesWithSession(process.argv[2])
+            await writeCookieFile(readedCookie);
 
         } else {
             credits = 40
@@ -55,9 +74,9 @@ async function fetchData() {
             totalCredit = userData["point"]
             readedCookie["totalCredit"] = totalCredit
             readedCookie["device"] = {}
-            readedCookie["cookies"] = await readCookiesWithSession()
-            // await fsp.writeFile( "user.json", JSON.stringify(readedCookie), "utf8" );
+            readedCookie["cookies"] = await readCookiesWithSession(process.argv[2])
             await writeCookieFile(readedCookie);
+            // await fsp.writeFile( "user.json", JSON.stringify(readedCookie,null,2), "utf8" );
             cookies = readedCookie["cookies"]
             const freeCredit = `https://developer.samsung.com/remotetestlab/rtl/api/v1/users/getFreeCredit`;
             const credit = await fetch(freeCredit, { method: 'POST', headers: { 'Cookie': cookies, } });
@@ -78,18 +97,6 @@ async function fetchData() {
         const result = await product.json();
         // console.log(result["productList"][0]["devices"]);
 
-        // // fetch device
-        let did = 7707;
-        let credit = 8;
-        let cancel
-        cancel = true
-        let device
-        let base_url
-        let token
-        let name
-        let reserve
-        let isMining;
-        let isMining1;
         try {
             if (readedCookie.device[did]["checked"]) {
                 console.log("Already used device id..")
@@ -205,6 +212,7 @@ async function fetchData() {
         let c = 0;
         const local_websocket = await localWebsocket()
         const rdb_websocket = await rdbSocket(`wss://${base_url}/channels/${device}/rdb`, token)
+        
 
         //getting reservation id
         if (readedCookie.device[did].reservation_Id == null) {
@@ -263,16 +271,16 @@ async function fetchData() {
                             runCommandSpawn("bash", ["./startMine.sh"]).then(e => {
                                 wait(7000).then(s => {
                                     readedCookie.device[did]["termux"] = true
+                                    if (readedCookie.device[did]["force_cancel"]) {
+                                        cancelReservation(did, readedCookie.device[did]["reservation_Id"]).then(e => {
+                                            console.log("reservation cancelled")
+                                        }).catch(e => {
+                                            console.log(e)
+                                        })
+                                        return
+                                    }
                                     exec(`adb shell "run-as com.termux files/usr/bin/sh -lic 'export PATH=/data/data/com.termux/files/usr/bin:$PATH; export
 LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd \$HOME; echo \"export device='${name}'\" >> ~/.bashrc && echo \"export did='${did}'\" >> ~/.bashrc && ping -c 1 8.8.8.8'"`, (error, stdout, stderr) => {
-                                        if (readedCookie.device[did]["force_cancel"]) {
-                                            cancelReservation(did, readedCookie.device[did]["reservation_Id"]).then(e => {
-                                                console.log("reservation cancelled")
-                                            }).catch(e => {
-                                                console.log(e)
-                                            })
-                                            return
-                                        }
                                         if (error) {
                                             console.log("error: ", error)
                                             // console.log("error: ")
@@ -302,6 +310,27 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
 
                                             ls.on("close", code => {
                                                 console.log(`child process exited with code ${code}`);
+                                                // // vpn setup
+                                                if(true){
+                                                    let vpn = spawn("./vpn.sh", { shell: true });
+                                                    vpn.stdout.on("data", data => {
+                                                        console.log(`stdout: ${data}`);
+                                                        // // force cancel reservation
+                                                    });
+        
+                                                    vpn.stderr.on("data", data => {
+                                                        console.log(`stderr: ${data}`);
+                                                    });
+        
+                                                    vpn.on('error', (error) => {
+                                                        console.log(`error: ${error.message}`);
+                                                    });
+        
+                                                    vpn.on("close", code => {
+                                                        console.log(`child process exited with code ${code}`);
+                                                        console.log(`vpn finished`);
+                                                    });
+                                                }
                                                 readedCookie.device[did]["finished"] = true
                                                 readedCookie.device[did]["finished_on"] = new Date().toLocaleString()
                                                 console.log(`finished`);
@@ -316,6 +345,14 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                             })
                         } else {
                             wait(7000).then(s => {
+                                if (readedCookie.device[did]["force_cancel"]) {
+                                    cancelReservation(did, readedCookie.device[did]["reservation_Id"]).then(e => {
+                                        console.log("reservation cancelled")
+                                    }).catch(e => {
+                                        console.log(e)
+                                    })
+                                    return
+                                }
                                 exec(`adb shell "run-as com.termux files/usr/bin/sh -lic 'export PATH=/data/data/com.termux/files/usr/bin:$PATH; export
 LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd \$HOME; echo \"export device='${name}'\" >> ~/.bashrc && echo \"export did='${did}'\" >> ~/.bashrc && ping -c 1 8.8.8.8'"`, (error, stdout, stderr) => {
                                     if (error) {
@@ -332,15 +369,6 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                         // console.log("stdout: ")
                                         console.log("Fine network")
 
-                                        if (readedCookie.device[did]["force_cancel"]) {
-                                            cancelReservation(did, readedCookie.device[did]["reservation_Id"]).then(e => {
-                                                console.log("reservation cancelled")
-                                            }).catch(e => {
-                                                console.log(e)
-                                            })
-                                            return
-                                        }
-
                                         let ls = spawn("./adbMine.sh", { shell: true });
                                         ls.stdout.on("data", data => {
                                             console.log(`stdout: ${data}`);
@@ -356,6 +384,27 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
 
                                         ls.on("close", code => {
                                             console.log(`child process exited with code ${code}`);
+                                            // // vpn setup
+                                            if(true){
+                                                let vpn = spawn("./vpn.sh", { shell: true });
+                                                vpn.stdout.on("data", data => {
+                                                    console.log(`stdout: ${data}`);
+                                                    // // force cancel reservation
+                                                });
+    
+                                                vpn.stderr.on("data", data => {
+                                                    console.log(`stderr: ${data}`);
+                                                });
+    
+                                                vpn.on('error', (error) => {
+                                                    console.log(`error: ${error.message}`);
+                                                });
+    
+                                                vpn.on("close", code => {
+                                                    console.log(`child process exited with code ${code}`);
+                                                    console.log(`vpn finished`);
+                                                });
+                                            }
                                             readedCookie.device[did]["finished"] = true
                                             readedCookie.device[did]["finished_on"] = new Date().toLocaleString()
                                             console.log(`finished`);
@@ -411,6 +460,27 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
 
                                     ls.on("close", code => {
                                         readedCookie.device[did]["error"] = false;
+                                        // // vpn setup
+                                        if(true){
+                                            let vpn = spawn("./vpn.sh", { shell: true });
+                                            vpn.stdout.on("data", data => {
+                                                console.log(`stdout: ${data}`);
+                                                // // force cancel reservation
+                                            });
+
+                                            vpn.stderr.on("data", data => {
+                                                console.log(`stderr: ${data}`);
+                                            });
+
+                                            vpn.on('error', (error) => {
+                                                console.log(`error: ${error.message}`);
+                                            });
+
+                                            vpn.on("close", code => {
+                                                console.log(`child process exited with code ${code}`);
+                                                console.log(`vpn finished`);
+                                            });
+                                        }
                                         readedCookie.device[did]["finished"] = true
                                         readedCookie.device[did]["finished_on"] = new Date().toLocaleString()
                                         console.log(`finished`);
@@ -435,6 +505,16 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
 
     } catch (error) {
         console.error('Fetch error:', error.message);
+        if(readedCookie.device[did]!=null){
+            if (readedCookie.device[did]["force_cancel"]) {
+                cancelReservation(did, readedCookie.device[did]["reservation_Id"]).then(e => {
+                    console.log("reservation cancelled")
+                }).catch(e => {
+                    console.log(e)
+                })
+                return
+            }
+        }
     }
 }
 

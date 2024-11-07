@@ -1,5 +1,5 @@
-import { readCookiesFile } from "../cookies/readCookieFile.js";
-import { writeCookieFile } from "../cookies/writeCookieFile.js";
+import { readCookiesFile } from "./cookies/readCookieFile.js";
+import { writeCookieFile } from "./cookies/writeCookieFile.js";
 export async function cancelReservation(did,reservationId) {
     return new Promise((resolve, reject) =>{
         readCookiesFile().then(user=>{

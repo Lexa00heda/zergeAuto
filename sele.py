@@ -5,10 +5,22 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import pyotp
+import sys
 import time
+import os
 import json
 
+def count_files_in_directory(directory):
+    return len([f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))])
 
+def delete_all_files_recursively(directory):
+    for root, dirs, files in os.walk(directory, topdown=False):
+        for file in files:
+            file_path = os.path.join(root, file)
+            os.remove(file_path)
+            print(f"Deleted: {file_path}")
+
+count=0
 mail = input("Enter your mail: ")
 fact = input("Enter your 2fact sec: ")
 service = Service('/usr/local/bin/geckodriver')
@@ -45,9 +57,17 @@ try:
     started = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="desktop-btn"]')))
     started.click()
     cookies = driver.get_cookies()
+    if(len(sys.argv) > 1):
+        if(sys.argv[1]=="0"):
+            delete_all_files_recursively("./cookies")
+            count=1
+        else:
+            count = sys.argv[1]
+    else:
+        count=count_files_in_directory("./cookies") +1
     for cookie in cookies:
         print(cookie)
-    with open('cookies.txt', 'w') as f:
+    with open(f'./cookies/cookies{count}.txt', 'w') as f:
         for cookie in cookies:
             f.write(f"{cookie['name']}={cookie['value']}\n")
     print("Finished...")

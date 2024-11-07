@@ -1,9 +1,9 @@
 import fs from 'fs';
-import { readCookiesFile } from '../cookies/readCookieFile.js';
-import { writeCookieFile } from '../cookies/writeCookieFile.js';
-export async function readCookies() {
+import { readCookiesFile } from './cookies/readCookieFile.js';
+import { writeCookieFile } from './cookies/writeCookieFile.js';
+export async function readCookies(count) {
     return new Promise((resolve, reject) =>{
-        fs.readFile('cookies.txt', 'utf8',(err, data) => {
+        fs.readFile(`./cookies/cookies${count}.txt`, 'utf8',(err, data) => {
             if (err) {
                 return reject('Error reading cookies file: ' + err);
             }
@@ -16,9 +16,9 @@ export async function readCookies() {
         });
     });
 }
-export async function readCookiesWithSession() {
+export async function readCookiesWithSession(count) {
     return new Promise((resolve, reject) =>{
-        fs.readFile('cookies.txt', 'utf8',(err, data) => {
+        fs.readFile(`./cookies/cookies${count}.txt`, 'utf8',(err, data) => {
             if (err) {
                 return reject('Error reading cookies file: ' + err);
             }
