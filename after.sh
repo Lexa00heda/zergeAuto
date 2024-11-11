@@ -12,7 +12,7 @@ sleep 2
 adb shell am start -n com.termux/.HomeActivity --display 0
 sleep 4
 adb shell input keyevent 66
-adb shell input keyevent 4
+# adb shell input keyevent 4
 sleep 1
 adb shell input keyevent 61 && adb shell input keyevent 61 && adb shell input keyevent 66
 sleep 1

@@ -1,0 +1,16 @@
+{
+  "live": {
+    "devices": {},
+    "total": 0
+  },
+  "dead": {
+    "devices": {
+      "6017": {
+        "name": "SM-F700F-RU1",
+        "time": "4hr",
+        "creation": "11/10/2024, 3:26:59 AM"
+      }
+    },
+    "total": 1
+  }
+}

@@ -15,10 +15,6 @@ else
 fi
 adb shell monkey -p com.pandavpn.androidproxy -v 1
 sleep 10
-# adb shell input keyevent 61
-# adb shell input keyevent 61
-# adb shell input keyevent 66
-# sleep 1
 adb shell am force-stop com.pandavpn.androidproxy
 sleep 2
 adb shell monkey -p com.pandavpn.androidproxy -v 1
@@ -34,44 +30,76 @@ sleep 2
 adb shell input keyevent 61
 adb shell input keyevent 61
 adb shell input keyevent 66
-# adb shell input keyevent KEYCODE_HOME
 sleep 4
-adb shell am force-stop com.pandavpn.androidproxy
-sleep 2
-adb shell monkey -p com.pandavpn.androidproxy -v 1
-sleep 3
-if adb shell wm size | grep -q "Override size"; then
-    echo "Override size is set."
-    adb shell input swipe $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 100)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 - 100)) 2000
-else
-    echo "Override size is not set."
-    adb shell input swipe $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 + 100)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 - 100)) 2000
-fi
-sleep 4
-adb shell input keyevent 61
-sleep 1
-adb shell input keyevent 61
-sleep 1
-adb shell input keyevent 61
-sleep 1
-adb shell input keyevent 66
-sleep 1
-# adb shell input swipe $(($(adb shell wm size | awk '/Physical size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Physical size/ {print $3}' | cut -d'x' -f2) / 2 + 100)) $(($(adb shell wm size | awk '/Physical size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Physical size/ {print $3}' | cut -d'x' -f2) / 2 - 100)) 2000
-# adb shell input swipe $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 + 100)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 - 100)) 2000
-# adb shell input keyevent KEYCODE_HOME
-# sleep 4
-# adb shell am force-stop com.pandavpn.androidproxy
-# sleep 2
-# adb shell monkey -p com.pandavpn.androidproxy -v 1
-# sleep 3
-# adb shell input swipe $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 + 100)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 - 100)) 2000
-# sleep 4
-# adb shell input keyevent 61
-# sleep 1
-# adb shell input keyevent 61
-# sleep 1
-# adb shell input keyevent 61
-# sleep 1
-# adb shell input keyevent 66
-# sleep 1
-# adb shell input keyevent KEYCODE_HOME
+
+for i in {1..7}; do
+    echo "Checking connection on attempt $i..."
+    adb shell am force-stop com.pandavpn.androidproxy
+    sleep 2
+    adb shell monkey -p com.pandavpn.androidproxy -v 1
+    sleep 3
+    if adb shell wm size | grep -q "Override size"; then
+        echo "Override size is set."
+        adb shell input swipe $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 100)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 - 100)) 2000
+    else
+        echo "Override size is not set."
+        adb shell input swipe $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 + 100)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 - 100)) 2000
+    fi
+    sleep 4
+    adb shell input keyevent 61
+    sleep 1
+    adb shell input keyevent 61
+    sleep 1
+    adb shell input keyevent 61
+    sleep 1
+    adb shell input keyevent 66
+    adb shell "run-as com.termux truncate -s 0 /data/data/com.termux/files/home/verusMinings/nohup.out"
+    # adb shell "run-as com.termux truncate -s 0 /data/data/com.termux/files/home/unmineable/nohup.out"
+    sleep 3
+    adb shell input keyevent KEYCODE_HOME
+    sleep 8
+    for i in {1..2}; do
+        sleep 4
+
+        #zergpool
+
+        if adb shell "run-as com.termux test ! -s /data/data/com.termux/files/home/verusMinings/nohup.out"; then
+            echo "File is empty"
+        else
+            echo "File is not empty"
+            if adb shell "run-as com.termux cat /data/data/com.termux/files/home/verusMinings/nohup.out | grep -q 'Verus Hashing'" || adb shell "run-as com.termux cat /data/data/com.termux/files/home/verusMinings/nohup.out | grep -q 'accepted'" || adb shell "run-as com.termux cat /data/data/com.termux/files/home/verusMinings/nohup.out | grep -q 'Stratum difficulty set to'" ; then
+                    echo "Miner running succesfully"
+                    is_running=true
+            else
+                    echo "Miner not connected"
+                    is_running=false
+            fi
+            break
+        fi
+
+        #unmineable
+
+        # if adb shell "run-as com.termux test ! -s /data/data/com.termux/files/home/unmineable/nohup.out"; then
+        #     echo "File is empty"
+        # else
+        #     echo "File is not empty"
+        #     if adb shell "run-as com.termux cat /data/data/com.termux/files/home/unmineable/nohup.out | grep -q 'new job'" || adb shell "run-as com.termux cat /data/data/com.termux/files/home/unmineable/nohup.out | grep -q 'accepted'" || adb shell "run-as com.termux cat /data/data/com.termux/files/home/unmineable/nohup.out | grep -q 'speed'" ; then
+        #             echo "Miner running succesfully"
+        #             is_running=true
+        #     else
+        #             echo "Miner not connected"
+        #             is_running=false
+        #     fi
+        #     break
+        # fi
+
+        #end
+
+    done
+    if [ "$is_running" = true ]; then
+        echo "Vpn connected Successfully"
+        break
+    else
+        echo "Restarting vpn"
+    fi
+done

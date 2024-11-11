@@ -10,8 +10,9 @@ export async function getReservationId(did,cookies) {
                             // console.log(element)
                             const reserve = element["reservationId"]
                             const name = element["deviceName"]
+                            const location = element["location"]
                             console.log(`reservation Id: ${reserve}`)
-                            resolve({reserve,name})
+                            resolve({reserve,name,location})
 
                         }
                     });

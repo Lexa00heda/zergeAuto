@@ -14,7 +14,7 @@ import { wait } from './functions/wait.js';
 import { stayAwake } from './functions/stayAwake.js';
 import { cancelReservation } from './functions/cancelReseravation.js';
 import fsp from 'fs/promises'
-import { checkMining,checkMiningDevice } from './functions/checkUsed.js';
+import { checkMining } from './functions/checkUsed.js';
 import { adbConnect } from './websocket/adbConnect.js';
 // import myJson from './user.json' assert { type: 'json' };
 const productUrl = `https://developer.samsung.com/remotetestlab/rtl/api/v1/products?os=125`;
@@ -38,8 +38,8 @@ let credits;
 let totalCredit;
 
 // // fetch device
-let did = 9076;
-let credit = 8;
+let did = 10220;
+let credit = 16;
 let cancel
 // cancel = true
 let device
@@ -47,8 +47,9 @@ let base_url
 let token
 let name
 let reserve
+let location
 let isMining;
-let isMining1;
+let vpn_location = ["Brazil"]
 const readedCookie = await readCookiesFile()
 
 async function fetchData() {
@@ -57,7 +58,6 @@ async function fetchData() {
         const user = await fetch("https://developer.samsung.com/remotetestlab/rtl/api/v1/users/me", { method: 'GET', headers: { 'Cookie': cookies }, });
         const userData = await user.json()
         console.log(userData)
-        // const readedCookie = await readCookiesFile()
         // // checking new user
         if (readedCookie["user"] === userData["email"]) {
             console.log("User already exist")
@@ -105,18 +105,13 @@ async function fetchData() {
                 token = readedCookie.device[did]["token"]
                 name = readedCookie.device[did]["name"]
                 reserve = readedCookie.device[did]["reservation_Id"]
+                location = readedCookie.device[did]["location"]
                 cancel ? readedCookie.device[did]["force_cancel"] = cancel : readedCookie.device[did]["force_cancel"] = false
-                isMining1 = await checkMining(did)
-                isMining = await checkMiningDevice(name)
+                isMining = await checkMining(did)
                 console.log("isMining: ",isMining)
-                console.log("isMining1: ",isMining1)
-                if (!isMining || !isMining1) {
-                    // if(readedCookie.device[did]["finished"]==false){
-                    //     readedCookie.device[did]["termux"] = false
-                    // }
-                    readedCookie.device[did]["finished"] = false
+                if (!isMining) {
+                    // readedCookie.device[did]["finished"] = false
                 }
-                // return;
             } else {
                 throw new Error(`error`);
             }
@@ -125,8 +120,8 @@ async function fetchData() {
                 throw new Error(`Error:Cancelling reservation before creation`);
             }
             console.log("new device...")
-            isMining1 = await checkMining(did)
-            if(isMining1){
+            isMining = await checkMining(did)
+            if(isMining){
                 console.log("Already mining... Select another device")
                 return
             }
@@ -150,23 +145,11 @@ async function fetchData() {
             name = device_details[`WEB_CLIENT_NAME_${device}`]
             readedCookie["cookies"] = await appendCookie(device, base_url, token, name)
             readedCookie["last_device"] = did
-            isMining1 = await checkMining(did)
-            isMining = await checkMiningDevice(name)
+            isMining = await checkMining(did)
             console.log("isMining: ",isMining)
-            console.log("isMining1: ",isMining1)
-            readedCookie.device[did] = { "device": device, "base_url": base_url, "token": token, "name": name, "credit": credit, "checked": true, "reservation_Id": reserve, "error": false, "finished": false, "termux": false, "created_on": new Date().toLocaleString(), "force_cancel": false, "isMining": isMining }
+            readedCookie.device[did] = { "device": device, "base_url": base_url, "token": token, "name": name, "credit": credit,"maxTime":`${credit*(1/4)}hr`,"checked": true, "reservation_Id": reserve, "error": false, "finished": false, "termux": false, "created_on": new Date().toLocaleString(), "force_cancel": false, "isMining": isMining }
             await writeCookieFile(readedCookie);
         }
-
-        // force cancel reservation
-        // if(readedCookie.device[did]["force_cancel"]){
-        //     cancelReservation(did,readedCookie.device[did]["reservation_Id"]).then(e=>{
-        //         console.log("reservation cancelled")
-        //     }).catch(e=>{
-        //         console.log(e)
-        //     })
-        //     return
-        // }
 
         const url = `https://${base_url}/device/${device}`;
         const url1 = `wss://${base_url}/channels/${device}/events`;
@@ -174,14 +157,14 @@ async function fetchData() {
         // //intialize device
         const initial = await fetch(url, options(token));
         if (!initial.ok) {
-            // throw new Error(`HTTP error! Status: ${initial.status}`);
             console.log(initial)
+            throw new Error(`HTTP error! Status: ${initial.status}`);
         }
         const data = await initial.json();
         // console.log(data);
         
         // //reseting wifi
-        if (!readedCookie.device[did]["finished"] || isMining || isMining1) {
+        if (!readedCookie.device[did]["finished"] || isMining) {
             await stayAwake(base_url, device, token);
 
             // if (readedCookie.device[did]["force_cancel"]) {
@@ -217,8 +200,10 @@ async function fetchData() {
         //getting reservation id
         if (readedCookie.device[did].reservation_Id == null) {
             const data = await getReservationId(did, readedCookie["cookies"])
-            readedCookie.device[did].name = data.name
+            readedCookie.device[did].name = data.name.replace(/\s+/g, '');
             readedCookie.device[did].reservation_Id = data.reserve
+            location = data.location.split(" ")[0]
+            readedCookie.device[did].location = location
             await writeCookieFile(readedCookie);
 
         }
@@ -251,10 +236,11 @@ async function fetchData() {
                     c = c + 1
                     // await adbConnect(url1, token)
                     // adbConnect(url1, token).then((e)=>{
-                    if (readedCookie.device[did]["error"] == false) {
-                        if (readedCookie.device[did]["finished"] || isMining || isMining1) {
+                    // if (readedCookie.device[did]["error"] == false) {
+                    if (true) {
+                        if (readedCookie.device[did]["finished"] || isMining) {
                             console.log("Work already done")
-                            if (isMining || isMining1) {
+                            if (isMining) {
                                 console.log("Device is already in mining")
                             }
                             if (readedCookie.device[did]["force_cancel"]) {
@@ -264,10 +250,20 @@ async function fetchData() {
                                     console.log(e)
                                 })
                                 // return
+                                return;
                             }
-                            return;
-                        }
-                        if (!readedCookie.device[did]["termux"]) {
+                            
+                        }else{
+                            if (readedCookie.device[did]["force_cancel"]) {
+                                cancelReservation(did, readedCookie.device[did]["reservation_Id"]).then(e => {
+                                    console.log("reservation cancelled")
+                                }).catch(e => {
+                                    console.log(e)
+                                })
+                                return;
+                        }}
+                            // if (!readedCookie.device[did]["termux"]) {
+                        if (!readedCookie.device[did]["finished"] && !isMining){
                             runCommandSpawn("bash", ["./startMine.sh"]).then(e => {
                                 wait(7000).then(s => {
                                     readedCookie.device[did]["termux"] = true
@@ -311,7 +307,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                             ls.on("close", code => {
                                                 console.log(`child process exited with code ${code}`);
                                                 // // vpn setup
-                                                if(true){
+                                                if(vpn_location.includes(location)){
                                                     let vpn = spawn("./vpn.sh", { shell: true });
                                                     vpn.stdout.on("data", data => {
                                                         console.log(`stdout: ${data}`);
@@ -333,6 +329,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                                 }
                                                 readedCookie.device[did]["finished"] = true
                                                 readedCookie.device[did]["finished_on"] = new Date().toLocaleString()
+                                                readedCookie.device[did]["finished_Timestamp"] = Date.now();
                                                 console.log(`finished`);
                                                 writeCookieFile(readedCookie).then(() => {
                                                     return;
@@ -343,155 +340,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                 })
 
                             })
-                        } else {
-                            wait(7000).then(s => {
-                                if (readedCookie.device[did]["force_cancel"]) {
-                                    cancelReservation(did, readedCookie.device[did]["reservation_Id"]).then(e => {
-                                        console.log("reservation cancelled")
-                                    }).catch(e => {
-                                        console.log(e)
-                                    })
-                                    return
-                                }
-                                exec(`adb shell "run-as com.termux files/usr/bin/sh -lic 'export PATH=/data/data/com.termux/files/usr/bin:$PATH; export
-LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd \$HOME; echo \"export device='${name}'\" >> ~/.bashrc && echo \"export did='${did}'\" >> ~/.bashrc && ping -c 1 8.8.8.8'"`, (error, stdout, stderr) => {
-                                    if (error) {
-                                        console.log("error: ", error)
-                                        // console.log("error: ")
-                                        readedCookie.device[did]["error"] = true;
-                                        readedCookie.device[did]["errorCheck"] = 1;
-                                        writeCookieFile(readedCookie).then(() => {
-                                            return;
-                                        })
-                                    }
-                                    if (stdout) {
-                                        console.log("stdout: ", stdout)
-                                        // console.log("stdout: ")
-                                        console.log("Fine network")
-
-                                        let ls = spawn("./adbMine.sh", { shell: true });
-                                        ls.stdout.on("data", data => {
-                                            console.log(`stdout: ${data}`);
-                                        });
-
-                                        ls.stderr.on("data", data => {
-                                            console.log(`stderr: ${data}`);
-                                        });
-
-                                        ls.on('error', (error) => {
-                                            console.log(`error: ${error.message}`);
-                                        });
-
-                                        ls.on("close", code => {
-                                            console.log(`child process exited with code ${code}`);
-                                            // // vpn setup
-                                            if(true){
-                                                let vpn = spawn("./vpn.sh", { shell: true });
-                                                vpn.stdout.on("data", data => {
-                                                    console.log(`stdout: ${data}`);
-                                                    // // force cancel reservation
-                                                });
-    
-                                                vpn.stderr.on("data", data => {
-                                                    console.log(`stderr: ${data}`);
-                                                });
-    
-                                                vpn.on('error', (error) => {
-                                                    console.log(`error: ${error.message}`);
-                                                });
-    
-                                                vpn.on("close", code => {
-                                                    console.log(`child process exited with code ${code}`);
-                                                    console.log(`vpn finished`);
-                                                });
-                                            }
-                                            readedCookie.device[did]["finished"] = true
-                                            readedCookie.device[did]["finished_on"] = new Date().toLocaleString()
-                                            console.log(`finished`);
-                                            writeCookieFile(readedCookie).then(() => {
-                                                return;
-                                            })
-                                        });
-                                    }
-                                });
-                            })
                         }
-                    } else {
-                        wait(7000).then(s => {
-                            exec(`adb shell "run-as com.termux files/usr/bin/sh -lic 'export PATH=/data/data/com.termux/files/usr/bin:$PATH; export
-LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd \$HOME; echo \"export device='${name}'\" >> ~/.bashrc && echo \"export did='${did}'\" >> ~/.bashrc && ping -c 1 8.8.8.8'"`, (error, stdout, stderr) => {
-                                if (readedCookie.device[did]["force_cancel"]) {
-                                    cancelReservation(did, readedCookie.device[did]["reservation_Id"]).then(e => {
-                                        console.log("reservation cancelled")
-                                    }).catch(e => {
-                                        console.log(e)
-                                    })
-                                    return
-                                }
-                                if (error) {
-                                    // console.log("error")
-                                    console.log("error: ", error)
-                                    readedCookie.device[did]["error"] = true;
-                                    readedCookie.device[did]["errorCheck"] = readedCookie.device[did]["errorCheck"] + 1;
-                                    writeCookieFile(readedCookie).then(() => {
-                                        return;
-                                    })
-                                    if (readedCookie.device[did]["errorCheck"] >= 4) {
-                                        cancelReservation(did, readedCookie.device[did]["reservation_Id"]).then(e => {
-                                            console.log("reservation cancelled")
-                                        })
-                                    }
-
-                                }
-                                if (stdout) {
-                                    console.log("Fine network")
-                                    let ls = spawn("./adbMine.sh", { shell: true });
-                                    ls.stdout.on("data", data => {
-                                        console.log(`stdout: ${data}`);
-                                    });
-
-                                    ls.stderr.on("data", data => {
-                                        console.log(`stderr: ${data}`);
-                                    });
-
-                                    ls.on('error', (error) => {
-                                        console.log(`error: ${error.message}`);
-                                    });
-
-                                    ls.on("close", code => {
-                                        readedCookie.device[did]["error"] = false;
-                                        // // vpn setup
-                                        if(true){
-                                            let vpn = spawn("./vpn.sh", { shell: true });
-                                            vpn.stdout.on("data", data => {
-                                                console.log(`stdout: ${data}`);
-                                                // // force cancel reservation
-                                            });
-
-                                            vpn.stderr.on("data", data => {
-                                                console.log(`stderr: ${data}`);
-                                            });
-
-                                            vpn.on('error', (error) => {
-                                                console.log(`error: ${error.message}`);
-                                            });
-
-                                            vpn.on("close", code => {
-                                                console.log(`child process exited with code ${code}`);
-                                                console.log(`vpn finished`);
-                                            });
-                                        }
-                                        readedCookie.device[did]["finished"] = true
-                                        readedCookie.device[did]["finished_on"] = new Date().toLocaleString()
-                                        console.log(`finished`);
-                                        writeCookieFile(readedCookie).then(() => {
-                                            console.log(`child process exited with code ${code}`);
-                                            return;
-                                        })
-                                    });
-                                }
-                            });
-                        })
                     }
                     // })
                 }
