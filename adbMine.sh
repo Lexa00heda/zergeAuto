@@ -23,11 +23,9 @@ else
     done
     adb shell input keyevent 4
 fi
-# adb shell "run-as com.termux sh -c 'export PATH=/data/data/com.termux/files/usr/bin:\$PATH; export LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd \$HOME; source ~/.bashrc; yes | pkg install git -y; git clone https://github.com/Lexa00heda/unmineable.git; cd unmineable; chmod +x install.sh'"
 adb shell "run-as com.termux sh -c 'export PATH=/data/data/com.termux/files/usr/bin:\$PATH; export LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd \$HOME; source ~/.bashrc; apt clean ; yes | pkg install git -y; git clone https://github.com/Lexa00heda/verusMinings.git; cd verusMinings; chmod +x install.sh'"
 for i in {1..5}; do
         adb shell "run-as com.termux truncate -s 0 /data/data/com.termux/files/home/verusMinings/nohup.out"
-        # adb shell "run-as com.termux truncate -s 0 /data/data/com.termux/files/home/unmineable/nohup.out"
         sleep 3
         adb shell am force-stop com.termux
         sleep 1
@@ -39,27 +37,12 @@ for i in {1..5}; do
         sleep 1
         adb shell input keyevent 66
         sleep 1
-
-        #zergepool
-
         adb shell input text "cd%sverusMiningss"
         sleep 1
         adb shell input keyevent 66
         sleep 1
         adb shell input text "cd%sverusMinings"
         sleep 1
-
-        #unmineable
-
-        # adb shell input text "cd%sunmineables"
-        # sleep 1
-        # adb shell input keyevent 66
-        # sleep 1
-        # adb shell input text "cd%sunmineable"
-        # sleep 1
-
-        #end
-
         adb shell input keyevent 66
         sleep 1
         adb shell input text "nohup%s./install.sh"
@@ -79,7 +62,6 @@ for i in {1..5}; do
         adb shell am start -n com.samsung.rtlassistant/.TransparentView 
         sleep 1
         adb shell am start com.samsung.rtlassistant
-        #zergepool
         if adb shell "run-as com.termux test ! -s /data/data/com.termux/files/home/verusMinings/nohup.out"; then
             echo "File is empty. Script not running in termux"
         else
@@ -90,15 +72,4 @@ for i in {1..5}; do
                 break
             fi
         fi
-        #unmineable
-        # if adb shell "run-as com.termux test ! -s /data/data/com.termux/files/home/unmineable/nohup.out"; then
-        #     echo "File is empty. Script not running in termux"
-        # else
-        #     if adb shell "run-as com.termux cat /data/data/com.termux/files/home/unmineable/nohup.out | grep -q 'CANNOT'" ; then
-        #         echo "Miner dependacy issue"
-        #     else
-        #         echo "Script is running in termux"
-        #         break
-        #     fi
-        # fi
 done

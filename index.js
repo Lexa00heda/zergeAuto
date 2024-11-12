@@ -38,7 +38,7 @@ let credits;
 let totalCredit;
 
 // // fetch device
-let did = 11460;
+let did = 10839;
 let credit = 16;
 let cancel
 // cancel = true

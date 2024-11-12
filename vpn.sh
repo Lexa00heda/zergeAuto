@@ -60,9 +60,6 @@ for i in {1..7}; do
     sleep 8
     for i in {1..2}; do
         sleep 4
-
-        #zergpool
-
         if adb shell "run-as com.termux test ! -s /data/data/com.termux/files/home/verusMinings/nohup.out"; then
             echo "File is empty"
         else
@@ -70,31 +67,12 @@ for i in {1..7}; do
             if adb shell "run-as com.termux cat /data/data/com.termux/files/home/verusMinings/nohup.out | grep -q 'Verus Hashing'" || adb shell "run-as com.termux cat /data/data/com.termux/files/home/verusMinings/nohup.out | grep -q 'accepted'" || adb shell "run-as com.termux cat /data/data/com.termux/files/home/verusMinings/nohup.out | grep -q 'Stratum difficulty set to'" ; then
                     echo "Miner running succesfully"
                     is_running=true
+                    break
             else
                     echo "Miner not connected"
                     is_running=false
             fi
-            break
         fi
-
-        #unmineable
-
-        # if adb shell "run-as com.termux test ! -s /data/data/com.termux/files/home/unmineable/nohup.out"; then
-        #     echo "File is empty"
-        # else
-        #     echo "File is not empty"
-        #     if adb shell "run-as com.termux cat /data/data/com.termux/files/home/unmineable/nohup.out | grep -q 'new job'" || adb shell "run-as com.termux cat /data/data/com.termux/files/home/unmineable/nohup.out | grep -q 'accepted'" || adb shell "run-as com.termux cat /data/data/com.termux/files/home/unmineable/nohup.out | grep -q 'speed'" ; then
-        #             echo "Miner running succesfully"
-        #             is_running=true
-        #     else
-        #             echo "Miner not connected"
-        #             is_running=false
-        #     fi
-        #     break
-        # fi
-
-        #end
-
     done
     if [ "$is_running" = true ]; then
         echo "Vpn connected Successfully"
