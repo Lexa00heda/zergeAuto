@@ -38,7 +38,7 @@ let credits;
 let totalCredit;
 
 // // fetch device
-let did = 10220;
+let did = 11460;
 let credit = 16;
 let cancel
 // cancel = true
@@ -226,12 +226,14 @@ async function fetchData() {
         });
         // // rdb socket
         rdb_websocket.on('message', (message) => {
+            // console.log('message from rdb server:', message.toString('utf8'));
             if (message.toString('utf8').slice(0, 4) == "AUTH") {
                 local_websocket.send(message)
             }
             if (message.toString('utf8').slice(0, 4) == "CNXN") {
                 local_websocket.send(message)
                 if (c == 1) {
+                    // throw new Error(`error`);
                     // let ls = spawn(adbCommand, adbArgs, { shell: true });
                     c = c + 1
                     // await adbConnect(url1, token)
@@ -240,6 +242,7 @@ async function fetchData() {
                     if (true) {
                         if (readedCookie.device[did]["finished"] || isMining) {
                             console.log("Work already done")
+                            // local_websocket.close()
                             if (isMining) {
                                 console.log("Device is already in mining")
                             }
