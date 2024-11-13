@@ -4,13 +4,8 @@ export async function rdbSocket(url, key) {
         const socket = new WebSocket(url, [key], {
             rejectUnauthorized: false,// Disable SSL verification (not recommended for production)
         });
-        // Event listener for when the connection is opened
-        // socket._socket._destroy(new Error("Some error"), () => {
-        //     console.log("Socket destroyed!");
-        //   })
         socket.on('open', () => {
-            // socket.set
-            console.log('WebSocket connection established.');
+            console.log('rdb WebSocket connection established.');
             console.log('URL:', socket.url);
             // socket.close()
             // socket.send(messages);
@@ -27,6 +22,7 @@ export async function rdbSocket(url, key) {
         // Event listener for when the connection is closed
         socket.on('close', () => {
             console.log('WebSocket rdb connection closed.');
+            console.log(socket.readyState)
         });
     });
 }

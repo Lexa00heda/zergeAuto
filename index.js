@@ -38,7 +38,7 @@ let credits;
 let totalCredit;
 
 // // fetch device
-let did = 10839;
+let did = 10823;
 let credit = 16;
 let cancel
 // cancel = true
@@ -195,6 +195,7 @@ async function fetchData() {
         let c = 0;
         const local_websocket = await localWebsocket()
         const rdb_websocket = await rdbSocket(`wss://${base_url}/channels/${device}/rdb`, token)
+        // const rdb_websocket = await rdbSocket(`${base_url}/channels/${device}/rdb`, token)
         
 
         //getting reservation id
@@ -233,6 +234,8 @@ async function fetchData() {
             if (message.toString('utf8').slice(0, 4) == "CNXN") {
                 local_websocket.send(message)
                 if (c == 1) {
+                    // rdb_websocket._socket.end()
+                    // local_websocket._socket.end()
                     // throw new Error(`error`);
                     // let ls = spawn(adbCommand, adbArgs, { shell: true });
                     c = c + 1
@@ -293,7 +296,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                             console.log("stdout: ", stdout)
                                             // console.log("stdout: ")
                                             console.log("Fine network")
-                                            let ls = spawn("./adbMine.sh", { shell: true });
+                                            let ls = spawn("bash",["adbMine.sh"], { shell: true });
                                             ls.stdout.on("data", data => {
                                                 console.log(`stdout: ${data}`);
                                                 // // force cancel reservation
@@ -311,7 +314,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                                 console.log(`child process exited with code ${code}`);
                                                 // // vpn setup
                                                 if(vpn_location.includes(location)){
-                                                    let vpn = spawn("./vpn.sh", { shell: true });
+                                                    let vpn = spawn("bash",["vpn.sh"], { shell: true });
                                                     vpn.stdout.on("data", data => {
                                                         console.log(`stdout: ${data}`);
                                                         // // force cancel reservation
