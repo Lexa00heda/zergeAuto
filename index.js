@@ -38,10 +38,10 @@ let credits;
 let totalCredit;
 
 // // fetch device
-let did = 10823;
+let did = 10842;
 let credit = 16;
 let cancel
-// cancel = true
+cancel = true
 let device
 let base_url
 let token
@@ -194,9 +194,7 @@ async function fetchData() {
         let b = 1;
         let c = 0;
         const local_websocket = await localWebsocket()
-        const rdb_websocket = await rdbSocket(`wss://${base_url}/channels/${device}/rdb`, token)
-        // const rdb_websocket = await rdbSocket(`${base_url}/channels/${device}/rdb`, token)
-        
+        const rdb_websocket = await rdbSocket(`wss://${base_url}/channels/${device}/rdb`, token)        
 
         //getting reservation id
         if (readedCookie.device[did].reservation_Id == null) {
@@ -234,8 +232,6 @@ async function fetchData() {
             if (message.toString('utf8').slice(0, 4) == "CNXN") {
                 local_websocket.send(message)
                 if (c == 1) {
-                    // rdb_websocket._socket.end()
-                    // local_websocket._socket.end()
                     // throw new Error(`error`);
                     // let ls = spawn(adbCommand, adbArgs, { shell: true });
                     c = c + 1
