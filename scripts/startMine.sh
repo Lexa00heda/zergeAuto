@@ -39,6 +39,8 @@ fi
 
 adb shell settings put global stay_on_while_plugged_in 15
 sleep 1
+
+fail_count=0
 #installing termux
 if adb shell "pm list packages | grep -q com.termux" || adb shell pm path com.termux > /dev/null 2>&1 ; then
     echo "termux App is already installed. Skipping installation."
@@ -46,17 +48,23 @@ else
     echo "termux App is not installed. Installing APK..."
     if adb shell "which curl > /dev/null"; then
         echo "curl is available on the device. Downloading APK..."
-        for i in {1..4}; do
-            if adb shell "curl -L -o /data/local/tmp/termux.apk https://github.com/termux/termux-app/releases/download/v0.119.0-beta.1/termux-app_v0.119.0-beta.1+apt-android-7-github-debug_arm64-v8a.apk"; then
+        while [ $fail_count -lt 4 ]; do
+            if adb shell "timeout 80 curl -L -o /data/local/tmp/termux.apk https://github.com/termux/termux-app/releases/download/v0.119.0-beta.1/termux-app_v0.119.0-beta.1+apt-android-7-github-debug_arm64-v8a.apk"; then
                 echo "Download Successful"
                 adb shell "pm install  /data/local/tmp/termux.apk"
                 echo "APK downloaded and installed via curl."
                 break
             else
-                echo "Download Failed.retrying"
+                fail_count=$((fail_count + 1))
+                echo "Download Failed or Timeout (Attempt $fail_count/4). Retrying..."
                 sleep 5
             fi
         done
+        if [ $fail_count -ge 4 ]; then
+            echo "Failed 4 times. Using adb install..."
+            adb install termux.apk
+            echo "APK installed using adb."
+        fi
     else
         echo "curl is not available on the device. Using adb install..."
         adb install termux.apk
