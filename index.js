@@ -38,7 +38,7 @@ let credits;
 let totalCredit;
 
 // // fetch device
-let did = 10842;
+let did = 10824;
 let credit = 16;
 let cancel
 cancel = true
@@ -149,6 +149,15 @@ async function fetchData() {
             console.log("isMining: ",isMining)
             readedCookie.device[did] = { "device": device, "base_url": base_url, "token": token, "name": name, "credit": credit,"maxTime":`${credit*(1/4)}hr`,"checked": true, "reservation_Id": reserve, "error": false, "finished": false, "termux": false, "created_on": new Date().toLocaleString(), "force_cancel": false, "isMining": isMining }
             await writeCookieFile(readedCookie);
+        }
+
+        if (cancel && !readedCookie.device[did]["finished"]) {
+                cancelReservation(did, readedCookie.device[did]["reservation_Id"]).then(e => {
+                    console.log("reservation cancelled")
+                }).catch(e => {
+                    console.log(e)
+                })
+                // return
         }
 
         const url = `https://${base_url}/device/${device}`;
@@ -266,7 +275,7 @@ async function fetchData() {
                         }}
                             // if (!readedCookie.device[did]["termux"]) {
                         if (!readedCookie.device[did]["finished"] && !isMining){
-                            runCommandSpawn("bash", ["./startMine.sh"]).then(e => {
+                            runCommandSpawn("bash", ["./scripts/startMine.sh"]).then(e => {
                                 wait(7000).then(s => {
                                     readedCookie.device[did]["termux"] = true
                                     if (readedCookie.device[did]["force_cancel"]) {
@@ -292,7 +301,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                             console.log("stdout: ", stdout)
                                             // console.log("stdout: ")
                                             console.log("Fine network")
-                                            let ls = spawn("bash",["adbMine.sh"], { shell: true });
+                                            let ls = spawn("bash",["./scripts/adbMine.sh"], { shell: true });
                                             ls.stdout.on("data", data => {
                                                 console.log(`stdout: ${data}`);
                                                 // // force cancel reservation
@@ -310,7 +319,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                                 console.log(`child process exited with code ${code}`);
                                                 // // vpn setup
                                                 if(vpn_location.includes(location)){
-                                                    let vpn = spawn("bash",["vpn.sh"], { shell: true });
+                                                    let vpn = spawn("bash",["./scripts/vpn.sh"], { shell: true });
                                                     vpn.stdout.on("data", data => {
                                                         console.log(`stdout: ${data}`);
                                                         // // force cancel reservation
