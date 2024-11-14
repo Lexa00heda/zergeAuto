@@ -38,10 +38,10 @@ let credits;
 let totalCredit;
 
 // // fetch device
-let did = 10756;
+let did = 10780;
 let credit = 16;
 let cancel
-cancel = true
+// cancel = true
 let device
 let base_url
 let token
