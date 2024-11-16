@@ -76,8 +76,11 @@ for i in {1..7}; do
     done
     if [ "$is_running" = true ]; then
         echo "Vpn connected Successfully"
+        exit 0
         break
     else
         echo "Restarting vpn"
     fi
 done
+echo "Mining or vpn did not start after 7 attempts."
+exit 1

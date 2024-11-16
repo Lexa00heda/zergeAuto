@@ -1,3 +1,15 @@
+#function
+check_internet_connection() {
+    # Try to ping Google's DNS server (8.8.8.8)
+    if adb shell "ping -c 1 8.8.8.8 > /dev/null 2>&1"; then
+        echo "Internet connection is available."
+        return 0  # Return success
+    else
+        echo "No internet connection. Please check your network."
+        return 1  # Return failure
+    fi
+}
+
 if adb shell wm size | grep -q "Override size"; then
     echo "Override size is set."
     adb shell input swipe $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 280)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 - 500)) 2000
@@ -40,6 +52,12 @@ fi
 adb shell settings put global stay_on_while_plugged_in 15
 sleep 1
 
+#internet checking
+if ! check_internet_connection; then
+    echo "Exiting script due to lack of internet connection."
+    exit 1
+fi
+
 fail_count=0
 #installing termux
 if adb shell "pm list packages | grep -q com.termux" || adb shell pm path com.termux > /dev/null 2>&1 ; then
@@ -48,7 +66,7 @@ else
     echo "termux App is not installed. Installing APK..."
     if adb shell "which curl > /dev/null"; then
         echo "curl is available on the device. Downloading APK..."
-        while [ $fail_count -lt 4 ]; do
+        while [ $fail_count -lt 2 ]; do
             if adb shell "timeout 80 curl -L -o /data/local/tmp/termux.apk https://github.com/termux/termux-app/releases/download/v0.119.0-beta.1/termux-app_v0.119.0-beta.1+apt-android-7-github-debug_arm64-v8a.apk"; then
                 echo "Download Successful"
                 adb shell "pm install  /data/local/tmp/termux.apk"
@@ -56,12 +74,12 @@ else
                 break
             else
                 fail_count=$((fail_count + 1))
-                echo "Download Failed or Timeout (Attempt $fail_count/4). Retrying..."
+                echo "Download Failed or Timeout (Attempt $fail_count/2). Retrying..."
                 sleep 5
             fi
         done
-        if [ $fail_count -ge 4 ]; then
-            echo "Failed 4 times. Using adb install..."
+        if [ $fail_count -ge 2 ]; then
+            echo "Failed 2 times. Using adb install..."
             adb install termux.apk
             echo "APK installed using adb."
         fi
