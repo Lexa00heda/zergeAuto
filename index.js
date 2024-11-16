@@ -13,14 +13,12 @@ import { runCommandSpawn } from './functions/runSpawn.js';
 import { wait } from './functions/wait.js';
 import { stayAwake } from './functions/stayAwake.js';
 import { cancelReservation } from './functions/cancelReseravation.js';
-import fsp from 'fs/promises'
 import { checkMining } from './functions/checkUsed.js';
 import { adbConnect } from './websocket/adbConnect.js';
 import { getDevice } from './functions/getDevices.js';
 import { getLocationsName } from './functions/getLocationsName.js';
-import { exit } from 'process';
-import { error } from 'console';
-import { finished } from 'stream';
+import path from 'path';
+
 // import myJson from './user.json' assert { type: 'json' };
 const productUrl = `https://developer.samsung.com/remotetestlab/rtl/api/v1/products?os=125`;
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
@@ -50,10 +48,12 @@ const daily_limit = 40
 // cancel = true
 
 const locations = { 0: "Russia", 1: "India", 2: "Korea", 3: "Brazil", 4: "Vietnam", 5: "UK", 6: "USA", 7: "Poland" }
-let vpn_location = getLocationsName(3)
 const device_model_list = { 0: { "device": "Galaxy A", "id": 124 }, 1: { "device": "Galaxy S", "id": 125 }, 2: { "device": "Galaxy Z", "id": 126 }, 3: { "device": "Galaxy F&M", "id": 127 }, 4: { "device": "Galaxy TAB", "id": 128 } }
 const device_model_id = device_model_list[(Number(process.argv[2]) - 1) % 5]["id"]
-const devices = await getDevice(device_model_id, getLocationsName(0, 1))
+const vpn_locations = getLocationsName(3)
+const eventAliveLocation = getLocationsName(0,4)
+const ignoreDevice = getLocationsName()
+const devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 async function fetchData(devices) {
     const did = Number(devices)
@@ -91,7 +91,6 @@ async function fetchData(devices) {
             readedCookie["last_device"] = ""
             readedCookie["cookies"] = await readCookiesWithSession(process.argv[2])
             await writeCookieFile(readedCookie);
-            // await fsp.writeFile( "user.json", JSON.stringify(readedCookie,null,2), "utf8" );
             cookies = readedCookie["cookies"]
             const freeCredit = `https://developer.samsung.com/remotetestlab/rtl/api/v1/users/getFreeCredit`;
             const credit = await fetch(freeCredit, { method: 'POST', headers: { 'Cookie': cookies, } });
@@ -108,10 +107,6 @@ async function fetchData(devices) {
         const optionCookie = {
             'Cookie': cookies,
         }
-        // fetch product list
-        const product = await fetch(productUrl, { method: 'GET', headers: optionCookie });
-        const result = await product.json();
-        // console.log(result["productList"][0]["devices"]);
 
         try {
             if (readedCookie.device[did]["checked"]) {
@@ -122,19 +117,12 @@ async function fetchData(devices) {
                 name = readedCookie.device[did]["name"]
                 reserve = readedCookie.device[did]["reservation_Id"]
                 location = readedCookie.device[did]["location"]
-                // cancel ? readedCookie.device[did]["force_cancel"] = cancel : readedCookie.device[did]["force_cancel"] = false
                 isMining = await checkMining(did)
                 console.log("isMining: ", isMining)
-                if (!isMining) {
-                    // readedCookie.device[did]["finished"] = false
-                }
             } else {
                 throw new Error(`error`);
             }
         } catch {
-            // if (cancel != null) {
-            //     throw new Error(`Error:Cancelling reservation before creation`);
-            // }
             console.log("new device...")
             isMining = await checkMining(did)
             if (isMining) {
@@ -188,17 +176,6 @@ async function fetchData(devices) {
         // //reseting wifi
         if (!readedCookie.device[did]["finished"] || isMining) {
             await stayAwake(base_url, device, token);
-
-            // if (readedCookie.device[did]["force_cancel"]) {
-            //     cancelReservation(did, readedCookie.device[did]["reservation_Id"]).then(e => {
-            //         console.log("reservation cancelled")
-            //     }).catch(e => {
-            //         console.log(e)
-            //     })
-            //     // return
-            // }
-            // return;
-
             // const reset = await wifiReset(url1, token)
             // reset.on('message', (message) => {
             //     console.log('message from server:', message.toString('utf8'));
@@ -257,19 +234,23 @@ async function fetchData(devices) {
                         local_websocket.send(message)
                         if (c == 1) {
                             c = c + 1
-                            // if (readedCookie.device[did]["finished"] || isMining) {
-                            //     console.log("Work already done")
-                            //     if (isMining) {
-                            //         console.log("Device is already in mining")
-                            //     }
-
-
-                            // }
                             if (readedCookie.device[did]["finished"] && !readedCookie.device[did]["cancelled"] || isMining) {
                                 console.log("Work already done")
                                 if (isMining) {
                                     console.log("Device is already in mining")
                                 }
+
+                                if(eventAliveLocation.includes(readedCookie.device[did]["location"] )){
+                                    //create event websocket to keep alive (test)
+                                    const childs = spawn('node', [path.join(process.cwd(), '/websocket/eventAlive.js'), readedCookie.device[did]["device"],readedCookie.device[did]["base_url"],readedCookie.device[did]["token"]], {
+                                        detached: true,
+                                        stdio: 'ignore' // Detach from the parent's stdio (optional)
+                                    });
+                                    childs.unref();  // Make sure the parent process doesn't wait for the child to finish
+                                    console.log('Child process detached. Parent can exit independently.');
+                                    await wait(2000)
+                                }
+                                //cancelling reservation
                                 await cancelReservation(did, readedCookie.device[did]["reservation_Id"])
                                 readedCookie.device[did]["force_cancel"] = true
                                 console.log("reservation cancelled")
@@ -328,7 +309,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                             reject(code)
                                         }
                                         // // vpn setup
-                                        if (vpn_location.includes(location)) {
+                                        if (vpn_locations.includes(location)) {
                                             exit_code = await new Promise((resolve, reject) => {
                                                 let vpn = spawn("bash", ["./scripts/vpn.sh"], { shell: true });
                                                 vpn.stdout.on("data", data => {
@@ -350,6 +331,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                                     }
                                                     console.log(`child process exited with code ${code}`);
                                                     console.log(`vpn finished`);
+                                                    readedCookie.device[readedCookie["last_device"]].error = false
                                                     exit_code = code
                                                     resolve(code)
                                                 });
@@ -363,21 +345,10 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                     readedCookie.device[did]["finished"] = true
                                     readedCookie.device[did]["finished_on"] = new Date().toLocaleString()
                                     readedCookie.device[did]["finished_Timestamp"] = Date.now();
+                                    readedCookie.device[readedCookie["last_device"]].error = false
                                     console.log(`finished`);
-                                    // readedCookie["finishCount"] = readedCookie["finishCount"] + 1
                                     await wait(3000)
-                                    // readedCookie["cookies"] = await readCookiesWithSession(process.argv[2])
-                                    // await cancelReservation(did, readedCookie.device[did]["reservation_Id"])
-                                    // readedCookie.device[did]["force_cancel"] = true
-                                    // console.log("reservation cancelled")
-                                    // await wait(5000)
-                                    // cookies = await readCookies(process.argv[2]);
-                                    // const user = await fetch("https://developer.samsung.com/remotetestlab/rtl/api/v1/users/me", { method: 'GET', headers: { 'Cookie': cookies }, });
-                                    // const userData = await user.json()
-                                    // console.log(`points before:${readedCookie["totalCredit"]}, points after:${userData["point"]}`)
-                                    // readedCookie["today_credits_left"] = readedCookie["today_credits_left"] - (userData["point"] - readedCookie["totalCredit"])
-                                    // await writeCookieFile(readedCookie)
-                                    // await wait(5000)
+                                    // await wait(300000000)
                                     resolve(exit_code)
                                 }
 
@@ -418,15 +389,15 @@ let count = 0;
                 } else {
                     console.log(devices[count])
                     await fetchData(devices[count])
-                    if (readedCookie["totalCredit"] < 16 || readedCookie["today_credits_left"] < 16) {
+                    if ((readedCookie.device[readedCookie["last_device"]].cancelled && readedCookie["totalCredit"] < 16) || readedCookie["today_credits_left"] < 16) {
                         break
                     }
-                    count = count + 1
                 }
+                count = count + 1
             } else {
                 console.log(devices[count])
                 await fetchData(devices[count])
-                if (readedCookie["totalCredit"] < 16 || readedCookie["today_credits_left"] < 16) {
+                if ((readedCookie.device[readedCookie["last_device"]].cancelled && readedCookie["totalCredit"] < 16) || readedCookie["today_credits_left"] < 16 || readedCookie["startCredit"] < 16) {
                     break
                 }
                 count = count + 1
@@ -443,12 +414,12 @@ let count = 0;
                     readedCookie.device[readedCookie["last_device"]]["force_cancel"] = true
                     cookies = await readCookies(process.argv[2]);
                     const user = await fetch("https://developer.samsung.com/remotetestlab/rtl/api/v1/users/me", { method: 'GET', headers: { 'Cookie': cookies }, });
+                    count = count + 1
                     const userData = await user.json()
                     readedCookie.device[readedCookie["last_device"]]["cancelled"] = true
                     console.log(userData)
                     console.log(`points before:${readedCookie["totalCredit"]}, points after:${userData["point"]}`)
                     readedCookie["today_credits_left"] = daily_limit - (readedCookie["startCredit"] - userData["point"])
-                    count = count + 1
                     await writeCookieFile(readedCookie)
                     console.log("reservation cancelled")
                 } else {
