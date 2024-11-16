@@ -275,7 +275,6 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                         if (error) {
                                             console.log("error: ", error)
                                             readedCookie.device[did]["error"] = true;
-                                            readedCookie.device[did]["errorCheck"] = 1;
                                             await writeCookieFile(readedCookie)
                                             reject(error);
                                         }
@@ -407,6 +406,7 @@ let count = 0;
             if (readedCookie.device[readedCookie["last_device"]].error == false) {
                 readedCookie.device[readedCookie["last_device"]].error = true
                 readedCookie.device[readedCookie["last_device"]].errorCount = 1
+                await writeCookieFile(readedCookie)
             } else {
                 if (readedCookie.device[readedCookie["last_device"]].errorCount > 1) {
                     readedCookie["cookies"] = await readCookiesWithSession(process.argv[2])

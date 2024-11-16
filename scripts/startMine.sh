@@ -12,18 +12,26 @@ check_internet_connection() {
 
 if adb shell wm size | grep -q "Override size"; then
     echo "Override size is set."
-    adb shell input swipe $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 280)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 - 500)) 2000
-    sleep 2
-    adb shell input swipe $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 350)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2 + 500)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 350)) 2000
-    sleep 2
+    for i in {1..5}; do
+        adb shell input swipe $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 180 + i*40 )) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 - 500)) 2000
+        sleep 2
+    done
+    for i in {1..5}; do
+        adb shell input swipe $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 150 + i*50 )) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2 + 500)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 150 + i*50 )) 2000
+        sleep 2
+    done
     adb shell input swipe $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 100)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 - 100)) 2000
     sleep 2
 else
     echo "Override size is not set."
-    adb shell input swipe $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 + 280)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 - 500)) 2000
-    sleep 2
-    adb shell input swipe $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 + 350)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2 + 500)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 + 350)) 2000
-    sleep 2
+    for i in {1..5}; do
+        adb shell input swipe $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 + 180 + i*40 )) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 - 500)) 2000
+        sleep 2
+    done
+    for i in {1..5}; do
+        adb shell input swipe $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 + 150 + i*50)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2 + 500)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 + 150 + i*50)) 2000
+        sleep 2
+    done
     adb shell input swipe $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 + 100)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 - 500)) 2000
     sleep 2
 fi
@@ -92,14 +100,18 @@ else
 fi
 adb shell monkey -p com.termux -v 500
 sleep 4
-for i in {1..7}; do
+for i in {1..4}; do
     output=$(adb shell "run-as com.termux files/usr/bin/sh -lic 'export PATH=/data/data/com.termux/files/usr/bin:$PATH; export LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd $HOME;' 2>&1")
     if [[ "$output" == *"No such file or directory"* ]]; then
         echo "termux not opened"
         adb shell am force-stop com.termux
         sleep 2
         adb shell am start -n com.termux/.HomeActivity --display 0
-        sleep 5
+        if [ $i -eq 4 ]; then
+            sleep 25
+        else
+            sleep 10
+        fi
     else
         echo "termux opened"
         break
