@@ -63,6 +63,7 @@ sleep 1
 #internet checking
 if ! check_internet_connection; then
     echo "Exiting script due to lack of internet connection."
+    timeout 10s adb shell reboot
     exit 1
 fi
 
