@@ -53,7 +53,7 @@ const device_model_id = device_model_list[(Number(process.argv[2]) - 1) % 5]["id
 const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
-const ignoreDevice = getLocationsName(0)
+const ignoreDevice = getLocationsName(0,1)
 const devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 async function fetchData(devices) {
@@ -86,6 +86,8 @@ async function fetchData(devices) {
             readedCookie["totalCredit"] = userData["point"]
             readedCookie["startCredit"] = userData["point"]
             readedCookie["device"] = {}
+            readedCookie["finishList"] = {}
+            readedCookie["deadList"] = {}
             readedCookie["finishCount"] = 0
             readedCookie["today_credits_left"] = daily_limit
             readedCookie["Totalcount"] = 0
@@ -100,6 +102,9 @@ async function fetchData(devices) {
                 if (credit.ok) {
                     readedCookie["totalCredit"] = readedCookie["totalCredit"] + 10
                     readedCookie["startCredit"] = readedCookie["startCredit"] + 10
+                    if(readedCookie["startCredit"] < daily_limit){
+                        readedCookie["today_credits_left"] = daily_limit - (daily_limit-readedCookie["startCredit"])
+                    }
                 }
             } catch {
                 console.log("credit added")
@@ -200,7 +205,7 @@ async function fetchData(devices) {
         if (readedCookie.device[did].reservation_Id == null) {
             const data = await getReservationId(did, readedCookie["cookies"])
             console.log("reservation: ", data)
-            readedCookie.device[did].name = data.name.replace(/\s+/g, '');
+            readedCookie.device[did].name ? readedCookie.device[did].name.replace(" ","") : readedCookie.device[did].name = data.name.replace(/\s+/g, '');
             readedCookie.device[did].reservation_Id = data.reserve
             location = data.location.split(" ")[0]
             readedCookie.device[did].location = location
@@ -255,13 +260,18 @@ async function fetchData(devices) {
                                 await cancelReservation(did, readedCookie.device[did]["reservation_Id"])
                                 readedCookie.device[did]["force_cancel"] = true
                                 console.log("reservation cancelled")
-                                // await wait(4000)
-                                await wait( (30 * 60 * 60 * 1000) + (30 * 60 * 1000))
+                                await wait(4000)
+                                // await wait( (30 * 60 * 60 * 1000) + (30 * 60 * 1000))
                                 cookies = await readCookies(process.argv[2]);
                                 const user = await fetch("https://developer.samsung.com/remotetestlab/rtl/api/v1/users/me", { method: 'GET', headers: { 'Cookie': cookies }, });
                                 const userData = await user.json()
                                 readedCookie.device[did]["cancelled"] = true
                                 readedCookie["finishCount"] = readedCookie["finishCount"] + 1
+                                try{
+                                    readedCookie.finishList[readedCookie.device[did]["location"]]["count"] = readedCookie.finishList[readedCookie.device[did]["location"]]["count"] +1 
+                                }catch{
+                                    readedCookie.finishList[readedCookie.device[did]["location"]] = {"count": 1}
+                                }
                                 console.log(`points before:${readedCookie["totalCredit"]}, points after:${userData["point"]}`)
                                 readedCookie["today_credits_left"] = daily_limit - (readedCookie["startCredit"] - userData["point"])
                                 await writeCookieFile(readedCookie)
@@ -420,6 +430,11 @@ let count = 0;
                     readedCookie.device[readedCookie["last_device"]]["force_cancel"] = true
                     cookies = await readCookies(process.argv[2]);
                     const user = await fetch("https://developer.samsung.com/remotetestlab/rtl/api/v1/users/me", { method: 'GET', headers: { 'Cookie': cookies }, });
+                    try{
+                        readedCookie.deadList[readedCookie.device[readedCookie["last_device"]]["location"]]["count"] = readedCookie.deadList[readedCookie.device[readedCookie["last_device"]]["location"]]["count"] +1 
+                    }catch{
+                        readedCookie.deadList[readedCookie.device[readedCookie["last_device"]]["location"]] = {"count": 1}
+                    }
                     count = count + 1
                     const userData = await user.json()
                     readedCookie.device[readedCookie["last_device"]]["cancelled"] = true
@@ -429,6 +444,9 @@ let count = 0;
                     await writeCookieFile(readedCookie)
                     console.log("reservation cancelled")
                 } else {
+                    if(readedCookie.device[readedCookie["last_device"]].errorCount == null){
+                        readedCookie.device[readedCookie["last_device"]].errorCount = 1
+                    }
                     readedCookie.device[readedCookie["last_device"]].errorCount = readedCookie.device[readedCookie["last_device"]].errorCount + 1
                 }
             }
