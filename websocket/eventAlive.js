@@ -68,9 +68,10 @@ socket1.on('open', () => {
       // Event listener for when the connection is closed
       socket1.on('close', () => {
         clearInterval(intervalId);
-        logFile.write(`WebSocket wifi_reset connection closed.`);
+        logFile.write(`WebSocket wifi_reset connection closed.`,()=>{
+            process.exit(0)
+        });
         console.log('WebSocket wifi_reset connection closed.');
-        process.exit(0)
     });
     
 });

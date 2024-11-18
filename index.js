@@ -52,7 +52,8 @@ const device_model_list = { 0: { "device": "Galaxy A", "id": 124 }, 1: { "device
 const device_model_id = device_model_list[(Number(process.argv[2]) - 1) % 5]["id"]
 const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
-const ignoreDevice = getLocationsName(1,2,3,4,5,6,7)
+// const ignoreDevice = getLocationsName(0)
+const ignoreDevice = getLocationsName(0)
 const devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 async function fetchData(devices) {
@@ -254,7 +255,8 @@ async function fetchData(devices) {
                                 await cancelReservation(did, readedCookie.device[did]["reservation_Id"])
                                 readedCookie.device[did]["force_cancel"] = true
                                 console.log("reservation cancelled")
-                                await wait(4000)
+                                // await wait(4000)
+                                await wait( (30 * 60 * 60 * 1000) + (30 * 60 * 1000))
                                 cookies = await readCookies(process.argv[2]);
                                 const user = await fetch("https://developer.samsung.com/remotetestlab/rtl/api/v1/users/me", { method: 'GET', headers: { 'Cookie': cookies }, });
                                 const userData = await user.json()
@@ -305,7 +307,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                         console.log(`child process exited with code ${code}`);
                                         exit_code = code
                                         if (code != 0) {
-                                            reject(code)
+                                            resolve(code)
                                         }
                                         // // vpn setup
                                         if (vpn_locations.includes(location)) {
@@ -326,7 +328,8 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
 
                                                 vpn.on("close", code => {
                                                     if (code != 0) {
-                                                        reject(code)
+                                                        exit_code = code
+                                                        resolve(code)
                                                     }else{
                                                         console.log(`child process exited with code ${code}`);
                                                         console.log(`vpn finished`);
@@ -350,6 +353,8 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                     await wait(3000)
                                     // await wait(300000000)
                                     resolve(exit_code)
+                                }else{
+                                    reject(exit_code)
                                 }
 
                             } else {
