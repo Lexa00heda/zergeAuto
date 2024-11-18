@@ -37,7 +37,6 @@ socket.on('open', () => {
         clearInterval(intervalId);
         // logFile.write(`WebSocket wifi_reset connection closed.`);
         console.log('WebSocket wifi_reset connection closed.');
-        process.exit(0)
     });
     
 });
@@ -78,7 +77,7 @@ socket1.on('open', () => {
 
 socket1.on('message', (message) => {
     console.log('message from server:', message.toString('utf8'));
-    // logFile.write(`${new Date().toISOString()} - ${message}\n`);
+    logFile.write(`${new Date().toISOString()} - ${message}\n`);
 });
 
 // Event listener for errors

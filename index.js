@@ -51,8 +51,8 @@ const locations = { 0: "Russia", 1: "India", 2: "Korea", 3: "Brazil", 4: "Vietna
 const device_model_list = { 0: { "device": "Galaxy A", "id": 124 }, 1: { "device": "Galaxy S", "id": 125 }, 2: { "device": "Galaxy Z", "id": 126 }, 3: { "device": "Galaxy F&M", "id": 127 }, 4: { "device": "Galaxy TAB", "id": 128 } }
 const device_model_id = device_model_list[(Number(process.argv[2]) - 1) % 5]["id"]
 const vpn_locations = getLocationsName(3)
-const eventAliveLocation = getLocationsName(0,4)
-const ignoreDevice = getLocationsName(0)
+const eventAliveLocation = getLocationsName(0)
+const ignoreDevice = getLocationsName(1,2,3,4,5,6,7)
 const devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 async function fetchData(devices) {
@@ -327,12 +327,13 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                                 vpn.on("close", code => {
                                                     if (code != 0) {
                                                         reject(code)
+                                                    }else{
+                                                        console.log(`child process exited with code ${code}`);
+                                                        console.log(`vpn finished`);
+                                                        readedCookie.device[readedCookie["last_device"]].error = false
+                                                        exit_code = code
+                                                        resolve(code)
                                                     }
-                                                    console.log(`child process exited with code ${code}`);
-                                                    console.log(`vpn finished`);
-                                                    readedCookie.device[readedCookie["last_device"]].error = false
-                                                    exit_code = code
-                                                    resolve(code)
                                                 });
                                             })
                                         }
