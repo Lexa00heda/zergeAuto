@@ -19,6 +19,9 @@ export async function getDevice(id, ignore = []) {
                             }
                         });
                     });
+                    if( Math.random() < 0.5){
+                        devices.reverse()
+                    }
                     resolve(devices)
                 })
             } catch (e) {
