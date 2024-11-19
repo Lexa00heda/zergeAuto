@@ -53,7 +53,7 @@ const device_model_id = device_model_list[(Number(process.argv[2]) - 1) % 5]["id
 const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
-const ignoreDevice = getLocationsName(0)
+const ignoreDevice = getLocationsName(0,4,1)
 const devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 async function fetchData(devices) {
@@ -198,6 +198,8 @@ async function fetchData(devices) {
         let a = 0;
         let b = 1;
         let c = 0;
+        let k = 0;
+        let conditionMet = false;
         local_websocket = await localWebsocket()
         rdb_websocket = await rdbSocket(`wss://${base_url}/channels/${device}/rdb`, token)
 
@@ -233,10 +235,20 @@ async function fetchData(devices) {
         await new Promise((resolve, reject) => {
             rdb_websocket.on('message', async (message) => {
                 try {
+                    if(k==0){
+                        setTimeout(() => {
+                            if (!conditionMet) {
+                                console.log("Connection not done properly");
+                                reject();
+                            }
+                        }, 5000);
+                    }
+                    k = k+1
                     if (message.toString('utf8').slice(0, 4) == "AUTH") {
                         local_websocket.send(message)
                     }
                     if (message.toString('utf8').slice(0, 4) == "CNXN") {
+                        conditionMet = true
                         local_websocket.send(message)
                         c = c + 1
                         if (c == 1) {
