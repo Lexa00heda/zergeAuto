@@ -77,8 +77,8 @@ socket1.on('open', () => {
 });
 
 socket1.on('message', (message) => {
-    console.log('message from server:', message.toString('utf8'));
-    logFile.write(`${new Date().toISOString()} - ${message}\n`);
+    // console.log('message from server:', message.toString('utf8'));
+    // logFile.write(`${new Date().toISOString()} - ${message}\n`);
 });
 
 // Event listener for errors

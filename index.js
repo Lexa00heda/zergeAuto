@@ -236,17 +236,19 @@ async function fetchData(devices) {
             rdb_websocket.on("close",()=>{
                 resolve()
             })
+            if(k==0){
+                setTimeout(() => {
+                    if (!conditionMet) {
+                        console.log("Connection not done properly");
+                        reject();
+                    }else{
+                        console.log("Connection done properly");
+                    }
+                }, 5000);
+            }
+            k = k+1
             rdb_websocket.on('message', async (message) => {
                 try {
-                    if(k==0){
-                        setTimeout(() => {
-                            if (!conditionMet) {
-                                console.log("Connection not done properly");
-                                reject();
-                            }
-                        }, 5000);
-                    }
-                    k = k+1
                     if (message.toString('utf8').slice(0, 4) == "AUTH") {
                         local_websocket.send(message)
                     }
