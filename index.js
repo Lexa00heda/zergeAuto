@@ -53,7 +53,7 @@ const device_model_id = device_model_list[(Number(process.argv[2]) - 1) % 5]["id
 const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
-const ignoreDevice = getLocationsName(0,4,1)
+const ignoreDevice = getLocationsName(0,4)
 const devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 async function fetchData(devices) {
@@ -233,6 +233,9 @@ async function fetchData(devices) {
         });
         // // rdb socket
         await new Promise((resolve, reject) => {
+            rdb_websocket.on("close",()=>{
+                resolve()
+            })
             rdb_websocket.on('message', async (message) => {
                 try {
                     if(k==0){
