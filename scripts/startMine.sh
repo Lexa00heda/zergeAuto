@@ -99,21 +99,21 @@ else
     fi
     echo "APK installed."
 fi
-timeout 12s adb shell monkey -p com.termux -v 500
+timeout 90s adb shell monkey -p com.termux -v 500
 sleep 4
-for i in {1..4}; do
+for i in {1..3}; do
     output=$(adb shell "run-as com.termux files/usr/bin/sh -lic 'export PATH=/data/data/com.termux/files/usr/bin:$PATH; export LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd $HOME;' 2>&1")
     if [[ "$output" == *"No such file or directory"* ]]; then
         echo "termux not opened"
         adb shell am force-stop com.termux
         sleep 2
         adb shell am start -n com.termux/.HomeActivity --display 0
-        if [ $i -eq 3]; then
+        if [ $i -eq 2]; then
             sleep 25
         else
             sleep 10
         fi
-        if [ $i -eq 4]; then
+        if [ $i -eq 3]; then
             exit 1
         else
     else

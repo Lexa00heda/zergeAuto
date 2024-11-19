@@ -53,6 +53,8 @@ export async function checkMining(did) {
                 });
                 resolve(false)
             }
+        }).catch((e)=>{
+            reject(e)
         })
     });
 }
