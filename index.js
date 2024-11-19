@@ -18,6 +18,8 @@ import { adbConnect } from './websocket/adbConnect.js';
 import { getDevice } from './functions/getDevices.js';
 import { getLocationsName } from './functions/getLocationsName.js';
 import path from 'path';
+import { cancelPrevReservation } from './functions/cancelPrevReservation.js';
+import { error } from 'console';
 
 // import myJson from './user.json' assert { type: 'json' };
 const productUrl = `https://developer.samsung.com/remotetestlab/rtl/api/v1/products?os=125`;
@@ -49,11 +51,11 @@ const daily_limit = 40
 
 const locations = { 0: "Russia", 1: "India", 2: "Korea", 3: "Brazil", 4: "Vietnam", 5: "UK", 6: "USA", 7: "Poland" }
 const device_model_list = { 0: { "device": "Galaxy A", "id": 124 }, 1: { "device": "Galaxy S", "id": 125 }, 2: { "device": "Galaxy Z", "id": 126 }, 3: { "device": "Galaxy F&M", "id": 127 }, 4: { "device": "Galaxy TAB", "id": 128 } }
-const device_model_id = device_model_list[(Number(process.argv[2]) - 1) % 5]["id"]
+const device_model_id = device_model_list[(Number(process.argv[2]) - 1) % 5 + 2]["id"]
 const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
-const ignoreDevice = getLocationsName(1,6)
+const ignoreDevice = getLocationsName(6)
 const devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 async function fetchData(devices) {
@@ -102,8 +104,8 @@ async function fetchData(devices) {
                 if (credit.ok) {
                     readedCookie["totalCredit"] = readedCookie["totalCredit"] + 10
                     readedCookie["startCredit"] = readedCookie["startCredit"] + 10
-                    if(readedCookie["startCredit"] < daily_limit){
-                        readedCookie["today_credits_left"] = daily_limit - (daily_limit-readedCookie["startCredit"])
+                    if (readedCookie["startCredit"] < daily_limit) {
+                        readedCookie["today_credits_left"] = daily_limit - (daily_limit - readedCookie["startCredit"])
                     }
                 }
             } catch {
@@ -163,7 +165,7 @@ async function fetchData(devices) {
             readedCookie["totalCredit"] = readedCookie["totalCredit"]
             console.log("isMining: ", isMining)
             readedCookie["totalCredit"] = readedCookie["totalCredit"] - credit
-            readedCookie.device[did] = { "device": device, "base_url": base_url, "token": token, "name": name, "credit": credit, "maxTime": `${credit * (1 / 4)}hr`, "checked": true, "reservation_Id": reserve, "error": false, "finished": false, "termux": false, "created_on": new Date().toLocaleString(), "force_cancel": false, "isMining": isMining, "cancelled": false }
+            readedCookie.device[did] = { "device": device, "base_url": base_url, "token": token, "name": name, "credit": credit, "maxTime": `${credit * (1 / 4)}hr`, "checked": true, "reservation_Id": reserve, "error": false, "finished": false, "termux": false, "created_on": new Date().toLocaleString(), "force_cancel": false, "isMining": isMining, "cancelled": false, "error": false }
             await writeCookieFile(readedCookie);
         }
 
@@ -207,7 +209,7 @@ async function fetchData(devices) {
         if (readedCookie.device[did].reservation_Id == null) {
             const data = await getReservationId(did, readedCookie["cookies"])
             console.log("reservation: ", data)
-            readedCookie.device[did].name ? readedCookie.device[did].name.replace(" ","") : readedCookie.device[did].name = data.name.replace(/\s+/g, '');
+            readedCookie.device[did].name ? readedCookie.device[did].name.replace(" ", "") : readedCookie.device[did].name = data.name.replace(/\s+/g, '');
             readedCookie.device[did].reservation_Id = data.reserve
             location = data.location.split(" ")[0]
             readedCookie.device[did].location = location
@@ -233,20 +235,20 @@ async function fetchData(devices) {
         });
         // // rdb socket
         await new Promise((resolve, reject) => {
-            rdb_websocket.on("close",()=>{
+            rdb_websocket.on("close", () => {
                 resolve()
             })
-            if(k==0){
+            if (k == 0) {
                 setTimeout(() => {
                     if (!conditionMet) {
                         console.log("Connection not done properly");
                         reject();
-                    }else{
+                    } else {
                         console.log("Connection done properly");
                     }
                 }, 8000);
             }
-            k = k+1
+            k = k + 1
             rdb_websocket.on('message', async (message) => {
                 try {
                     if (message.toString('utf8').slice(0, 4) == "AUTH") {
@@ -263,9 +265,9 @@ async function fetchData(devices) {
                                     console.log("Device is already in mining")
                                 }
 
-                                if(eventAliveLocation.includes(readedCookie.device[did]["location"] )){
+                                if (eventAliveLocation.includes(readedCookie.device[did]["location"])) {
                                     //create event websocket to keep alive (test)
-                                    const childs = spawn('node', [path.join(process.cwd(), '/websocket/eventAlive.js'), readedCookie.device[did]["device"],readedCookie.device[did]["base_url"],readedCookie.device[did]["token"]], {
+                                    const childs = spawn('node', [path.join(process.cwd(), '/websocket/eventAlive.js'), readedCookie.device[did]["device"], readedCookie.device[did]["base_url"], readedCookie.device[did]["token"]], {
                                         detached: true,
                                         stdio: 'ignore' // Detach from the parent's stdio (optional)
                                     });
@@ -284,10 +286,10 @@ async function fetchData(devices) {
                                 const userData = await user.json()
                                 readedCookie.device[did]["cancelled"] = true
                                 readedCookie["finishCount"] = readedCookie["finishCount"] + 1
-                                try{
-                                    readedCookie.finishList[readedCookie.device[did]["location"]]["count"] = readedCookie.finishList[readedCookie.device[did]["location"]]["count"] +1 
-                                }catch{
-                                    readedCookie.finishList[readedCookie.device[did]["location"]] = {"count": 1}
+                                try {
+                                    readedCookie.finishList[readedCookie.device[did]["location"]]["count"] = readedCookie.finishList[readedCookie.device[did]["location"]]["count"] + 1
+                                } catch {
+                                    readedCookie.finishList[readedCookie.device[did]["location"]] = { "count": 1 }
                                 }
                                 console.log(`points before:${readedCookie["totalCredit"]}, points after:${userData["point"]}`)
                                 readedCookie["today_credits_left"] = daily_limit - (readedCookie["startCredit"] - userData["point"])
@@ -357,7 +359,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                                     if (code != 0) {
                                                         exit_code = code
                                                         resolve(code)
-                                                    }else{
+                                                    } else {
                                                         console.log(`child process exited with code ${code}`);
                                                         console.log(`vpn finished`);
                                                         readedCookie.device[readedCookie["last_device"]].error = false
@@ -380,7 +382,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                     await wait(3000)
                                     // await wait(300000000)
                                     resolve(exit_code)
-                                }else{
+                                } else {
                                     reject(exit_code)
                                 }
 
@@ -414,6 +416,7 @@ let count = 0;
 (async function () {
     while (true) {
         try {
+            await cancelPrevReservation(readedCookie["last_device"], readedCookie["cookies"])
             if (readedCookie["last_device"] != "") {
                 if (!readedCookie.device[readedCookie["last_device"]].cancelled) {
                     console.log("prevoius device: ", readedCookie["last_device"])
@@ -435,36 +438,38 @@ let count = 0;
                 count = count + 1
             }
         } catch (e) {
-            console.log("error: ", e)
-            if (readedCookie.device[readedCookie["last_device"]].error == false) {
-                readedCookie.device[readedCookie["last_device"]].error = true
-                readedCookie.device[readedCookie["last_device"]].errorCount = 1
-                await writeCookieFile(readedCookie)
-            } else {
-                if (readedCookie.device[readedCookie["last_device"]].errorCount > 1) {
-                    readedCookie["cookies"] = await readCookiesWithSession(process.argv[2])
-                    await cancelReservation(readedCookie["last_device"], readedCookie.device[readedCookie["last_device"]]["reservation_Id"])
-                    readedCookie.device[readedCookie["last_device"]]["force_cancel"] = true
-                    cookies = await readCookies(process.argv[2]);
-                    const user = await fetch("https://developer.samsung.com/remotetestlab/rtl/api/v1/users/me", { method: 'GET', headers: { 'Cookie': cookies }, });
-                    try{
-                        readedCookie.deadList[readedCookie.device[readedCookie["last_device"]]["location"]]["count"] = readedCookie.deadList[readedCookie.device[readedCookie["last_device"]]["location"]]["count"] +1 
-                    }catch{
-                        readedCookie.deadList[readedCookie.device[readedCookie["last_device"]]["location"]] = {"count": 1}
-                    }
-                    count = count + 1
-                    const userData = await user.json()
-                    readedCookie.device[readedCookie["last_device"]]["cancelled"] = true
-                    console.log(userData)
-                    console.log(`points before:${readedCookie["totalCredit"]}, points after:${userData["point"]}`)
-                    readedCookie["today_credits_left"] = daily_limit - (readedCookie["startCredit"] - userData["point"])
+            if (readedCookie["last_device"] != "") {
+                console.log("error: ", e)
+                if (readedCookie.device[readedCookie["last_device"]].error == false) {
+                    readedCookie.device[readedCookie["last_device"]].error = true
+                    readedCookie.device[readedCookie["last_device"]].errorCount = 1
                     await writeCookieFile(readedCookie)
-                    console.log("reservation cancelled")
                 } else {
-                    if(readedCookie.device[readedCookie["last_device"]].errorCount == null){
-                        readedCookie.device[readedCookie["last_device"]].errorCount = 1
+                    if (readedCookie.device[readedCookie["last_device"]].errorCount > 1) {
+                        readedCookie["cookies"] = await readCookiesWithSession(process.argv[2])
+                        await cancelReservation(readedCookie["last_device"], readedCookie.device[readedCookie["last_device"]]["reservation_Id"])
+                        readedCookie.device[readedCookie["last_device"]]["force_cancel"] = true
+                        cookies = await readCookies(process.argv[2]);
+                        const user = await fetch("https://developer.samsung.com/remotetestlab/rtl/api/v1/users/me", { method: 'GET', headers: { 'Cookie': cookies }, });
+                        try {
+                            readedCookie.deadList[readedCookie.device[readedCookie["last_device"]]["location"]]["count"] = readedCookie.deadList[readedCookie.device[readedCookie["last_device"]]["location"]]["count"] + 1
+                        } catch {
+                            readedCookie.deadList[readedCookie.device[readedCookie["last_device"]]["location"]] = { "count": 1 }
+                        }
+                        count = count + 1
+                        const userData = await user.json()
+                        readedCookie.device[readedCookie["last_device"]]["cancelled"] = true
+                        console.log(userData)
+                        console.log(`points before:${readedCookie["totalCredit"]}, points after:${userData["point"]}`)
+                        readedCookie["today_credits_left"] = daily_limit - (readedCookie["startCredit"] - userData["point"])
+                        await writeCookieFile(readedCookie)
+                        console.log("reservation cancelled")
+                    } else {
+                        if (readedCookie.device[readedCookie["last_device"]].errorCount == null) {
+                            readedCookie.device[readedCookie["last_device"]].errorCount = 1
+                        }
+                        readedCookie.device[readedCookie["last_device"]].errorCount = readedCookie.device[readedCookie["last_device"]].errorCount + 1
                     }
-                    readedCookie.device[readedCookie["last_device"]].errorCount = readedCookie.device[readedCookie["last_device"]].errorCount + 1
                 }
             }
         }

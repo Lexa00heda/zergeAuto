@@ -9,14 +9,13 @@ check_internet_connection() {
         return 1  # Return failure
     fi
 }
-
 if adb shell wm size | grep -q "Override size"; then
     echo "Override size is set."
     for i in {1..5}; do
         adb shell input swipe $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 180 + i*40 )) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) 100 1500
         sleep 2
     done
-    for i in {1..7}; do
+    for i in {1..6}; do
         adb shell input swipe $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 150 + i*50 )) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) - 10)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 150 + i*50 )) 1500
         sleep 2
     done
@@ -63,7 +62,7 @@ sleep 1
 #internet checking
 if ! check_internet_connection; then
     echo "Exiting script due to lack of internet connection."
-    timeout 10s adb shell reboot
+    # timeout 10s adb shell reboot
     exit 1
 fi
 
@@ -110,12 +109,12 @@ for i in {1..3}; do
         adb shell am start -n com.termux/.HomeActivity --display 0
         if [ $i -eq 2]; then
             sleep 25
+        elif [ $i -eq 3]; then
+            echo "termux didn't opened after 3 retry"
+            exit 1
         else
             sleep 10
         fi
-        if [ $i -eq 3]; then
-            exit 1
-        else
     else
         echo "termux opened"
         break
