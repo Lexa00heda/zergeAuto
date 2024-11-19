@@ -31,6 +31,7 @@ for i in {1..5}; do
         adb shell am force-stop com.termux
         sleep 1
         adb shell monkey -p com.termux -v 1
+        adb shell am start -n com.termux/.HomeActivity --display 0
         sleep 4
         adb shell input keyevent 66
         sleep 1
