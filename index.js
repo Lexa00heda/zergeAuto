@@ -53,7 +53,7 @@ const device_model_id = device_model_list[(Number(process.argv[2]) - 1) % 5]["id
 const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
-const ignoreDevice = getLocationsName(0,4)
+const ignoreDevice = getLocationsName()
 const devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 async function fetchData(devices) {
@@ -244,7 +244,7 @@ async function fetchData(devices) {
                     }else{
                         console.log("Connection done properly");
                     }
-                }, 5000);
+                }, 8000);
             }
             k = k+1
             rdb_websocket.on('message', async (message) => {
@@ -421,7 +421,7 @@ let count = 0;
                 } else {
                     console.log(devices[count])
                     await fetchData(devices[count])
-                    if ((readedCookie.device[readedCookie["last_device"]].cancelled && readedCookie["totalCredit"] < 16) || readedCookie["today_credits_left"] < 16) {
+                    if ((readedCookie.device[readedCookie["last_device"]].cancelled && readedCookie["totalCredit"] < credit) || readedCookie["today_credits_left"] < credit) {
                         break
                     }
                 }
@@ -429,7 +429,7 @@ let count = 0;
             } else {
                 console.log(devices[count])
                 await fetchData(devices[count])
-                if ((readedCookie.device[readedCookie["last_device"]].cancelled && readedCookie["totalCredit"] < 16) || readedCookie["today_credits_left"] < 16 || readedCookie["startCredit"] < 16) {
+                if ((readedCookie.device[readedCookie["last_device"]].cancelled && readedCookie["totalCredit"] < credit) || readedCookie["today_credits_left"] < credit || readedCookie["startCredit"] < credit) {
                     break
                 }
                 count = count + 1
