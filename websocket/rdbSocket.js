@@ -19,6 +19,7 @@ export async function rdbSocket(url, key) {
         // Event listener for when the connection is closed
         socket.on('close', () => {
             console.log('WebSocket rdb connection closed.');
+            resolve()
         });
     });
 }

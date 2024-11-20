@@ -55,7 +55,7 @@ const device_model_id = device_model_list[(Number(process.argv[2]) - 1) % 5]["id
 const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
-const ignoreDevice = getLocationsName(6)
+const ignoreDevice = getLocationsName(6,4,0,1)
 const devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 async function fetchData(devices) {
@@ -246,7 +246,7 @@ async function fetchData(devices) {
                     } else {
                         console.log("Connection done properly");
                     }
-                }, 8000);
+                }, 15000);
             }
             k = k + 1
             rdb_websocket.on('message', async (message) => {
@@ -470,6 +470,10 @@ let count = 0;
                         }
                         readedCookie.device[readedCookie["last_device"]].errorCount = readedCookie.device[readedCookie["last_device"]].errorCount + 1
                     }
+                }
+            }else{
+                if (readedCookie["today_credits_left"] < credit || readedCookie["startCredit"] < credit) {
+                    break
                 }
             }
         }
