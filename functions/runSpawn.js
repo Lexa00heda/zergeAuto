@@ -22,9 +22,10 @@ export async function runCommandSpawn(command, args,) {
     // Handle process exit
     process.on('close', (code) => {
       if (code === 0) {
-        resolve(output);
+        resolve(code);
       } else {
-        reject(new Error(`Process exited with code ${code}: ${errorOutput}`));
+        reject(code);
+        // reject(new Error(`Process exited with code ${code}: ${errorOutput}`));
       }
     });
   });

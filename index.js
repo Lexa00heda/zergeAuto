@@ -236,7 +236,10 @@ async function fetchData(devices) {
         // // rdb socket
         await new Promise((resolve, reject) => {
             rdb_websocket.on("close", () => {
-                resolve()
+                if(!c>0){
+                    console.log("closing ws connection before connecting rb ")
+                    reject()
+                }
             })
             if (k == 0) {
                 setTimeout(() => {
@@ -298,7 +301,10 @@ async function fetchData(devices) {
                                 resolve()
                             }
                             if (!isMining && !readedCookie.device[did]["finished"]) {
-                                await runCommandSpawn("bash", ["./scripts/startMine.sh"])
+                                let code = await runCommandSpawn("bash", ["./scripts/startMine.sh"])
+                                if(code!=0){
+                                    reject()
+                                }
                                 await wait(2000);
                                 await new Promise((resolve, reject) => {
                                     exec(`adb shell "run-as com.termux files/usr/bin/sh -lic 'export PATH=/data/data/com.termux/files/usr/bin:$PATH; export
@@ -447,6 +453,7 @@ let count = 0;
                 } else {
                     if (readedCookie.device[readedCookie["last_device"]].errorCount > 1) {
                         readedCookie["cookies"] = await readCookiesWithSession(process.argv[2])
+                        await wait(4000)
                         await cancelReservation(readedCookie["last_device"], readedCookie.device[readedCookie["last_device"]]["reservation_Id"])
                         readedCookie.device[readedCookie["last_device"]]["force_cancel"] = true
                         cookies = await readCookies(process.argv[2]);
@@ -477,5 +484,6 @@ let count = 0;
                 }
             }
         }
+        await wait(10000);
     }
 })();

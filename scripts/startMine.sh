@@ -117,6 +117,7 @@ for i in {1..3}; do
         fi
     else
         echo "termux opened"
+        exit 0
         break
     fi
 done
