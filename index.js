@@ -55,7 +55,7 @@ const device_model_id = device_model_list[(Number(process.argv[2]) - 1) % 5]["id
 const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
-const ignoreDevice = getLocationsName(6, 4, 0, 1)
+const ignoreDevice = getLocationsName(0)
 const devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 async function fetchData(devices) {
@@ -202,13 +202,16 @@ async function fetchData(devices) {
         let c = 0;
         let k = 0;
         let connectCondition = false
+        let connecc;
         let conditionMet = false;
         local_websocket = await localWebsocket()
         rdb_websocket = await rdbSocket(`wss://${base_url}/channels/${device}/rdb`, token)
-        setTimeout(() => {
+        connecc = setTimeout(() => {
             if (!connectCondition) {
                 console.log("rdb Connection not done properly");
-                resolve();
+                local_websocket.close()
+                rdb_websocket.close()
+                Promise.resolve()
             } else {
                 console.log("rdb Connection done properly");
             }
@@ -252,8 +255,9 @@ async function fetchData(devices) {
                     resolve()
                 }
             })
+            let connec
             if (k == 0) {
-                setTimeout(() => {
+                connec = setTimeout(() => {
                     if (!conditionMet) {
                         console.log("Connection not done properly");
                         reject();
@@ -265,12 +269,14 @@ async function fetchData(devices) {
             k = k + 1
             rdb_websocket.on('message', async (message) => {
                 connectCondition = true
+                clearTimeout(connecc)
                 try {
                     if (message.toString('utf8').slice(0, 4) == "AUTH") {
                         local_websocket.send(message)
                     }
                     if (message.toString('utf8').slice(0, 4) == "CNXN") {
                         conditionMet = true
+                        clearTimeout(connec)
                         local_websocket.send(message)
                         c = c + 1
                         if (c == 1) {
@@ -427,6 +433,8 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
             rdb_websocket.close()
         }
         throw new Error(`error`);
+        // if(error.message!="warning"){
+        // }
     }
 }
 

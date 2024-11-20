@@ -22,7 +22,7 @@ def delete_all_files_recursively(directory):
 
 count=0
 i=0
-account = ["capacitynmw+milliken@gmail.com:fekn fmwp emrm hdow"]
+account = ["nohealani@sturaman.com:mfrk akts asaj lgsl","yumalay@sturaman.com:urgn qjat ugqt zamh","jaquante12@fintning.com:upxq zubc abfa yjda","goldenyellowc0@fintning.com:robc opbb njny siyx","juniper24@chrfeeul.com:qnhc pdqe jibf bbym","yifoca3391@skrak.com:loyf gggm eozw yzym","c5nto@rustyload.com:iqyc vzgn pelg hltm"]
 # mail = input("Enter your mail: ")
 # fact = input("Enter your 2fact sec: ")
 service = Service('/usr/local/bin/geckodriver')
