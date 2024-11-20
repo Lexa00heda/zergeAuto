@@ -44,7 +44,7 @@ const options = (token) => {
 // // fetch device
 // let did = 6650;
 let credit = 16;
-let cookies
+let cookies = await readCookies(process.argv[2]);
 const daily_limit = 40
 // let cancel
 // cancel = true
@@ -70,7 +70,7 @@ async function fetchData(devices) {
     let local_websocket;
     let rdb_websocket;
     try {
-        cookies = await readCookies(process.argv[2]);
+        // cookies = await readCookies(process.argv[2]);
         const user = await fetch("https://developer.samsung.com/remotetestlab/rtl/api/v1/users/me", { method: 'GET', headers: { 'Cookie': cookies }, });
         const userData = await user.json()
         console.log(userData)
@@ -422,7 +422,8 @@ let count = 0;
 (async function () {
     while (true) {
         try {
-            await cancelPrevReservation(readedCookie["last_device"], readedCookie["cookies"])
+            // await cancelPrevReservation(readedCookie["last_device"], readedCookie["cookies"])
+            await cancelPrevReservation(readedCookie["last_device"], cookies)
             if (readedCookie["last_device"] != "") {
                 if (!readedCookie.device[readedCookie["last_device"]].cancelled) {
                     console.log("prevoius device: ", readedCookie["last_device"])
