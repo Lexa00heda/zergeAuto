@@ -51,11 +51,11 @@ const daily_limit = 40
 
 const locations = { 0: "Russia", 1: "India", 2: "Korea", 3: "Brazil", 4: "Vietnam", 5: "UK", 6: "USA", 7: "Poland" }
 const device_model_list = { 0: { "device": "Galaxy A", "id": 124 }, 1: { "device": "Galaxy S", "id": 125 }, 2: { "device": "Galaxy Z", "id": 126 }, 3: { "device": "Galaxy F&M", "id": 127 }, 4: { "device": "Galaxy TAB", "id": 128 } }
-const device_model_id = device_model_list[(Number(process.argv[2]) - 1) % 5]["id"]
+const device_model_id = device_model_list[(Number(process.argv[2]) - 1) % 5 - 3]["id"]
 const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
-const ignoreDevice = getLocationsName(6,4,0,1)
+const ignoreDevice = getLocationsName(6, 4, 0, 1)
 const devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 async function fetchData(devices) {
@@ -201,10 +201,18 @@ async function fetchData(devices) {
         let b = 1;
         let c = 0;
         let k = 0;
+        let connectCondition = false
         let conditionMet = false;
         local_websocket = await localWebsocket()
         rdb_websocket = await rdbSocket(`wss://${base_url}/channels/${device}/rdb`, token)
-
+        setTimeout(() => {
+            if (!connectCondition) {
+                console.log("rdb Connection not done properly");
+                resolve();
+            } else {
+                console.log("rdb Connection done properly");
+            }
+        }, 10000);
         //getting reservation id
         if (readedCookie.device[did].reservation_Id == null) {
             const data = await getReservationId(did, readedCookie["cookies"])
@@ -236,9 +244,12 @@ async function fetchData(devices) {
         // // rdb socket
         await new Promise((resolve, reject) => {
             rdb_websocket.on("close", () => {
-                if(!c>0){
+                if (!c > 0) {
                     console.log("closing ws connection before connecting rb ")
                     reject()
+                } else {
+                    console.log("closing ws connection while excuting")
+                    resolve()
                 }
             })
             if (k == 0) {
@@ -249,10 +260,11 @@ async function fetchData(devices) {
                     } else {
                         console.log("Connection done properly");
                     }
-                }, 15000);
+                }, 60000);
             }
             k = k + 1
             rdb_websocket.on('message', async (message) => {
+                connectCondition = true
                 try {
                     if (message.toString('utf8').slice(0, 4) == "AUTH") {
                         local_websocket.send(message)
@@ -302,7 +314,7 @@ async function fetchData(devices) {
                             }
                             if (!isMining && !readedCookie.device[did]["finished"]) {
                                 let code = await runCommandSpawn("bash", ["./scripts/startMine.sh"])
-                                if(code!=0){
+                                if (code != 0) {
                                     reject()
                                 }
                                 await wait(2000);
@@ -479,12 +491,12 @@ let count = 0;
                         readedCookie.device[readedCookie["last_device"]].errorCount = readedCookie.device[readedCookie["last_device"]].errorCount + 1
                     }
                 }
-            }else{
+            } else {
                 if (readedCookie["today_credits_left"] < credit || readedCookie["startCredit"] < credit) {
                     break
                 }
             }
         }
-        await wait(10000);
+        await wait(15000);
     }
 })();

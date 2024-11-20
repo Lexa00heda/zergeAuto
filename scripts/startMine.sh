@@ -100,19 +100,29 @@ else
 fi
 timeout 90s adb shell monkey -p com.termux -v 500
 sleep 4
+timeout_status=$?
+sleep 4
+# Check if timeout happened
+if [ $timeout_status -eq 124 ]; then
+    echo "The monkey command timed out."
+else
+    echo "The monkey command completed or was terminated by another reason."
+fi
+
 for i in {1..3}; do
     output=$(adb shell "run-as com.termux files/usr/bin/sh -lic 'export PATH=/data/data/com.termux/files/usr/bin:$PATH; export LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd $HOME;' 2>&1")
     if [[ "$output" == *"No such file or directory"* ]]; then
-        echo "termux not opened"
         adb shell am force-stop com.termux
         sleep 2
         adb shell am start -n com.termux/.HomeActivity --display 0
-        if [ $i -eq 2]; then
+        if [ $i -eq 2 ]; then
+            echo "termux not opened $i time"
             sleep 25
-        elif [ $i -eq 3]; then
-            echo "termux didn't opened after 3 retry"
+        elif [ $i -eq 3 ]; then
+            echo "termux didn't opened after $i retry"
             exit 1
         else
+            echo "termux not opened $i time"
             sleep 10
         fi
     else

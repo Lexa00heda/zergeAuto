@@ -21,76 +21,117 @@ def delete_all_files_recursively(directory):
             print(f"Deleted: {file_path}")
 
 count=0
-mail = input("Enter your mail: ")
-fact = input("Enter your 2fact sec: ")
+i=0
+account = ["capacitynmw+milliken@gmail.com:fekn fmwp emrm hdow"]
+# mail = input("Enter your mail: ")
+# fact = input("Enter your 2fact sec: ")
 service = Service('/usr/local/bin/geckodriver')
-driver = webdriver.Firefox(service=service)
-driver.get('https://developer.samsung.com/remote-test-lab')
-try:
-    wait = WebDriverWait(driver, 10)
-    sign_in = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, 'util-group-sign-in')))
-    sign_in.click()
-    wait = WebDriverWait(driver, 10)
-    time.sleep(14)
-    # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptLgnPlnID"]')))
-    email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="account"]')))
-    email_input.click()
-    # email_input.send_keys(mail)
-    email_input.send_keys(mail)
-    # sign_in_button =  driver.find_element(By.XPATH, '//*[@id="signInButton"]')
-    sign_in_button =  driver.find_element(By.XPATH, "//*[contains(text(), 'Next')]")
-    sign_in_button.click()
-    wait = WebDriverWait(driver, 10)
-    time.sleep(14)
-    # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptLgnPlnPD"]')))
-    email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="password"]')))
-    email_input.click()
-    email_input.send_keys('Lexa@heda12')
-    # sign_in_button =  driver.find_element(By.XPATH, '//*[@id="signInButton"]')
-    sign_in_button =  wait.until(EC.element_to_be_clickable((By.XPATH,  "//button[text()='Sign in']")))
-    sign_in_button.click()
-    wait = WebDriverWait(driver, 15)
-    time.sleep(14)
+while(i<len(account)):
+    fact = account[i].split(":")[1]
+    driver = webdriver.Firefox(service=service)
+    driver.get('https://developer.samsung.com/remote-test-lab')
     try:
-        updated_policy_text = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[contains(text(), 'Samsung account policies updated')]"))).text
-        if updated_policy_text:
-            print("Samsung account policies updated")
-            wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[contains(text(), 'Terms and Conditions')])[2]"))).click()
-            wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[contains(text(), 'Special terms')])[1]"))).click()
-            wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[contains(text(), 'Notice of Financial Incentives')])[2]"))).click()
-            wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[contains(text(), 'I agree to Samsung using my registered phone number for verification and customer support.')])[1]"))).click()
-            wait.until(EC.element_to_be_clickable((By.XPATH,  "//button[text()='Agree']"))).click()
-        else:
+        wait = WebDriverWait(driver, 10)
+        sign_in = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, 'util-group-sign-in')))
+        sign_in.click()
+        wait = WebDriverWait(driver, 10)
+        time.sleep(14)
+        # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptLgnPlnID"]')))
+        email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="account"]')))
+        email_input.click()
+        # email_input.send_keys(mail)
+        email_input.send_keys(account[i].split(":")[0])
+        # sign_in_button =  driver.find_element(By.XPATH, '//*[@id="signInButton"]')
+        sign_in_button =  driver.find_element(By.XPATH, "//*[contains(text(), 'Next')]")
+        sign_in_button.click()
+        wait = WebDriverWait(driver, 10)
+        time.sleep(14)
+        # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptLgnPlnPD"]')))
+        email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="password"]')))
+        email_input.click()
+        email_input.send_keys('Lexa@heda12')
+        # sign_in_button =  driver.find_element(By.XPATH, '//*[@id="signInButton"]')
+        sign_in_button =  wait.until(EC.element_to_be_clickable((By.XPATH,  "//button[text()='Sign in']")))
+        sign_in_button.click()
+        wait = WebDriverWait(driver, 15)
+        time.sleep(14)
+        try:
+            updated_policy_text = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[contains(text(), 'Samsung account policies updated')]"))).text
+            if updated_policy_text:
+                print("Samsung account policies updated")
+                wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[contains(text(), 'Terms and Conditions')])[2]"))).click()
+                wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[contains(text(), 'Special terms')])[1]"))).click()
+                wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[contains(text(), 'Notice of Financial Incentives')])[2]"))).click()
+                wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[contains(text(), 'I agree to Samsung using my registered phone number for verification and customer support.')])[1]"))).click()
+                wait.until(EC.element_to_be_clickable((By.XPATH,  "//button[text()='Agree']"))).click()
+            else:
+                print("auth page")
+        except:
             print("auth page")
-    except:
-        print("auth page")
-    # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptAuthNum"]')))
-    email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="otp"]')))
-    totp = pyotp.TOTP(fact.replace(" ",""))
-    email_input.click()
-    email_input.send_keys(totp.now())
-    # sign_in_button =  driver.find_element(By.XPATH, '//*[@id="btnNext"]')
-    wait.until(EC.element_to_be_clickable((By.XPATH,  "//button[text()='Verify']"))).click()
-    wait = WebDriverWait(driver, 10)
-    time.sleep(2)
-    started = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="desktop-btn"]')))
-    started.click()
-    cookies = driver.get_cookies()
-    if(len(sys.argv) > 1):
-        if(sys.argv[1]=="0"):
-            delete_all_files_recursively("./cookies")
-            count=1
+        # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptAuthNum"]')))
+        email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="otp"]')))
+        totp = pyotp.TOTP(fact.replace(" ",""))
+        email_input.click()
+        email_input.send_keys(totp.now())
+        # sign_in_button =  driver.find_element(By.XPATH, '//*[@id="btnNext"]')
+        wait.until(EC.element_to_be_clickable((By.XPATH,  "//button[text()='Verify']"))).click()
+        wait = WebDriverWait(driver, 10)
+        time.sleep(3)
+        try:
+            updated_policy_text = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[contains(text(), 'Choose the option that best describes you to pick the account type most appropriate to you.')]"))).text
+            if updated_policy_text:
+                print("Choose your account type.")
+                wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[contains(text(), 'Personal Account')])[1]"))).click()
+                time.sleep(1)
+                wait.until(EC.element_to_be_clickable((By.XPATH,  "//span[text()='Next']"))).click()
+                time.sleep(3)
+                updated_policy_text = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[contains(text(), 'To use Samsung Developer Portal, you need to accept the Terms of Service.')]"))).text
+                if updated_policy_text:
+                    print("Privacy Policy and Terms of Service")
+                    time.sleep(1)
+                    wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[contains(text(), '[Required] Samsung Developer Terms & Conditions')])[1]"))).click()
+                    time.sleep(1)
+                    wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[contains(text(), '[Required] Samsung Developer Privacy Policy')])[1]"))).click()
+                    time.sleep(1)
+                    wait.until(EC.element_to_be_clickable((By.XPATH,  "//span[text()='Next']"))).click()
+                time.sleep(3)
+                updated_policy_text = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[contains(text(), 'Enter your Personal information')]"))).text
+                if updated_policy_text:
+                    print("Enter your Personal information")
+                    time.sleep(4)
+                    wait.until(EC.presence_of_element_located((By.XPATH,  "//span[text()='Submit']"))).click()
+                time.sleep(2)
+                updated_policy_text = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[contains(text(), 'Welcome to Samsung Developer Portal!')]"))).text
+                if updated_policy_text:
+                    print("Welcome to Samsung Developer Portal!")
+                    time.sleep(4)
+                    wait.until(EC.presence_of_element_located((By.XPATH,  "//span[text()='Go to the Dashboard']"))).click()
+                time.sleep(2)
+            else:
+                # print("cookie page")
+                pass
+        except:
+            # print("cookie page")
+            pass
+        started = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="desktop-btn"]')))
+        started.click()
+        cookies = driver.get_cookies()
+        if(len(sys.argv) > 1):
+            if(sys.argv[1]=="0"):
+                delete_all_files_recursively("./cookies")
+                count=1
+            else:
+                count = sys.argv[1]
         else:
-            count = sys.argv[1]
-    else:
-        count=count_files_in_directory("./cookies") +1
-    for cookie in cookies:
-        print(cookie)
-    with open(f'./cookies/cookies{count}.txt', 'w') as f:
+            count=count_files_in_directory("./cookies") +1
         for cookie in cookies:
-            f.write(f"{cookie['name']}={cookie['value']}\n")
-    print("Finished...")
-
-finally:
-    # driver.quit()
-    pass
+            print(cookie)
+        with open(f'./cookies/cookies{count}.txt', 'w') as f:
+            for cookie in cookies:
+                f.write(f"{cookie['name']}={cookie['value']}\n")
+        print("Finished...")
+        i=i+1
+        driver.quit()
+    finally:
+        # driver.quit()
+        pass
