@@ -54,6 +54,7 @@ else
         fi
     done
     adb shell input keyevent 4
+    adb shell input keyevent KEYCODE_HOME
 fi
 
 adb shell settings put global stay_on_while_plugged_in 15
