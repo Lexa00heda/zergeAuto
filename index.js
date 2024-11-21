@@ -55,7 +55,7 @@ const device_model_id = device_model_list[(Number(process.argv[2]) - 1) % 5]["id
 const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
-const ignoreDevice = getLocationsName()
+const ignoreDevice = getLocationsName(0)
 const devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 async function fetchData(devices) {
@@ -193,7 +193,16 @@ async function fetchData(devices) {
             // });
             // console.log("here")
         }
+        if (readedCookie.device[did].reservation_Id == null) {
+            const data = await getReservationId(did, readedCookie["cookies"])
+            console.log("reservation: ", data)
+            readedCookie.device[did].name ? readedCookie.device[did].name.replace(" ", "") : readedCookie.device[did].name = data.name.replace(/\s+/g, '');
+            readedCookie.device[did].reservation_Id = data.reserve
+            location = data.location.split(" ")[0]
+            readedCookie.device[did].location = location
+            await writeCookieFile(readedCookie);
 
+        }
         // adb to device
         // // local websocket
         let messages;
@@ -217,16 +226,6 @@ async function fetchData(devices) {
             }
         }, 10000);
         //getting reservation id
-        if (readedCookie.device[did].reservation_Id == null) {
-            const data = await getReservationId(did, readedCookie["cookies"])
-            console.log("reservation: ", data)
-            readedCookie.device[did].name ? readedCookie.device[did].name.replace(" ", "") : readedCookie.device[did].name = data.name.replace(/\s+/g, '');
-            readedCookie.device[did].reservation_Id = data.reserve
-            location = data.location.split(" ")[0]
-            readedCookie.device[did].location = location
-            await writeCookieFile(readedCookie);
-
-        }
         local_websocket.send(`{"serial":"${device}","manufacturer":"samsung","symbol":"${name ? name : "SM-F741U"}","name":"${name ? name : "SM-F741U"}"}`);
 
         local_websocket.on('message', (message) => {
@@ -479,7 +478,7 @@ let count = 0;
                             await cancelReservation(readedCookie["last_device"], readedCookie.device[readedCookie["last_device"]]["reservation_Id"])
                         }catch{
                             const data = await getReservationId(readedCookie["last_device"], readedCookie["cookies"])
-                            readedCookie.device[did].reservation_Id = data.reserve
+                            readedCookie.device[readedCookie["last_device"]].reservation_Id = data.reserve
                             await cancelReservation(readedCookie["last_device"], readedCookie.device[readedCookie["last_device"]]["reservation_Id"])
                         }
                         readedCookie.device[readedCookie["last_device"]]["force_cancel"] = true

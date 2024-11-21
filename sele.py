@@ -137,6 +137,10 @@ while(i<(i+refil_left)):
                     wait.until(EC.element_to_be_clickable((By.XPATH,"//button[text()='Continue']"))).click()
                 except:
                     pass
+                try:
+                    wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[contains(text(), 'Agree')])[1]"))).click()
+                except:
+                    pass
         except:
             print("cookie page")
             pass
