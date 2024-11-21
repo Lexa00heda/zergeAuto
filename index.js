@@ -18,6 +18,7 @@ import { adbConnect } from './websocket/adbConnect.js';
 import { getDevice } from './functions/getDevices.js';
 import { getLocationsName } from './functions/getLocationsName.js';
 import path from 'path';
+import WebSocket from 'ws';
 import { cancelPrevReservation } from './functions/cancelPrevReservation.js';
 import { error } from 'console';
 
@@ -58,6 +59,8 @@ const eventAliveLocation = getLocationsName(0)
 const ignoreDevice = getLocationsName(0)
 const devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
+let local_websocket;
+let rdb_websocket;
 async function fetchData(devices) {
     const did = Number(devices)
     let device
@@ -67,8 +70,7 @@ async function fetchData(devices) {
     let reserve
     let location
     let isMining;
-    let local_websocket;
-    let rdb_websocket;
+    let deviceFetched = false
     try {
         // cookies = await readCookies(process.argv[2]);
         const user = await fetch("https://developer.samsung.com/remotetestlab/rtl/api/v1/users/me", { method: 'GET', headers: { 'Cookie': cookies }, });
@@ -169,6 +171,14 @@ async function fetchData(devices) {
             await writeCookieFile(readedCookie);
         }
 
+        //handled if fetch not done
+        const deviceFetchTimeOut = setTimeout(() => {
+            if (!deviceFetched) {
+                console.log("device fetch not done properly");
+                Promise.reject()
+            }
+        }, 15000);
+
         const url = `https://${base_url}/device/${device}`;
         const url1 = `wss://${base_url}/channels/${device}/events`;
 
@@ -181,6 +191,10 @@ async function fetchData(devices) {
         const data = await initial.json();
         // console.log(data);
 
+        //device fetched sucessfully
+        deviceFetched=true
+        clearTimeout(deviceFetchTimeOut)
+        
         // //reseting wifi
         if (!readedCookie.device[did]["finished"] || isMining) {
             await stayAwake(base_url, device, token);
@@ -224,7 +238,7 @@ async function fetchData(devices) {
             } else {
                 console.log("rdb Connection done properly");
             }
-        }, 10000);
+        }, 15000);
         //getting reservation id
         local_websocket.send(`{"serial":"${device}","manufacturer":"samsung","symbol":"${name ? name : "SM-F741U"}","name":"${name ? name : "SM-F741U"}"}`);
 
@@ -263,7 +277,7 @@ async function fetchData(devices) {
                     } else {
                         console.log("Connection done properly");
                     }
-                }, 60000);
+                }, 80000);
             }
             k = k + 1
             rdb_websocket.on('message', async (message) => {
@@ -464,6 +478,14 @@ let count = 0;
                 count = count + 1
             }
         } catch (e) {
+            if(rdb_websocket != null &&  rdb_websocket !=null){
+                if (rdb_websocket.readyState === WebSocket.OPEN) {
+                    rdb_websocket.close()
+                }
+                if (local_websocket.readyState === WebSocket.OPEN) {
+                    local_websocket.close()
+                }
+            }
             if (readedCookie["last_device"] != "") {
                 console.log("error: ", e)
                 if (readedCookie.device[readedCookie["last_device"]].error == false) {
