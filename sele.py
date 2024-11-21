@@ -10,6 +10,10 @@ import time
 import os
 import json
 
+with open('accounts.json', 'r') as file:
+    data = json.load(file)
+
+account = data["accounts"]
 def count_files_in_directory(directory):
     return len([f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))])
 
@@ -21,12 +25,14 @@ def delete_all_files_recursively(directory):
             print(f"Deleted: {file_path}")
 
 count=0
-i=0
-account = ["nohealani@sturaman.com:mfrk akts asaj lgsl","yumalay@sturaman.com:urgn qjat ugqt zamh","jaquante12@fintning.com:upxq zubc abfa yjda","goldenyellowc0@fintning.com:robc opbb njny siyx","juniper24@chrfeeul.com:qnhc pdqe jibf bbym","yifoca3391@skrak.com:loyf gggm eozw yzym","c5nto@rustyload.com:iqyc vzgn pelg hltm"]
+args = sys.argv[1]
+i=data["last_index"] + 1
+refil_count = 8
+refil_left = refil_count - count_files_in_directory("./cookies")
 # mail = input("Enter your mail: ")
 # fact = input("Enter your 2fact sec: ")
 service = Service('/usr/local/bin/geckodriver')
-while(i<len(account)):
+while(i<(i+refil_left)):
     fact = account[i].split(":")[1]
     driver = webdriver.Firefox(service=service)
     driver.get('https://developer.samsung.com/remote-test-lab')
@@ -36,22 +42,22 @@ while(i<len(account)):
         sign_in.click()
         wait = WebDriverWait(driver, 10)
         time.sleep(14)
-        # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptLgnPlnID"]')))
-        email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="account"]')))
+        email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptLgnPlnID"]')))
+        # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="account"]')))
         email_input.click()
         # email_input.send_keys(mail)
         email_input.send_keys(account[i].split(":")[0])
-        # sign_in_button =  driver.find_element(By.XPATH, '//*[@id="signInButton"]')
-        sign_in_button =  driver.find_element(By.XPATH, "//*[contains(text(), 'Next')]")
+        sign_in_button =  driver.find_element(By.XPATH, '//*[@id="signInButton"]')
+        # sign_in_button =  driver.find_element(By.XPATH, "//*[contains(text(), 'Next')]")
         sign_in_button.click()
         wait = WebDriverWait(driver, 10)
         time.sleep(14)
-        # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptLgnPlnPD"]')))
-        email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="password"]')))
+        email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptLgnPlnPD"]')))
+        # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="password"]')))
         email_input.click()
         email_input.send_keys('Lexa@heda12')
-        # sign_in_button =  driver.find_element(By.XPATH, '//*[@id="signInButton"]')
-        sign_in_button =  wait.until(EC.element_to_be_clickable((By.XPATH,  "//button[text()='Sign in']")))
+        sign_in_button =  driver.find_element(By.XPATH, '//*[@id="signInButton"]')
+        # sign_in_button =  wait.until(EC.element_to_be_clickable((By.XPATH,  "//button[text()='Sign in']")))
         sign_in_button.click()
         wait = WebDriverWait(driver, 15)
         time.sleep(14)
@@ -68,13 +74,14 @@ while(i<len(account)):
                 print("auth page")
         except:
             print("auth page")
-        # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptAuthNum"]')))
-        email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="otp"]')))
+        email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptAuthNum"]')))
+        # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="otp"]')))
         totp = pyotp.TOTP(fact.replace(" ",""))
         email_input.click()
         email_input.send_keys(totp.now())
-        # sign_in_button =  driver.find_element(By.XPATH, '//*[@id="btnNext"]')
-        wait.until(EC.element_to_be_clickable((By.XPATH,  "//button[text()='Verify']"))).click()
+        sign_in_button =  driver.find_element(By.XPATH, '//*[@id="btnNext"]')
+        sign_in_button.click()
+        # wait.until(EC.element_to_be_clickable((By.XPATH,  "//button[text()='Verify']"))).click()
         wait = WebDriverWait(driver, 10)
         time.sleep(3)
         try:
@@ -117,11 +124,22 @@ while(i<len(account)):
         started.click()
         cookies = driver.get_cookies()
         if(len(sys.argv) > 1):
-            if(sys.argv[1]=="0"):
+            if(args=="-1"):
                 delete_all_files_recursively("./cookies")
                 count=1
+                args = "1"
+            elif(args=="0"):
+                if(count_files_in_directory("./cookies") >= refil_count):
+                    delete_all_files_recursively("./cookies")
+                    count=1
+                else:
+                    count=count_files_in_directory("./cookies") +1
+                args = "1"
             else:
-                count = sys.argv[1]
+                if(sys.argv[1]!="0" and sys.argv[1]!="-1"):
+                    count = sys.argv[1]
+                else:
+                    count=count_files_in_directory("./cookies") +1
         else:
             count=count_files_in_directory("./cookies") +1
         for cookie in cookies:
@@ -130,6 +148,9 @@ while(i<len(account)):
             for cookie in cookies:
                 f.write(f"{cookie['name']}={cookie['value']}\n")
         print("Finished...")
+        data["last_index"] = data["last_index"] + 1
+        with open('accounts.json', 'w') as file:
+            json.dump(data, file, indent=4)
         i=i+1
         driver.quit()
     finally:
