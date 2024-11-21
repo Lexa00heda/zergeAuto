@@ -55,7 +55,7 @@ const device_model_id = device_model_list[(Number(process.argv[2]) - 1) % 5]["id
 const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
-const ignoreDevice = getLocationsName(0)
+const ignoreDevice = getLocationsName()
 const devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 async function fetchData(devices) {
@@ -475,7 +475,13 @@ let count = 0;
                     if (readedCookie.device[readedCookie["last_device"]].errorCount > 1) {
                         readedCookie["cookies"] = await readCookiesWithSession(process.argv[2])
                         await wait(4000)
-                        await cancelReservation(readedCookie["last_device"], readedCookie.device[readedCookie["last_device"]]["reservation_Id"])
+                        try{
+                            await cancelReservation(readedCookie["last_device"], readedCookie.device[readedCookie["last_device"]]["reservation_Id"])
+                        }catch{
+                            const data = await getReservationId(readedCookie["last_device"], readedCookie["cookies"])
+                            readedCookie.device[did].reservation_Id = data.reserve
+                            await cancelReservation(readedCookie["last_device"], readedCookie.device[readedCookie["last_device"]]["reservation_Id"])
+                        }
                         readedCookie.device[readedCookie["last_device"]]["force_cancel"] = true
                         cookies = await readCookies(process.argv[2]);
                         const user = await fetch("https://developer.samsung.com/remotetestlab/rtl/api/v1/users/me", { method: 'GET', headers: { 'Cookie': cookies }, });

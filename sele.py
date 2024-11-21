@@ -28,7 +28,11 @@ count=0
 args = sys.argv[1]
 i=data["last_index"] + 1
 refil_count = 8
-refil_left = refil_count - count_files_in_directory("./cookies")
+counts = count_files_in_directory("./cookies")
+if counts >=refil_count:
+    refil_left = 8
+else:
+    refil_left = refil_count - counts
 # mail = input("Enter your mail: ")
 # fact = input("Enter your 2fact sec: ")
 service = Service('/usr/local/bin/geckodriver')
@@ -120,6 +124,23 @@ while(i<(i+refil_left)):
         except:
             # print("cookie page")
             pass
+        try:
+            updated_policy_text = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[contains(text(), 'Samsung account Privacy Notice updated')]"))).text
+            if updated_policy_text:
+                print("Samsung account Privacy Notice updated")
+                time.sleep(2)
+                try:
+                    wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[contains(text(), 'Continue')])[1]"))).click()
+                except:
+                    pass
+                try:
+                    wait.until(EC.element_to_be_clickable((By.XPATH,"//button[text()='Continue']"))).click()
+                except:
+                    pass
+        except:
+            print("cookie page")
+            pass
+        time.sleep(1)
         started = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="desktop-btn"]')))
         started.click()
         cookies = driver.get_cookies()
@@ -153,6 +174,8 @@ while(i<(i+refil_left)):
             json.dump(data, file, indent=4)
         i=i+1
         driver.quit()
+        if(sys.argv[1]!="0" and sys.argv[1]!="-1"):
+            break
     finally:
         # driver.quit()
         pass
