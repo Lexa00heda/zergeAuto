@@ -1,13 +1,56 @@
 {
-  "cookies": "locale=en-US; sa_did=rRbneruyc0wkuRD93L4tXqcVi2h0hNtm; sa_id=f5ccf7c4d87db334abd30c49572188a51bca3635bc40813b7baef528183d2ab3a6355665074682e9b5801e808385baa93177d5ef18b085519b5a01f5de45f3fa16e79cc4c4068fdfeab3090f32f21ab3129d5f234f95bb8c2245edf6ffffd1e40fb2483829d78924d69eefe43117e4ebdc57fa982dde56f80aa724cc1eb8c33c37089eabe2297ca7d715dfa14aff40a984f4e2d5777b206357837ce6d80fd90a5d6456395943d40ba8eb82976e6372b7d49a5572ff73de69f9d544c64c37498841cb0b23e7449186607f16c9abc81540949c9d7e7cb9836c9ce50fca220b7b330a3dbaed3e668122097bb84f4ab81fdd87ca2c2a8256e16ec8db01bd4a065050; sa_state=DKKB0KgXxNpAzeXTNXreEcUJwXZNQgS4; SD_PORTAL_SSID=NByhVA9WEpoEhNcwUbjZfZe1xWfIdfjIoD69ojQ8%2FTQO4iCPah354r%2BbGtqSRGrnE3A97whYvTtnO22Otub9BnRCJpj7IGSvqdMp%2BcT2UQEJt2enNicBGLboVUmsNFC0unfX91I%2FBhnTiac0gozI20OxCshr7z8ocQnQcdhvF%2FpFJK9r32LfaD6WKNySoK7m%2BnSkMO01vY72qFJfGyv%2F89k2a%2Byfx5ki77sthcsQkZvTaFI8ugqfYy5sqtwyZyN1h2TTZhxsXflLpJgG3ms2XYuuf1jgN8TQ4M%2F%2F%2FJAsFj7lQuDq8XVVDksVu7jYaAWlSy40fD0yS6YRSwe177D3F%2BioITorS%2B0ZHRo2n2QZeFHsb2JCD4zM76cwpQd6i%2FAJ; sdp_samsung_com_jwt=JEwlihYR%2BkkhSpsRYT5TUjAFks6vM7aMKzIptIYU1kANeW6IR1ciprrdMprtp6gkipvL9z6BVuhXkXkk1FdxsEpQBkFeaFo17CRuvPBEgKtEj3an%2B0kt5tGnvPj6RcGy1OYDIUxDuyQuHC4lJCIrfQ1jhyeTBsYuAkq%2B%2B93zJs3lWcTxlCGcwdHi8SB9LE5VA6JDbnXteeSgo3U6oSViuGgklQFoZe1ur37spEPTxGDYSOHm4hBtPLgViGdosFM1cZQsFJa0fxJ2Xpx8oEpAIWjK13Lit4ekzUgnONMRNTaGZxNGRYFTA3qiNNXNSCIRO8KB87ekU6uorj%2FF1FzklVkdsXQc8YL9EDjSLCKWsjgeBv210ln1o5McQmShH93pAj3KSwistrotBKwUQ2rLyHaOvJ3Wi%2BoqXXAsT1d5ikM%3D; _ga=GA1.1.745934701.1732199808; _ga_LCSMK6BNH8=GS1.1.1732199807.1.1.1732199915.60.0.0; RTL-XSRF-TOKEN=093c250e-e209-46a0-81c7-9a9c1e7a00a1; RTL-XSRF-TOKEN-SIG=5ed52596223b600206c09c8267523142; RTL_FRONT_SESSIONID=MDI1MjRlNmItMjFlNy00NzYxLWEzZjUtZWQ2YTBhOTRiMTkz",
-  "device": {},
-  "last_device": "",
-  "user": "nor.a.dse.k.asa.jo@gmail.com",
-  "totalCredit": 99,
-  "today_credits_left": 15,
-  "Totalcount": 0,
-  "finishCount": 0,
-  "startCredit": 99,
-  "finishList": {},
+  "cookies": "locale=en-US; _ga=GA1.1.848571296.1732210403; sa_did=ddUSyJBXm4F7ZxwCR9weF8NPKui9MrDS; _ga_LCSMK6BNH8=GS1.1.1732210402.1.0.1732210405.57.0.0; sa_id=a0f7893d56714a5fc0183d63f30e97d207432fc9e397ce94b2c0b2ffddc332d52768178a33cf8589fe7146b70418a911d98069f25117a2d1ce70af88409be26c8cbba3c7a9fe1c686e3e4268a9bfdce3e0652b60910c0e4b566a63d55d95a5588646145aeaf3618c547295ee9efb8b0cf3e9be70245f9011b34ade2fcde47744100610aca53bd20366485df53afb99eccbd0ff3c9a39bbdab2d613b6f7880dffef09c3183e91b8afd244ffe1f441db710d75ce070890dc93e261c0c75b21a844efd5cfdb83d0166129375c9d22a89f28bfda80d46a3702d78b32e3368d8dd0ddbde95b68ec116cc893f7df89f23460619464f11a1533acd11ffbe10156c5e723; sa_state=JQkBjXAkUbtyxUth1soSlgsNFTW4bGy1; SD_PORTAL_SSID=NByhVA9WEpoEhNcwUbjZffnleRXz%2BbXUncrbekJnBezutIvZ%2BOdCNU%2B1EwInPraRTNey8bsp2zVAZ%2BWKfDDvZeX57rDZ14um8MI1WmcFx3L3hLWjnR2rYE4T5REM0pJGO9NuY5YzxcR4UnCurrt9fW%2By4%2BObPVdYRTPzolEf6EAp7Wj3qRXKe8aS9kWy4YGwq15OjV1uMp4OeuRTMUnsPjp6%2F3evH8fA5byUk0xLyKvlxz0637nryTIXYpMk3lPmtRVRSQJYSbSM0Wc83qOdLm0aIoAfOlMNdpW5Gjn8aImyf44uDiOTlgxGgL%2FS6Zkh9IXPKasLlN6kh05KQwT3%2BfI4F9bjfvA6SO%2BKDa026m5GCSp4m7P3dwCVISmD7m%2Bv; sdp_samsung_com_jwt=9aBpApezYcWmINfMxGiXvR3cOgg7veWNR11wOgQqN6Ysy9pgrW7y%2FaxAsLvnO2G9VzRsZ%2BNdsOKL%2F8IMZs2vziaGVGyHo4EWcs16ZBYBzllwc8YJBkD1q0Gd1NVq0cH%2FRa52mq6V7itGLEl7DAK%2FKcMylCF%2FD737qwd9Nq99F%2BvTwTdmiiMIPAwW4PrZF%2F1Akb7IhFfL5DDgApGTaptkgRgBDjdlsgZq9fSh1fMB9T2%2FYkJk1paoOLhjToxH%2FmqsW5ACyTA%2BGnZSuRoHqUVCpjGB2OCYbZuMT1YlcKECjTNOeYzS%2FakYB%2FCqxfIdyb3DueCR%2BReuTcQExRFaxhYbwmc96hUZmiI9F%2FwZuHGf512FU8oXffZMl9e05eALyUyy8%2BTFzFQpPPaQrHwPWILRkWTKqlJ6woANEV4ArIdHaKDUkyzEVFfABawVXtImdCidXUHbrR0DFVcXQ2zMx3QKESC8AijJl6F7iMMwwuCtqtU%3D; RTL-XSRF-TOKEN=e28b42a2-50ad-45ca-b356-efb77a1ef739; RTL-XSRF-TOKEN-SIG=98f9a37e374266f226a955954e8a1290; RTL_FRONT_SESSIONID=NDdhZWE3YzItY2QyYi00MGU4LWI1NjEtMGIyYWRlODM1N2U5; WEB_CLIENT_DATA=R34W300AA5B; WEB_CLIENT_GATEWAY_R34W300AA5B=kr-gumi13-rtl.developer.samsung.com:443; WEB_CLIENT_TOKEN_R34W300AA5B=DCE5F07E5F1E7414A65463C86E7A4F43; WEB_CLIENT_NAME_R34W300AA5B=SM-X916N-KR4",
+  "device": {
+    "10582": {
+      "device": "R34W300AA5B",
+      "base_url": "kr-gumi13-rtl.developer.samsung.com:443",
+      "token": "DCE5F07E5F1E7414A65463C86E7A4F43",
+      "name": "SM-X916N-KR4",
+      "credit": 16,
+      "maxTime": "4hr",
+      "checked": true,
+      "reservation_Id": 8647573,
+      "error": false,
+      "finished": false,
+      "termux": false,
+      "created_on": "11/22/2024, 11:36:09 AM",
+      "force_cancel": false,
+      "isMining": false,
+      "cancelled": false,
+      "location": "Korea"
+    },
+    "10629": {
+      "device": "R32W4012A7T",
+      "base_url": "vn-hanoi03-rtl.developer.samsung.com:443",
+      "token": "8B3F1C37BA99B9B188991919BFD11FED",
+      "name": "SM-X916B-VN2",
+      "credit": 16,
+      "maxTime": "4hr",
+      "checked": true,
+      "reservation_Id": 8647608,
+      "error": false,
+      "finished": true,
+      "termux": false,
+      "created_on": "11/22/2024, 11:31:23 AM",
+      "force_cancel": true,
+      "isMining": false,
+      "cancelled": true,
+      "location": "Vietnam",
+      "finished_on": "11/22/2024, 11:34:57 AM",
+      "finished_Timestamp": 1732255497881
+    }
+  },
+  "last_device": 10582,
+  "user": "belvillevirgo+almond@gmail.com",
+  "totalCredit": 113,
+  "today_credits_left": 39,
+  "Totalcount": 2,
+  "finishCount": 1,
+  "startCredit": 130,
+  "finishList": {
+    "Vietnam": {
+      "count": 1
+    }
+  },
   "deadList": {}
 }

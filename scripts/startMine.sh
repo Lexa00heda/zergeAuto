@@ -12,6 +12,7 @@ check_internet_connection() {
 if adb shell wm size | grep -q "Override size"; then
     echo "Override size is set."
     for i in {1..7}; do
+        echo "coool..."
         adb shell input swipe $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 180 + i*35 )) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) 100 1500
         sleep 2
     done

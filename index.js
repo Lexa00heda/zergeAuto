@@ -170,20 +170,23 @@ async function fetchData(devices) {
             readedCookie.device[did] = { "device": device, "base_url": base_url, "token": token, "name": name, "credit": credit, "maxTime": `${credit * (1 / 4)}hr`, "checked": true, "reservation_Id": reserve, "error": false, "finished": false, "termux": false, "created_on": new Date().toLocaleString(), "force_cancel": false, "isMining": isMining, "cancelled": false, "error": false }
             await writeCookieFile(readedCookie);
         }
-
         //handled if fetch not done
-        const deviceFetchTimeOut = setTimeout(() => {
-            if (!deviceFetched) {
-                console.log("device fetch not done properly");
-                Promise.reject()
-            }
-        }, 15000);
-
+        let deviceFetchTimeOut
+        async function fetchDataWithTimeout(url,option) {
+            return new Promise((resolve, reject) => {
+                // Set the timeout to reject the promise after 1000ms if not resolved
+                const deviceFetchTimeOut = setTimeout(() => {
+                    reject(new Error("Timeout occurred"));
+                }, 20000);  
+                fetch(url, option).then((e)=>{clearTimeout(deviceFetchTimeOut);resolve(e)}).catch(e=>{reject(e)});
+            });
+        }
         const url = `https://${base_url}/device/${device}`;
         const url1 = `wss://${base_url}/channels/${device}/events`;
 
         // //intialize device
-        const initial = await fetch(url, options(token));
+        // const initial = await fetch(url, options(token));
+        const initial = await fetchDataWithTimeout(url,options(token));
         if (!initial.ok) {
             console.log(initial)
             throw new Error(`HTTP error! Status: ${initial.status}`);
@@ -192,9 +195,9 @@ async function fetchData(devices) {
         // console.log(data);
 
         //device fetched sucessfully
-        deviceFetched=true
-        clearTimeout(deviceFetchTimeOut)
-        
+        // deviceFetched = true
+        // clearTimeout(deviceFetchTimeOut)
+
         // //reseting wifi
         if (!readedCookie.device[did]["finished"] || isMining) {
             await stayAwake(base_url, device, token);
@@ -478,7 +481,7 @@ let count = 0;
                 count = count + 1
             }
         } catch (e) {
-            if(rdb_websocket != null &&  rdb_websocket !=null){
+            if (rdb_websocket != null && rdb_websocket != null) {
                 if (rdb_websocket.readyState === WebSocket.OPEN) {
                     rdb_websocket.close()
                 }
@@ -496,9 +499,9 @@ let count = 0;
                     if (readedCookie.device[readedCookie["last_device"]].errorCount > 1) {
                         readedCookie["cookies"] = await readCookiesWithSession(process.argv[2])
                         await wait(4000)
-                        try{
+                        try {
                             await cancelReservation(readedCookie["last_device"], readedCookie.device[readedCookie["last_device"]]["reservation_Id"])
-                        }catch{
+                        } catch {
                             const data = await getReservationId(readedCookie["last_device"], readedCookie["cookies"])
                             readedCookie.device[readedCookie["last_device"]].reservation_Id = data.reserve
                             await cancelReservation(readedCookie["last_device"], readedCookie.device[readedCookie["last_device"]]["reservation_Id"])

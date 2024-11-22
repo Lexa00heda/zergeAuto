@@ -27,6 +27,7 @@ def delete_all_files_recursively(directory):
 count=0
 args = sys.argv[1]
 i=data["last_index"] + 1
+j=i
 refil_count = 8
 counts = count_files_in_directory("./cookies")
 if counts >=refil_count:
@@ -36,7 +37,7 @@ else:
 # mail = input("Enter your mail: ")
 # fact = input("Enter your 2fact sec: ")
 service = Service('/usr/local/bin/geckodriver')
-while(i<(i+refil_left)):
+while(i<(j+refil_left)):
     fact = account[i].split(":")[1]
     driver = webdriver.Firefox(service=service)
     driver.get('https://developer.samsung.com/remote-test-lab')
