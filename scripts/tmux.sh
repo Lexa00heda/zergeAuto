@@ -1,1 +1,1 @@
-tmux attach-session -t 2
+tmux attach-session -t $1
