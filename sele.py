@@ -34,10 +34,11 @@ if counts >=refil_count:
     refil_left = 8
 else:
     refil_left = refil_count - counts
+condition = j+refil_left
 # mail = input("Enter your mail: ")
 # fact = input("Enter your 2fact sec: ")
 service = Service('/usr/local/bin/geckodriver')
-while(i<(j+refil_left)):
+while(i<condition):
     fact = account[i].split(":")[1]
     driver = webdriver.Firefox(service=service)
     driver.get('https://developer.samsung.com/remote-test-lab')
@@ -174,10 +175,13 @@ while(i<(j+refil_left)):
             for cookie in cookies:
                 f.write(f"{cookie['name']}={cookie['value']}\n")
         print("Finished...")
-        data["last_index"] = data["last_index"] + 1
+        data["last_index"] = (data["last_index"] + 1) % len(account)
         with open('accounts.json', 'w') as file:
             json.dump(data, file, indent=4)
         i=i+1
+        if(i>=len(account)):
+            i = i % len(account)
+            condition = condition % len(account)
         driver.quit()
         if(sys.argv[1]!="0" and sys.argv[1]!="-1"):
             break

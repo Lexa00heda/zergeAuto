@@ -116,7 +116,8 @@ for i in {1..3}; do
     if [[ "$output" == *"No such file or directory"* ]]; then
         adb shell am force-stop com.termux
         sleep 2
-        adb shell am start -n com.termux/.HomeActivity --display 0
+        # adb shell am start -n com.termux/.HomeActivity --display 0
+        adb shell am start -n com.termux/.HomeActivity
         if [ $i -eq 2 ]; then
             echo "termux not opened $i time"
             sleep 25

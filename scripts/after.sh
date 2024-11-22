@@ -9,7 +9,8 @@ fi
 sleep 1
 adb shell am force-stop com.termux
 sleep 2
-adb shell am start -n com.termux/.HomeActivity --display 0
+# adb shell am start -n com.termux/.HomeActivity --display 0
+adb shell am start -n com.termux/.HomeActivity
 sleep 4
 adb shell input keyevent 66
 # adb shell input keyevent 4

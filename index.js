@@ -57,11 +57,13 @@ const device_model_id = device_model_list[(Number(process.argv[2]) - 1) % 5]["id
 const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
-const ignoreDevice = getLocationsName(0)
+const ignoreDevice = getLocationsName(0,1,2,4,5,6,7)
 const devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 let local_websocket;
 let rdb_websocket;
+let vpn
+let ls
 async function fetchData(devices) {
     const did = Number(devices)
     let device
@@ -359,7 +361,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                 })
                                 const exit_code = await new Promise((resolve, reject) => {
                                     let exit_code = 1
-                                    let ls = spawn("bash", ["./scripts/adbMine.sh"], { shell: true });
+                                    ls = spawn("bash", ["./scripts/adbMine.sh"], { shell: true });
                                     ls.stdout.on("data", data => {
                                         console.log(`stdout: ${data}`);
                                     });
@@ -382,7 +384,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                         // // vpn setup
                                         if (vpn_locations.includes(location)) {
                                             exit_code = await new Promise((resolve, reject) => {
-                                                let vpn = spawn("bash", ["./scripts/vpn.sh"], { shell: true });
+                                                vpn = spawn("bash", ["./scripts/vpn.sh"], { shell: true });
                                                 vpn.stdout.on("data", data => {
                                                     console.log(`stdout: ${data}`);
                                                 });
@@ -445,6 +447,12 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
 
     } catch (error) {
         console.error('Fetch error:', error.message);
+        try{
+            vpn.kill()
+            ls.kill()
+        }catch{
+
+        }
         if (local_websocket != null && rdb_websocket != null) {
             local_websocket.close()
             rdb_websocket.close()
@@ -482,7 +490,13 @@ let count = 0;
                 count = count + 1
             }
         } catch (e) {
-            if (rdb_websocket != null && rdb_websocket != null) {
+            try{
+                vpn.kill()
+                ls.kill()
+            }catch{
+
+            }
+            if (rdb_websocket != null) {
                 if (rdb_websocket.readyState === WebSocket.OPEN) {
                     rdb_websocket.close()
                 }
