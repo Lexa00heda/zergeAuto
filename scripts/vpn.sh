@@ -37,6 +37,11 @@ for i in {1..7}; do
     adb shell am force-stop com.pandavpn.androidproxy
     sleep 2
     adb shell monkey -p com.pandavpn.androidproxy -v 1
+    if (( i % 2 == 0 )); then
+        adb shell am start -n com.pandavpn.androidproxy/.ui.main.MainActivity --display 1
+    else
+        adb shell am start -n com.pandavpn.androidproxy/.ui.main.MainActivity --display 0
+    fi
     sleep 3
     if adb shell wm size | grep -q "Override size"; then
         echo "Override size is set."

@@ -57,13 +57,18 @@ const device_model_id = device_model_list[(Number(process.argv[2]) - 1) % 5]["id
 const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
-const ignoreDevice = getLocationsName(0)
-const devices = await getDevice(device_model_id, ignoreDevice)
+// const ignoreDevice = getLocationsName(0,4,6)
+const ignoreDevice = getLocationsName(0,4)
+let devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 let local_websocket;
 let rdb_websocket;
 let vpn
 let ls
+let mineStart;
+let totalTimeOUt;
+let connecc;
+let connec;
 async function fetchData(devices) {
     const did = Number(devices)
     let device
@@ -73,7 +78,6 @@ async function fetchData(devices) {
     let reserve
     let location
     let isMining;
-    let deviceFetched = false
     try {
         // cookies = await readCookies(process.argv[2]);
         const user = await fetch("https://developer.samsung.com/remotetestlab/rtl/api/v1/users/me", { method: 'GET', headers: { 'Cookie': cookies }, });
@@ -174,14 +178,13 @@ async function fetchData(devices) {
             await writeCookieFile(readedCookie);
         }
         //handled if fetch not done
-        let deviceFetchTimeOut
-        async function fetchDataWithTimeout(url,option) {
+        async function fetchDataWithTimeout(url, option) {
             return new Promise((resolve, reject) => {
                 // Set the timeout to reject the promise after 1000ms if not resolved
                 const deviceFetchTimeOut = setTimeout(() => {
                     reject(new Error("Timeout occurred"));
-                }, 20000);  
-                fetch(url, option).then((e)=>{clearTimeout(deviceFetchTimeOut);resolve(e)}).catch(e=>{reject(e)});
+                }, 20000);
+                fetch(url, option).then((e) => { clearTimeout(deviceFetchTimeOut); resolve(e) }).catch(e => { reject(e) });
             });
         }
         const url = `https://${base_url}/device/${device}`;
@@ -189,7 +192,7 @@ async function fetchData(devices) {
 
         // //intialize device
         // const initial = await fetch(url, options(token));
-        const initial = await fetchDataWithTimeout(url,options(token));
+        const initial = await fetchDataWithTimeout(url, options(token));
         if (!initial.ok) {
             console.log(initial)
             throw new Error(`HTTP error! Status: ${initial.status}`);
@@ -231,20 +234,10 @@ async function fetchData(devices) {
         let c = 0;
         let k = 0;
         let connectCondition = false
-        let connecc;
+        let totalTimeOUtCondition = false
         let conditionMet = false;
         local_websocket = await localWebsocket()
         rdb_websocket = await rdbSocket(`wss://${base_url}/channels/${device}/rdb`, token)
-        connecc = setTimeout(() => {
-            if (!connectCondition) {
-                console.log("rdb Connection not done properly");
-                local_websocket.close()
-                rdb_websocket.close()
-                Promise.resolve()
-            } else {
-                console.log("rdb Connection done properly");
-            }
-        }, 15000);
         //getting reservation id
         local_websocket.send(`{"serial":"${device}","manufacturer":"samsung","symbol":"${name ? name : "SM-F741U"}","name":"${name ? name : "SM-F741U"}"}`);
 
@@ -265,30 +258,123 @@ async function fetchData(devices) {
         });
         // // rdb socket
         await new Promise((resolve, reject) => {
+            if (!readedCookie.device[did]["error"]) {
+                totalTimeOUt = setTimeout(() => {
+                    if (!totalTimeOUtCondition) {
+                        console.log("total time exceed 8 min ");
+                        if (ls) {
+                            if (!ls.killed) {
+                                ls.kill()
+
+                            }
+                        }
+                        if (vpn) {
+                            if (!vpn.killed) {
+                                vpn.kill()
+                            }
+                        }
+                        if (mineStart) {
+                            if (!mineStart.killed) {
+                                mineStart.kill()
+
+                            }
+                        }
+                        // local_websocket.close()
+                        // rdb_websocket.close()
+                        reject()
+                    }
+                }, (1000 * 60 * 8));
+            } else {
+                if (readedCookie.device[did]["errorCount"] > 1) {
+                    totalTimeOUt = setTimeout(() => {
+                        if (!totalTimeOUtCondition) {
+                            console.log("total time exceed 10 min ");
+                            if (ls) {
+                                if (!ls.killed) {
+                                    ls.kill()
+
+                                }
+                            }
+                            if (vpn) {
+                                if (!vpn.killed) {
+                                    vpn.kill()
+                                }
+                            }
+                            if (mineStart) {
+                                if (!mineStart.killed) {
+                                    mineStart.kill()
+
+                                }
+                            }
+                            // local_websocket.close()
+                            // rdb_websocket.close()
+                            reject()
+                        }
+                    }, (1000 * 60 * 10));
+
+                } else {
+                    totalTimeOUt = setTimeout(() => {
+                        if (!totalTimeOUtCondition) {
+                            console.log("total time exceed 8 min");
+                            if (ls) {
+                                if (!ls.killed) {
+                                    ls.kill()
+
+                                }
+                            }
+                            if (vpn) {
+                                if (!vpn.killed) {
+                                    vpn.kill()
+                                }
+                            }
+                            if (mineStart) {
+                                if (!mineStart.killed) {
+                                    mineStart.kill()
+
+                                }
+                            }
+                            // local_websocket.close()
+                            // rdb_websocket.close()
+                            reject()
+                        }
+                    }, (1000 * 60 * 8));
+                }
+            }
+            connecc = setTimeout(() => {
+                if (!connectCondition) {
+                    console.log("rdb Connection not done properly");
+                    local_websocket.close()
+                    rdb_websocket.close()
+                    resolve()
+                } else {
+                    console.log("rdb Connection done properly");
+                }
+            }, 15000);
             rdb_websocket.on("close", () => {
                 if (!c > 0) {
                     console.log("closing ws connection before connecting rb ")
                     reject()
                 } else {
-                    console.log("closing ws connection while excuting")
+                    if (!readedCookie.device[did]["finished"]) {
+                        console.log("closing ws connection while excuting")
+                    }
                     resolve()
                 }
             })
-            let connec
-            if (k == 0) {
-                connec = setTimeout(() => {
-                    if (!conditionMet) {
-                        console.log("Connection not done properly");
-                        reject();
-                    } else {
-                        console.log("Connection done properly");
-                    }
-                }, 80000);
-            }
-            k = k + 1
             rdb_websocket.on('message', async (message) => {
                 connectCondition = true
                 clearTimeout(connecc)
+                if (k == 0) {
+                    connec = setTimeout(() => {
+                        if (!conditionMet) {
+                            console.log("Connection not done properly");
+                            reject();
+                        } else {
+                            console.log("Connection done properly");
+                        }
+                    }, 10000);
+                }
+                k = k + 1
                 try {
                     if (message.toString('utf8').slice(0, 4) == "AUTH") {
                         local_websocket.send(message)
@@ -299,6 +385,7 @@ async function fetchData(devices) {
                         local_websocket.send(message)
                         c = c + 1
                         if (c == 1) {
+                            // await wait(100000000)
                             if (readedCookie.device[did]["finished"] && !readedCookie.device[did]["cancelled"] || isMining) {
                                 console.log("Work already done")
                                 if (isMining) {
@@ -338,10 +425,35 @@ async function fetchData(devices) {
                                 resolve()
                             }
                             if (!isMining && !readedCookie.device[did]["finished"]) {
-                                let code = await runCommandSpawn("bash", ["./scripts/startMine.sh"])
-                                if (code != 0) {
-                                    reject()
-                                }
+                                // let code = await runCommandSpawn("bash", ["./scripts/startMine.sh"])
+                                // if (code != 0) {
+                                //     reject()
+                                // }
+                                await wait(3000)
+                                await new Promise((resolve, reject) => {
+                                    mineStart = spawn("bash", ["./scripts/startMine.sh"], { shell: true });
+                                    mineStart.stdout.on("data", data => {
+                                        console.log(`${data}`);
+                                    });
+
+                                    mineStart.stderr.on("data", data => {
+                                        console.log(`stderr: ${data}`);
+                                    });
+
+                                    mineStart.on('error', (error) => {
+                                        console.log(`error: ${error.message}`);
+                                        reject(error);
+                                    });
+
+                                    mineStart.on("close", async (code) => {
+                                        console.log(`child process exited with code ${code}`);
+                                        if (code != 0) {
+                                            reject(code)
+                                        } else {
+                                            resolve(code)
+                                        }
+                                    })
+                                })
                                 await wait(2000);
                                 await new Promise((resolve, reject) => {
                                     exec(`adb shell "run-as com.termux files/usr/bin/sh -lic 'export PATH=/data/data/com.termux/files/usr/bin:$PATH; export
@@ -351,11 +463,12 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                             readedCookie.device[did]["error"] = true;
                                             await writeCookieFile(readedCookie)
                                             reject(error);
-                                        }
-                                        if (stdout) {
-                                            console.log("stdout: ", stdout)
-                                            console.log("Fine network")
-                                            resolve()
+                                        }else{
+                                            if (stdout) {
+                                                console.log("stdout: ", stdout)
+                                                console.log("Fine network")
+                                                resolve()
+                                            }
                                         }
                                     })
                                 })
@@ -379,7 +492,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                         console.log(`child process exited with code ${code}`);
                                         exit_code = code
                                         if (code != 0) {
-                                            resolve(code)
+                                            reject(code)
                                         }
                                         // // vpn setup
                                         if (vpn_locations.includes(location)) {
@@ -401,7 +514,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                                 vpn.on("close", code => {
                                                     if (code != 0) {
                                                         exit_code = code
-                                                        resolve(code)
+                                                        reject(code)
                                                     } else {
                                                         console.log(`child process exited with code ${code}`);
                                                         console.log(`vpn finished`);
@@ -421,6 +534,8 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                     readedCookie.device[did]["finished_on"] = new Date().toLocaleString()
                                     readedCookie.device[did]["finished_Timestamp"] = Date.now();
                                     readedCookie.device[readedCookie["last_device"]].error = false
+                                    totalTimeOUtCondition = true
+                                    clearTimeout(totalTimeOUt)
                                     console.log(`finished`);
                                     await wait(3000)
                                     // await wait(300000000)
@@ -447,11 +562,25 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
 
     } catch (error) {
         console.error('Fetch error:', error.message);
-        try{
-            vpn.kill()
-            ls.kill()
-        }catch{
+        clearTimeout(totalTimeOUt)
+        clearTimeout(connecc)
+        clearTimeout(connec)
+        if (ls) {
+            if (!ls.killed) {
+                ls.kill()
 
+            }
+        }
+        if (vpn) {
+            if (!vpn.killed) {
+                vpn.kill()
+            }
+        }
+        if (mineStart) {
+            if (!mineStart.killed) {
+                mineStart.kill()
+
+            }
         }
         if (local_websocket != null && rdb_websocket != null) {
             local_websocket.close()
@@ -467,6 +596,25 @@ let count = 0;
 (async function () {
     while (true) {
         try {
+            if (count > devices.length) {
+                devices = await getDevice(device_model_id, ignoreDevice)
+                let i
+                if (devices.length == 0) {
+                    for (i = 0; i < 5; i++) {
+                        devices = await getDevice(device_model_id, ignoreDevice)
+                        if (devices.length != 0) {
+                            break
+                        } else {
+                            await wait(1000 * 20)
+                        }
+                    }
+                    if (i == 5) {
+                        process.exit(0);
+                    }
+                }
+            }else{
+                
+            }
             // await cancelPrevReservation(readedCookie["last_device"], readedCookie["cookies"])
             await cancelPrevReservation(readedCookie["last_device"], cookies)
             if (readedCookie["last_device"] != "") {
@@ -490,11 +638,22 @@ let count = 0;
                 count = count + 1
             }
         } catch (e) {
-            try{
-                vpn.kill()
-                ls.kill()
-            }catch{
+            if (ls) {
+                if (!ls.killed) {
+                    ls.kill()
 
+                }
+            }
+            if (vpn) {
+                if (!vpn.killed) {
+                    vpn.kill()
+                }
+            }
+            if (mineStart) {
+                if (!mineStart.killed) {
+                    mineStart.kill()
+
+                }
             }
             if (rdb_websocket != null) {
                 if (rdb_websocket.readyState === WebSocket.OPEN) {

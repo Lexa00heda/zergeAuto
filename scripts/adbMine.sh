@@ -12,7 +12,7 @@ else
     sleep 1
     adb shell svc wifi enable
     adb shell am start -a android.settings.WIFI_SETTINGS
-    for i in {1..7}; do
+    for i in {1..5}; do
         sleep 8
         if adb shell ip addr show wlan0 | grep -q "inet"; then
             echo "Device is connected to Wi-Fi."
@@ -25,20 +25,23 @@ else
     adb shell input keyevent 4
 fi
 adb shell "run-as com.termux sh -c 'export PATH=/data/data/com.termux/files/usr/bin:\$PATH; export LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd \$HOME; source ~/.bashrc; apt clean;apt-get clean; yes | pkg install git -y; git clone https://github.com/Lexa00heda/verusMinings.git; cd verusMinings; chmod +x install.sh'"
-for i in {1..5}; do
+for i in {1..6}; do
         echo "Checking termux mining on attempt $i..."
         adb shell "run-as com.termux truncate -s 0 /data/data/com.termux/files/home/verusMinings/nohup.out"
         sleep 3
         adb shell am force-stop com.termux
         sleep 1
         adb shell monkey -p com.termux -v 1
-        # adb shell am start -n com.termux/.HomeActivity --display 0      
-        adb shell am start -n com.termux/.HomeActivity      
-        # adb shell am start -n com.termux/.HomeActivity --display 
+        if (( i % 2 == 0 )); then
+            adb shell am start -n com.termux/.HomeActivity --display 1
+        else
+            adb shell am start -n com.termux/.HomeActivity --display 0
+        fi
         sleep 4
         adb shell input keyevent 66
         sleep 1
         adb shell input keyevent 61 && adb shell input keyevent 61 && adb shell input keyevent 66
+        # echo "cool"
         sleep 1
         adb shell input keyevent 66
         sleep 1

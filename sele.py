@@ -26,7 +26,7 @@ def delete_all_files_recursively(directory):
 
 count=0
 args = sys.argv[1]
-i=data["last_index"] + 1
+i=(data["last_index"] + 1) % len(account)
 j=i
 refil_count = 8
 counts = count_files_in_directory("./cookies")

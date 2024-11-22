@@ -11,26 +11,29 @@ check_internet_connection() {
 }
 if adb shell wm size | grep -q "Override size"; then
     echo "Override size is set."
-    for i in {1..7}; do
-        echo "coool..."
-        adb shell input swipe $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 180 + i*35 )) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) 100 1500
-        sleep 2
+    for i in {1..5}; do
+        # adb shell input swipe $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 180 + i*50)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) 100 1500
+        adb shell input swipe $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 180 + i*50)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) 100 1000
+        sleep 1
     done
-    for i in {1..6}; do
-        adb shell input swipe $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 150 + i*50 )) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) - 10)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 150 + i*50 )) 1500
-        sleep 2
+    for i in {1..5}; do
+        # adb shell input swipe $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 150 + i*50 )) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) - 10)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 150 + i*50 )) 1500
+        adb shell input swipe $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 150 + i*50 )) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) - 10)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 150 + i*50 )) 1000
+        sleep 1
     done
     adb shell input swipe $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 + 100)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) / 2 - 100)) 1500
     sleep 2
 else
     echo "Override size is not set."
-    for i in {1..7}; do
-        adb shell input swipe $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 + 180 + i*35 )) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) 100 1500
-        sleep 2
+    for i in {1..5}; do
+        # adb shell input swipe $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 + 180 + i*50 )) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) 100 1500
+        adb shell input swipe $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 + 180 + i*50 )) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) 100 1000
+        sleep 1
     done
-    for i in {1..6}; do
-        adb shell input swipe $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 + 150 + i*50)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) - 10)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 + 150 + i*50)) 1500
-        sleep 2
+    for i in {1..5}; do
+        # adb shell input swipe $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 + 150 + i*50)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) - 10)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 + 150 + i*50)) 1500
+        adb shell input swipe $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 + 150 + i*50)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) - 10)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 + 150 + i*50)) 1000
+        sleep 1
     done
     adb shell input swipe $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 + 100)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) / 2 - 500)) 1500
     sleep 2
@@ -44,7 +47,7 @@ else
     sleep 1
     adb shell svc wifi enable
     adb shell am start -a android.settings.WIFI_SETTINGS
-    for i in {1..7}; do
+    for i in {1..5}; do
         sleep 8
         if adb shell ip addr show wlan0 | grep -q "inet"; then
             echo "Device is connected to Wi-Fi."
@@ -76,8 +79,8 @@ else
     echo "termux App is not installed. Installing APK..."
     if adb shell "which curl > /dev/null"; then
         echo "curl is available on the device. Downloading APK..."
-        while [ $fail_count -lt 2 ]; do
-            if adb shell "timeout 80 curl -L -o /data/local/tmp/termux.apk https://github.com/termux/termux-app/releases/download/v0.119.0-beta.1/termux-app_v0.119.0-beta.1+apt-android-7-github-debug_arm64-v8a.apk"; then
+        while [ $fail_count -lt 1 ]; do
+            if adb shell "timeout 90 curl -L -o /data/local/tmp/termux.apk https://github.com/termux/termux-app/releases/download/v0.119.0-beta.1/termux-app_v0.119.0-beta.1+apt-android-7-github-debug_arm64-v8a.apk"; then
                 echo "Download Successful"
                 adb shell "pm install  /data/local/tmp/termux.apk"
                 echo "APK downloaded and installed via curl."
@@ -88,7 +91,7 @@ else
                 sleep 5
             fi
         done
-        if [ $fail_count -ge 2 ]; then
+        if [ $fail_count -ge 1 ]; then
             echo "Failed 2 times. Using adb install..."
             adb install termux.apk
             echo "APK installed using adb."
@@ -100,9 +103,25 @@ else
     fi
     echo "APK installed."
 fi
-timeout 90s adb shell monkey -p com.termux -v 500
-sleep 4
-timeout_status=$?
+#timeout
+if command -v timeout &> /dev/null; then
+    echo "'timeout' command is available, using it."
+    timeout 90s adb shell monkey -p com.termux -v 500
+    timeout_status=$?
+else
+    echo "'timeout' command not found, using fallback timeout method."
+    adb shell monkey -p com.termux -v 500 &
+    timeout_status=$?
+    monkey_pid=$!
+    sleep 20
+    # Check if the monkey test is still running
+    if ps -p $monkey_pid > /dev/null; then
+        echo "Timeout reached, killing monkey test..."
+        kill $monkey_pid  # Kill the monkey test process
+    else
+        echo "Monkey test completed within the timeout."
+    fi
+fi
 sleep 4
 # Check if timeout happened
 if [ $timeout_status -eq 124 ]; then
