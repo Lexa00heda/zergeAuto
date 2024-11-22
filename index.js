@@ -45,7 +45,8 @@ const options = (token) => {
 // // fetch device
 // let did = 6650;
 let credit = 16;
-let cookies = await readCookies(process.argv[2]);
+// let cookies = await readCookies(process.argv[2]);
+let cookies = await readCookiesWithSession(process.argv[2]);
 const daily_limit = 40
 // let cancel
 // cancel = true

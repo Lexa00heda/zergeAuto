@@ -1,4 +1,4 @@
-import { cancelReservation } from "./cancelReseravation.js";
+import { cancelReservation, cancelReservationCookie } from "./cancelReseravation.js";
 
 export async function cancelPrevReservation(did, cookies) {
     return new Promise((resolve, reject) => {
@@ -12,7 +12,8 @@ export async function cancelPrevReservation(did, cookies) {
 
                             if (element.deviceId != did) {
                                 // console.log(element.deviceId)
-                                await cancelReservation(element.deviceId, element.reservationId)
+                                // await cancelReservation(element.deviceId, element.reservationId)
+                                await cancelReservationCookie(element.deviceId, element.reservationId,cookies)
                                 console.log(`Reservation not previous device of id ${element.deviceId} cancelled`)
 
                             }
@@ -21,7 +22,7 @@ export async function cancelPrevReservation(did, cookies) {
                     else {
                         re.forEach(async (element) => {
                             // console.log(element.deviceId)
-                            await cancelReservation(element.deviceId, element.reservationId)
+                            await cancelReservationCookie(element.deviceId, element.reservationId,cookies)
                             console.log(`Reservation not previous device of id ${element.deviceId} cancelled`)
 
                         });
