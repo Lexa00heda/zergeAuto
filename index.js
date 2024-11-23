@@ -560,6 +560,23 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
         })
         local_websocket.close()
         rdb_websocket.close()
+        if (ls) {
+            if (!ls.killed) {
+                ls.kill()
+
+            }
+        }
+        if (vpn) {
+            if (!vpn.killed) {
+                vpn.kill()
+            }
+        }
+        if (mineStart) {
+            if (!mineStart.killed) {
+                mineStart.kill()
+
+            }
+        }
         clearTimeout(totalTimeOUt)
         clearTimeout(connecc)
         clearTimeout(connec)
