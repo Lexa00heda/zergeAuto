@@ -643,7 +643,10 @@ let modelindex = 0;
                     }
                     if (i == 5) {
                         console.log("wokie")
-                        process.exit(0);
+                        console.log("recheckCount: ", recheckCount)
+                        device_model_id = device_model_list[modelindex % 5]["id"]
+                        modelindex = modelindex + 1
+                        // process.exit(0);
                     }
                 } else {
                     count = 0
