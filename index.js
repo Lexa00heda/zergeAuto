@@ -464,7 +464,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                             readedCookie.device[did]["error"] = true;
                                             await writeCookieFile(readedCookie)
                                             reject(error);
-                                        }else{
+                                        } else {
                                             if (stdout) {
                                                 console.log("stdout: ", stdout)
                                                 console.log("Fine network")
@@ -602,13 +602,14 @@ let modelindex = 0;
 (async function () {
     while (true) {
         try {
-            console.log("count: ",count,"length: ",devices.length)
+            console.log("count: ", count, "length: ", devices.length)
             if (count >= devices.length) {
                 recheckCount = recheckCount + 1
-                if(recheckCount > 4){
-                    device_model_id = device_model_list[ modelindex % 5]["id"]
+                if (recheckCount > 4) {
+                    console.log("recheckCount: ", recheckCount)
+                    device_model_id = device_model_list[modelindex % 5]["id"]
                     recheckCount = 0
-                    modelindex = modelindex+1
+                    modelindex = modelindex + 1
                 }
                 devices = await getDevice(device_model_id, ignoreDevice)
                 let i
@@ -627,7 +628,7 @@ let modelindex = 0;
                         console.log("wokie")
                         process.exit(0);
                     }
-                }else{
+                } else {
                     count = 0
                 }
             }
@@ -683,44 +684,48 @@ let modelindex = 0;
                 }
             }
             if (readedCookie["last_device"] != "") {
-                console.log("error: ", e)
-                if (readedCookie.device[readedCookie["last_device"]].error == false) {
-                    readedCookie.device[readedCookie["last_device"]].error = true
-                    readedCookie.device[readedCookie["last_device"]].errorCount = 1
-                    await writeCookieFile(readedCookie)
-                } else {
-                    if (readedCookie.device[readedCookie["last_device"]].errorCount > 1) {
-                        readedCookie["cookies"] = await readCookiesWithSession(process.argv[2])
-                        await wait(4000)
-                        try {
-                            await cancelReservation(readedCookie["last_device"], readedCookie.device[readedCookie["last_device"]]["reservation_Id"])
-                        } catch {
-                            const data = await getReservationId(readedCookie["last_device"], readedCookie["cookies"])
-                            readedCookie.device[readedCookie["last_device"]].reservation_Id = data.reserve
-                            await cancelReservation(readedCookie["last_device"], readedCookie.device[readedCookie["last_device"]]["reservation_Id"])
-                        }
-                        readedCookie.device[readedCookie["last_device"]]["force_cancel"] = true
-                        cookies = await readCookies(process.argv[2]);
-                        const user = await fetch("https://developer.samsung.com/remotetestlab/rtl/api/v1/users/me", { method: 'GET', headers: { 'Cookie': cookies }, });
-                        try {
-                            readedCookie.deadList[readedCookie.device[readedCookie["last_device"]]["location"]]["count"] = readedCookie.deadList[readedCookie.device[readedCookie["last_device"]]["location"]]["count"] + 1
-                        } catch {
-                            readedCookie.deadList[readedCookie.device[readedCookie["last_device"]]["location"]] = { "count": 1 }
-                        }
-                        count = count + 1
-                        const userData = await user.json()
-                        readedCookie.device[readedCookie["last_device"]]["cancelled"] = true
-                        console.log(userData)
-                        console.log(`points before:${readedCookie["totalCredit"]}, points after:${userData["point"]}`)
-                        readedCookie["today_credits_left"] = daily_limit - (readedCookie["startCredit"] - userData["point"])
+                try {
+                    console.log("error: ", e)
+                    if (readedCookie.device[readedCookie["last_device"]].error == false) {
+                        readedCookie.device[readedCookie["last_device"]].error = true
+                        readedCookie.device[readedCookie["last_device"]].errorCount = 1
                         await writeCookieFile(readedCookie)
-                        console.log("reservation cancelled")
                     } else {
-                        if (readedCookie.device[readedCookie["last_device"]].errorCount == null) {
-                            readedCookie.device[readedCookie["last_device"]].errorCount = 1
+                        if (readedCookie.device[readedCookie["last_device"]].errorCount > 1) {
+                            readedCookie["cookies"] = await readCookiesWithSession(process.argv[2])
+                            await wait(4000)
+                            try {
+                                await cancelReservation(readedCookie["last_device"], readedCookie.device[readedCookie["last_device"]]["reservation_Id"])
+                            } catch {
+                                const data = await getReservationId(readedCookie["last_device"], readedCookie["cookies"])
+                                readedCookie.device[readedCookie["last_device"]].reservation_Id = data.reserve
+                                await cancelReservation(readedCookie["last_device"], readedCookie.device[readedCookie["last_device"]]["reservation_Id"])
+                            }
+                            readedCookie.device[readedCookie["last_device"]]["force_cancel"] = true
+                            cookies = await readCookies(process.argv[2]);
+                            const user = await fetch("https://developer.samsung.com/remotetestlab/rtl/api/v1/users/me", { method: 'GET', headers: { 'Cookie': cookies }, });
+                            try {
+                                readedCookie.deadList[readedCookie.device[readedCookie["last_device"]]["location"]]["count"] = readedCookie.deadList[readedCookie.device[readedCookie["last_device"]]["location"]]["count"] + 1
+                            } catch {
+                                readedCookie.deadList[readedCookie.device[readedCookie["last_device"]]["location"]] = { "count": 1 }
+                            }
+                            count = count + 1
+                            const userData = await user.json()
+                            readedCookie.device[readedCookie["last_device"]]["cancelled"] = true
+                            console.log(userData)
+                            console.log(`points before:${readedCookie["totalCredit"]}, points after:${userData["point"]}`)
+                            readedCookie["today_credits_left"] = daily_limit - (readedCookie["startCredit"] - userData["point"])
+                            await writeCookieFile(readedCookie)
+                            console.log("reservation cancelled")
+                        } else {
+                            if (readedCookie.device[readedCookie["last_device"]].errorCount == null) {
+                                readedCookie.device[readedCookie["last_device"]].errorCount = 1
+                            }
+                            readedCookie.device[readedCookie["last_device"]].errorCount = readedCookie.device[readedCookie["last_device"]].errorCount + 1
                         }
-                        readedCookie.device[readedCookie["last_device"]].errorCount = readedCookie.device[readedCookie["last_device"]].errorCount + 1
                     }
+                } catch {
+
                 }
             } else {
                 if (readedCookie["today_credits_left"] < credit || readedCookie["startCredit"] < credit) {
