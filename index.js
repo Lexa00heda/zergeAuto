@@ -497,7 +497,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                         }
                                         // // vpn setup
                                         if (vpn_locations.includes(location)) {
-                                            exit_code = await new Promise((resolve, reject) => {
+                                            exit_code = await new Promise((resolve, rejects) => {
                                                 vpn = spawn("bash", ["./scripts/vpn.sh"], { shell: true });
                                                 vpn.stdout.on("data", data => {
                                                     console.log(`stdout: ${data}`);
@@ -509,13 +509,13 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
 
                                                 vpn.on('error', (error) => {
                                                     console.log(`error: ${error.message}`);
-                                                    reject(error);
+                                                    rejects(error);
                                                 });
 
                                                 vpn.on("close", code => {
                                                     if (code != 0) {
                                                         exit_code = code
-                                                        reject(code)
+                                                        rejects(code)
                                                     } else {
                                                         console.log(`child process exited with code ${code}`);
                                                         console.log(`vpn finished`);
