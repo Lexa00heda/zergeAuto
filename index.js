@@ -53,12 +53,13 @@ const daily_limit = 40
 
 const locations = { 0: "Russia", 1: "India", 2: "Korea", 3: "Brazil", 4: "Vietnam", 5: "UK", 6: "USA", 7: "Poland" }
 const device_model_list = { 0: { "device": "Galaxy A", "id": 124 }, 1: { "device": "Galaxy S", "id": 125 }, 2: { "device": "Galaxy Z", "id": 126 }, 3: { "device": "Galaxy F&M", "id": 127 }, 4: { "device": "Galaxy TAB", "id": 128 } }
-const device_model_id = device_model_list[(Number(process.argv[2]) - 1) % 5]["id"]
+let device_model_id = device_model_list[(Number(process.argv[2]) - 1) % 5]["id"]
+// const device_model_id = device_model_list[1]["id"]
 const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0,4,6)
-const ignoreDevice = getLocationsName(0,4)
+const ignoreDevice = getLocationsName(0)
 let devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 let local_websocket;
@@ -559,6 +560,9 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
         })
         local_websocket.close()
         rdb_websocket.close()
+        clearTimeout(totalTimeOUt)
+        clearTimeout(connecc)
+        clearTimeout(connec)
 
     } catch (error) {
         console.error('Fetch error:', error.message);
@@ -593,27 +597,39 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
 }
 
 let count = 0;
+let recheckCount = 0;
+let modelindex = 0;
 (async function () {
     while (true) {
         try {
-            if (count > devices.length) {
+            console.log("count: ",count,"length: ",devices.length)
+            if (count >= devices.length) {
+                recheckCount = recheckCount + 1
+                if(recheckCount > 4){
+                    device_model_id = device_model_list[ modelindex % 5]["id"]
+                    recheckCount = 0
+                    modelindex = modelindex+1
+                }
                 devices = await getDevice(device_model_id, ignoreDevice)
                 let i
                 if (devices.length == 0) {
                     for (i = 0; i < 5; i++) {
+                        console.log("cool")
                         devices = await getDevice(device_model_id, ignoreDevice)
                         if (devices.length != 0) {
+                            count = 0
                             break
                         } else {
-                            await wait(1000 * 20)
+                            await wait(1000 * 8)
                         }
                     }
                     if (i == 5) {
+                        console.log("wokie")
                         process.exit(0);
                     }
+                }else{
+                    count = 0
                 }
-            }else{
-                
             }
             // await cancelPrevReservation(readedCookie["last_device"], readedCookie["cookies"])
             await cancelPrevReservation(readedCookie["last_device"], cookies)
@@ -638,6 +654,9 @@ let count = 0;
                 count = count + 1
             }
         } catch (e) {
+            clearTimeout(totalTimeOUt)
+            clearTimeout(connecc)
+            clearTimeout(connec)
             if (ls) {
                 if (!ls.killed) {
                     ls.kill()
@@ -709,6 +728,6 @@ let count = 0;
                 }
             }
         }
-        await wait(15000);
+        await wait(8000);
     }
 })();
