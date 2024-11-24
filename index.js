@@ -53,13 +53,14 @@ const daily_limit = 40
 
 const locations = { 0: "Russia", 1: "India", 2: "Korea", 3: "Brazil", 4: "Vietnam", 5: "UK", 6: "USA", 7: "Poland" }
 const device_model_list = { 0: { "device": "Galaxy A", "id": 124 }, 1: { "device": "Galaxy S", "id": 125 }, 2: { "device": "Galaxy Z", "id": 126 }, 3: { "device": "Galaxy F&M", "id": 127 }, 4: { "device": "Galaxy TAB", "id": 128 } }
-let device_model_id = device_model_list[(Number(process.argv[2]) - 1) % 5]["id"]
+let modelindex = (Number(process.argv[2]) - 1) % 5;
+let device_model_id = device_model_list[modelindex]["id"]
 // const device_model_id = device_model_list[1]["id"]
 const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0,4,6)
-const ignoreDevice = getLocationsName(0)
+const ignoreDevice = getLocationsName(0, 1, 2, 4, 5, 6, 7)
 let devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 let local_websocket;
@@ -79,7 +80,17 @@ async function fetchData(devices) {
     let reserve
     let location
     let isMining;
+    let timeOutWait1;
+    let timeOutWait2;
     try {
+        if(device_model_list[modelindex%5]["device"]=="Galaxy Z"){
+            timeOutWait1=(1000*60*5);
+            timeOutWait2=(1000*60*5);
+        }else{
+            timeOutWait1=(1000*60*8);
+            timeOutWait2=(1000*60*10);
+
+        }
         // cookies = await readCookies(process.argv[2]);
         const user = await fetch("https://developer.samsung.com/remotetestlab/rtl/api/v1/users/me", { method: 'GET', headers: { 'Cookie': cookies }, });
         const userData = await user.json()
@@ -284,7 +295,7 @@ async function fetchData(devices) {
                         // rdb_websocket.close()
                         reject()
                     }
-                }, (1000 * 60 * 8));
+                }, timeOutWait1);
             } else {
                 if (readedCookie.device[did]["errorCount"] > 1) {
                     totalTimeOUt = setTimeout(() => {
@@ -311,7 +322,7 @@ async function fetchData(devices) {
                             // rdb_websocket.close()
                             reject()
                         }
-                    }, (1000 * 60 * 10));
+                    }, timeOutWait2);
 
                 } else {
                     totalTimeOUt = setTimeout(() => {
@@ -338,7 +349,7 @@ async function fetchData(devices) {
                             // rdb_websocket.close()
                             reject()
                         }
-                    }, (1000 * 60 * 8));
+                    }, timeOutWait1);
                 }
             }
             connecc = setTimeout(() => {
@@ -434,7 +445,7 @@ async function fetchData(devices) {
                                 await new Promise((resolve, reject) => {
                                     mineStart = spawn("bash", ["./scripts/startMine.sh"], { shell: true });
                                     mineStart.stdout.on("data", data => {
-                                        console.log("mine:",`${data}`);
+                                        console.log("mine:", `${data}`);
                                     });
 
                                     mineStart.stderr.on("data", data => {
@@ -489,33 +500,32 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                         reject(error);
                                     });
 
-                                    ls.on("close", async (code) => {
+                                    ls.on("close", (code) => {
                                         console.log(`ls child process exited with code ${code}`);
                                         exit_code = code
                                         if (code != 0) {
                                             reject(code)
-                                        }
-                                        // // vpn setup
-                                        if (vpn_locations.includes(location)) {
-                                            exit_code = await new Promise((resolve, rejects) => {
+                                        }else{
+                                            // // vpn setup
+                                            if (vpn_locations.includes(location)) {
                                                 vpn = spawn("bash", ["./scripts/vpn.sh"], { shell: true });
                                                 vpn.stdout.on("data", data => {
                                                     console.log(`stdout vpn: ${data}`);
                                                 });
-
+    
                                                 vpn.stderr.on("data", data => {
                                                     console.log(`stderr vpn: ${data}`);
                                                 });
-
+    
                                                 vpn.on('error', (error) => {
                                                     console.log(`error vpn: ${error.message}`);
-                                                    rejects(error);
+                                                    reject(error);
                                                 });
-
+    
                                                 vpn.on("close", code => {
                                                     if (code != 0) {
                                                         exit_code = code
-                                                        rejects(code)
+                                                        reject(code)
                                                     } else {
                                                         console.log(`vpn child process exited with code ${code}`);
                                                         console.log(`vpn finished`);
@@ -524,11 +534,12 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                                         resolve(code)
                                                     }
                                                 });
-                                            })
-                                        }
-                                        resolve(exit_code)
-                                    });
+                                            }else{
+                                                resolve(exit_code)
+                                            }
 
+                                        }
+                                    });
                                 })
                                 if (exit_code == 0) {
                                     readedCookie.device[did]["finished"] = true
@@ -615,64 +626,68 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
 
 let count = 0;
 let recheckCount = 0;
-let modelindex = 0;
 (async function () {
     while (true) {
         try {
             console.log("count: ", count, "length: ", devices.length)
-            if (count >= devices.length) {
-                recheckCount = recheckCount + 1
-                if (recheckCount > 4) {
-                    console.log("recheckCount: ", recheckCount)
-                    device_model_id = device_model_list[modelindex % 5]["id"]
-                    recheckCount = 0
-                    modelindex = modelindex + 1
-                }
-                devices = await getDevice(device_model_id, ignoreDevice)
-                let i
-                if (devices.length == 0) {
-                    for (i = 0; i < 5; i++) {
-                        console.log("cool")
-                        devices = await getDevice(device_model_id, ignoreDevice)
-                        if (devices.length != 0) {
-                            count = 0
-                            break
-                        } else {
-                            await wait(1000 * 8)
-                        }
-                    }
-                    if (i == 5) {
-                        console.log("wokie")
+            if ((readedCookie["last_device"] != "" && readedCookie.device[readedCookie["last_device"]].cancelled) || readedCookie["last_device"] == "") {
+                if (count > devices.length || devices.length==0) {
+                    recheckCount = recheckCount + 1
+                    if (recheckCount > 4) {
                         console.log("recheckCount: ", recheckCount)
-                        device_model_id = device_model_list[modelindex % 5]["id"]
                         modelindex = modelindex + 1
-                        // process.exit(0);
+                        device_model_id = device_model_list[modelindex % 5]["id"]
+                        recheckCount = 0
                     }
-                } else {
-                    count = 0
+                    devices = await getDevice(device_model_id, ignoreDevice)
+                    let i
+                    if (devices.length == 0) {
+                        for (i = 0; i < 5; i++) {
+                            console.log("no device is available for ",device_model_list[modelindex % 5]["device"],"for locations other than",ignoreDevice.join(", "),".retrying ", i, "...")
+                            devices = await getDevice(device_model_id, ignoreDevice)
+                            if (devices.length != 0) {
+                                count = 0
+                                break
+                            } else {
+                                await wait(1000 * 6)
+                            }
+                        }
+                        if (i >= 5) {
+                            console.log("recheckCount: ", recheckCount)
+                            modelindex = modelindex + 1
+                            device_model_id = device_model_list[modelindex % 5]["id"]
+                            console.log("device model changed to ", device_model_list[modelindex % 5]["device"])
+                            count = 0
+                            // process.exit(0);
+                        }
+                    } else {
+                        count = 0
+                    }
                 }
             }
             // await cancelPrevReservation(readedCookie["last_device"], readedCookie["cookies"])
             await cancelPrevReservation(readedCookie["last_device"], cookies)
-            if (readedCookie["last_device"] != "") {
-                if (!readedCookie.device[readedCookie["last_device"]].cancelled) {
-                    console.log("prevoius device: ", readedCookie["last_device"])
-                    await fetchData(readedCookie["last_device"])
+            if(devices.length!=0){
+                if (readedCookie["last_device"] != "") {
+                    if (!readedCookie.device[readedCookie["last_device"]].cancelled) {
+                        console.log("prevoius device: ", readedCookie["last_device"])
+                        await fetchData(readedCookie["last_device"])
+                    } else {
+                        console.log(devices[count])
+                        await fetchData(devices[count])
+                        if ((readedCookie.device[readedCookie["last_device"]].cancelled && readedCookie["totalCredit"] < credit) || readedCookie["today_credits_left"] < credit) {
+                            break
+                        }
+                    }
+                    count = count + 1
                 } else {
                     console.log(devices[count])
                     await fetchData(devices[count])
-                    if ((readedCookie.device[readedCookie["last_device"]].cancelled && readedCookie["totalCredit"] < credit) || readedCookie["today_credits_left"] < credit) {
+                    if ((readedCookie.device[readedCookie["last_device"]].cancelled && readedCookie["totalCredit"] < credit) || readedCookie["today_credits_left"] < credit || readedCookie["startCredit"] < credit) {
                         break
                     }
+                    count = count + 1
                 }
-                count = count + 1
-            } else {
-                console.log(devices[count])
-                await fetchData(devices[count])
-                if ((readedCookie.device[readedCookie["last_device"]].cancelled && readedCookie["totalCredit"] < credit) || readedCookie["today_credits_left"] < credit || readedCookie["startCredit"] < credit) {
-                    break
-                }
-                count = count + 1
             }
         } catch (e) {
             clearTimeout(totalTimeOUt)

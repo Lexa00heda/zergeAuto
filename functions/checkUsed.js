@@ -58,3 +58,27 @@ export async function checkMining(did) {
         })
     });
 }
+export async function getMiningDevices() {
+    return new Promise((resolve, reject) => {
+        let size = 1;
+        const startUrl = `https://api2.nicehash.com/main/api/v2/mining/external/64159907-b518-4708-aa8c-00ae8080ae59/rigs2?path=&page=0&sort=NAME&size=${size}`;
+        fetch(startUrl, { method: 'GET' }).then(async (result) => {
+            const results = await result.json();
+            size = results["totalRigs"]
+            const startUrl = `https://api2.nicehash.com/main/api/v2/mining/external/64159907-b518-4708-aa8c-00ae8080ae59/rigs2?path=&page=0&sort=NAME&size=${size}`;
+            const rigsDetail = await fetch(startUrl, { method: 'GET' })
+            const rigs = await rigsDetail.json()
+            // console.log(rigs)
+            // const index = rigs["miningRigs"].findIndex(rig => rig.rigId.split("-up")[0] === deviceName)
+            const indexes = rigs["miningRigs"].reduce((acc, rig, index) => {
+                if (rig.minerStatus == "MINING") {
+                    acc.push(Number(rig.rigId.split("-")[0]));
+                }
+                return acc;
+            }, []);
+            resolve(indexes)
+        }).catch((e)=>{
+            reject(e)
+        })
+    });
+}
