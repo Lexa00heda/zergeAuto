@@ -434,20 +434,20 @@ async function fetchData(devices) {
                                 await new Promise((resolve, reject) => {
                                     mineStart = spawn("bash", ["./scripts/startMine.sh"], { shell: true });
                                     mineStart.stdout.on("data", data => {
-                                        console.log(`${data}`);
+                                        console.log("mine:",`${data}`);
                                     });
 
                                     mineStart.stderr.on("data", data => {
-                                        console.log(`stderr: ${data}`);
+                                        console.log(`stderr mine: ${data}`);
                                     });
 
                                     mineStart.on('error', (error) => {
-                                        console.log(`error: ${error.message}`);
+                                        console.log(`error mine: ${error.message}`);
                                         reject(error);
                                     });
 
                                     mineStart.on("close", async (code) => {
-                                        console.log(`child process exited with code ${code}`);
+                                        console.log(`mine child process exited with code ${code}`);
                                         if (code != 0) {
                                             reject(code)
                                         } else {
@@ -477,20 +477,20 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                     let exit_code = 1
                                     ls = spawn("bash", ["./scripts/adbMine.sh"], { shell: true });
                                     ls.stdout.on("data", data => {
-                                        console.log(`stdout: ${data}`);
+                                        console.log(`stdout ls: ${data}`);
                                     });
 
                                     ls.stderr.on("data", data => {
-                                        console.log(`stderr: ${data}`);
+                                        console.log(`stderr ls: ${data}`);
                                     });
 
                                     ls.on('error', (error) => {
-                                        console.log(`error: ${error.message}`);
+                                        console.log(`error ls: ${error.message}`);
                                         reject(error);
                                     });
 
                                     ls.on("close", async (code) => {
-                                        console.log(`child process exited with code ${code}`);
+                                        console.log(`ls child process exited with code ${code}`);
                                         exit_code = code
                                         if (code != 0) {
                                             reject(code)
@@ -500,15 +500,15 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                             exit_code = await new Promise((resolve, rejects) => {
                                                 vpn = spawn("bash", ["./scripts/vpn.sh"], { shell: true });
                                                 vpn.stdout.on("data", data => {
-                                                    console.log(`stdout: ${data}`);
+                                                    console.log(`stdout vpn: ${data}`);
                                                 });
 
                                                 vpn.stderr.on("data", data => {
-                                                    console.log(`stderr: ${data}`);
+                                                    console.log(`stderr vpn: ${data}`);
                                                 });
 
                                                 vpn.on('error', (error) => {
-                                                    console.log(`error: ${error.message}`);
+                                                    console.log(`error vpn: ${error.message}`);
                                                     rejects(error);
                                                 });
 
@@ -517,7 +517,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                                         exit_code = code
                                                         rejects(code)
                                                     } else {
-                                                        console.log(`child process exited with code ${code}`);
+                                                        console.log(`vpn child process exited with code ${code}`);
                                                         console.log(`vpn finished`);
                                                         readedCookie.device[readedCookie["last_device"]].error = false
                                                         exit_code = code
