@@ -48,22 +48,22 @@ while(i<condition):
         sign_in.click()
         wait = WebDriverWait(driver, 10)
         time.sleep(14)
-        email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptLgnPlnID"]')))
-        # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="account"]')))
+        # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptLgnPlnID"]')))
+        email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="account"]')))
         email_input.click()
         # email_input.send_keys(mail)
         email_input.send_keys(account[i].split(":")[0])
-        sign_in_button =  driver.find_element(By.XPATH, '//*[@id="signInButton"]')
-        # sign_in_button =  driver.find_element(By.XPATH, "//*[contains(text(), 'Next')]")
+        # sign_in_button =  driver.find_element(By.XPATH, '//*[@id="signInButton"]')
+        sign_in_button =  driver.find_element(By.XPATH, "//*[contains(text(), 'Next')]")
         sign_in_button.click()
         wait = WebDriverWait(driver, 10)
         time.sleep(14)
-        email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptLgnPlnPD"]')))
-        # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="password"]')))
+        # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptLgnPlnPD"]')))
+        email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="password"]')))
         email_input.click()
         email_input.send_keys('Lexa@heda12')
-        sign_in_button =  driver.find_element(By.XPATH, '//*[@id="signInButton"]')
-        # sign_in_button =  wait.until(EC.element_to_be_clickable((By.XPATH,  "//button[text()='Sign in']")))
+        # sign_in_button =  driver.find_element(By.XPATH, '//*[@id="signInButton"]')
+        sign_in_button =  wait.until(EC.element_to_be_clickable((By.XPATH,  "//button[text()='Sign in']")))
         sign_in_button.click()
         wait = WebDriverWait(driver, 15)
         time.sleep(14)
@@ -80,14 +80,34 @@ while(i<condition):
                 print("auth page")
         except:
             print("auth page")
-        email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptAuthNum"]')))
-        # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="otp"]')))
+        try:
+            updated_policy_text = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[contains(text(), 'Samsung account Privacy Notice updated')]"))).text
+            if updated_policy_text:
+                print("Samsung account Privacy Notice updated")
+                time.sleep(2)
+                try:
+                    wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[contains(text(), 'Continue')])[1]"))).click()
+                except:
+                    pass
+                try:
+                    wait.until(EC.element_to_be_clickable((By.XPATH,"//button[text()='Continue']"))).click()
+                except:
+                    pass
+                try:
+                    wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[contains(text(), 'Agree')])[1]"))).click()
+                except:
+                    pass
+        except:
+            print("cookie page")
+            pass
+        # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptAuthNum"]')))
+        email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="otp"]')))
         totp = pyotp.TOTP(fact.replace(" ",""))
         email_input.click()
         email_input.send_keys(totp.now())
-        sign_in_button =  driver.find_element(By.XPATH, '//*[@id="btnNext"]')
-        sign_in_button.click()
-        # wait.until(EC.element_to_be_clickable((By.XPATH,  "//button[text()='Verify']"))).click()
+        # sign_in_button =  driver.find_element(By.XPATH, '//*[@id="btnNext"]')
+        # sign_in_button.click()
+        wait.until(EC.element_to_be_clickable((By.XPATH,  "//button[text()='Verify']"))).click()
         wait = WebDriverWait(driver, 10)
         time.sleep(3)
         try:

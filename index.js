@@ -276,18 +276,18 @@ async function fetchData(devices) {
                         console.log("total time exceed 8 min ");
                         if (ls) {
                             if (!ls.killed) {
-                                ls.kill()
+                                ls.kill('SIGKILL')
 
                             }
                         }
                         if (vpn) {
                             if (!vpn.killed) {
-                                vpn.kill()
+                                vpn.kill('SIGKILL')
                             }
                         }
                         if (mineStart) {
                             if (!mineStart.killed) {
-                                mineStart.kill()
+                                mineStart.kill('SIGKILL')
 
                             }
                         }
@@ -303,18 +303,18 @@ async function fetchData(devices) {
                             console.log("total time exceed 10 min ");
                             if (ls) {
                                 if (!ls.killed) {
-                                    ls.kill()
+                                    ls.kill('SIGKILL')
 
                                 }
                             }
                             if (vpn) {
                                 if (!vpn.killed) {
-                                    vpn.kill()
+                                    vpn.kill('SIGKILL')
                                 }
                             }
                             if (mineStart) {
                                 if (!mineStart.killed) {
-                                    mineStart.kill()
+                                    mineStart.kill('SIGKILL')
 
                                 }
                             }
@@ -330,18 +330,18 @@ async function fetchData(devices) {
                             console.log("total time exceed 8 min");
                             if (ls) {
                                 if (!ls.killed) {
-                                    ls.kill()
+                                    ls.kill('SIGKILL')
 
                                 }
                             }
                             if (vpn) {
                                 if (!vpn.killed) {
-                                    vpn.kill()
+                                    vpn.kill('SIGKILL')
                                 }
                             }
                             if (mineStart) {
                                 if (!mineStart.killed) {
-                                    mineStart.kill()
+                                    mineStart.kill('SIGKILL')
 
                                 }
                             }
@@ -573,18 +573,18 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
         rdb_websocket.close()
         if (ls) {
             if (!ls.killed) {
-                ls.kill()
+                ls.kill('SIGKILL')
 
             }
         }
         if (vpn) {
             if (!vpn.killed) {
-                vpn.kill()
+                vpn.kill('SIGKILL')
             }
         }
         if (mineStart) {
             if (!mineStart.killed) {
-                mineStart.kill()
+                mineStart.kill('SIGKILL')
 
             }
         }
@@ -599,18 +599,18 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
         clearTimeout(connec)
         if (ls) {
             if (!ls.killed) {
-                ls.kill()
+                ls.kill('SIGKILL')
 
             }
         }
         if (vpn) {
             if (!vpn.killed) {
-                vpn.kill()
+                vpn.kill('SIGKILL')
             }
         }
         if (mineStart) {
             if (!mineStart.killed) {
-                mineStart.kill()
+                mineStart.kill('SIGKILL')
 
             }
         }
@@ -695,18 +695,18 @@ let recheckCount = 0;
             clearTimeout(connec)
             if (ls) {
                 if (!ls.killed) {
-                    ls.kill()
+                    ls.kill('SIGKILL')
 
                 }
             }
             if (vpn) {
                 if (!vpn.killed) {
-                    vpn.kill()
+                    vpn.kill('SIGKILL')
                 }
             }
             if (mineStart) {
                 if (!mineStart.killed) {
-                    mineStart.kill()
+                    mineStart.kill('SIGKILL')
 
                 }
             }
