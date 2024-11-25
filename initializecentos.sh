@@ -1,14 +1,20 @@
-# Install EPEL repository for additional packages (CentOS 7)
-sudo yum install epel-release -y
+# # Install EPEL repository for additional packages (CentOS 7)
+# sudo yum install epel-release -y
 
-# Install Android tools and tmux
-sudo yum install android-tools -y
-sudo yum install tmux -y
+# # Install Android tools and tmux
+# sudo yum install android-tools -y
+# sudo yum install tmux -y
 
-# Create tmux sessions
-tmux new-session -d -s 1 'bash -c "./rdb &"; bash'  # Start session 1
-tmux new-session -d -s 2 'bash'  # Start session 2
-tmux new-session -d -s 3 'bash'  # Start session 3
+# # Create tmux sessions
+# tmux new-session -d -s 1 'bash -c "./rdb &"; bash'  # Start session 1
+# tmux new-session -d -s 2 'bash'  # Start session 2
+# tmux new-session -d -s 3 'bash'  # Start session 3
 
-# Attach to session 1 (if needed)
+# # Attach to session 1 (if needed)
+# # tmux attach-session -t 1
+apt update && apt install -y android-tools-adb android-tools-fastboot
+apt-get install tmux -y
+tmux new-session -d -s 1 'bash -c "./rdb &";bash'
+tmux new-session -d -s 2 'bash'
+tmux new-session -d -s 3 'bash'
 # tmux attach-session -t 1
