@@ -28,10 +28,10 @@ count=0
 args = sys.argv[1]
 i=(data["last_index"] + 1) % len(account)
 j=i
-refil_count = 8
+refil_count = 10
 counts = count_files_in_directory("./cookies")
 if counts >=refil_count:
-    refil_left = 8
+    refil_left = refil_count
 else:
     refil_left = refil_count - counts
 condition = j+refil_left

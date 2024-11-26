@@ -51,9 +51,10 @@ RUN mkdir -p /app/.android && \
 
 # Clone the GitHub repository (replace <repository_url> with actual repo URL)
 
+RUN chown -R $(whoami):$(whoami) /app
 RUN chmod 777 /app/user.json
 RUN chmod 777 /app/cookies/cookies*.txt
-
+RUN chmod -R 777 /app
 EXPOSE 5037
 
 # Set up environment variables if needed
