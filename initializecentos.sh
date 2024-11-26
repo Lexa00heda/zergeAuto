@@ -12,8 +12,6 @@
 
 # # Attach to session 1 (if needed)
 # # tmux attach-session -t 1
-apt update && apt install -y android-tools-adb android-tools-fastboot
-apt-get install tmux -y
 tmux new-session -d -s 1 'bash -c "./rdb &";bash'
 tmux new-session -d -s 2 'bash'
 tmux new-session -d -s 3 'bash'
