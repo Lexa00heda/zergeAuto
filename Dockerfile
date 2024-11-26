@@ -6,7 +6,7 @@ WORKDIR /app
 ENV DEBIAN_FRONTEND=noninteractive
 ENV ANDROID_SDK_HOME=/app/.android
 ENV HOME=/app
-
+# RUN useradd -m user
 
 RUN apt-get update && \
 apt-get install -y procps && \
@@ -25,6 +25,11 @@ ca-certificates \
 
 RUN git clone https://github.com/Lexa00heda/zergeAuto.git .
 RUN git config --global --add safe.directory /app
+RUN chmod -R 755 /app/.git 
+RUN git config pull.rebase false
+RUN chmod g+w /app/.git -R
+# RUN chown -R user:user /app
+# USER user
 # Install Node.js (latest version from NodeSource repository)
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
   && apt-get install -y nodejs \
@@ -41,6 +46,7 @@ RUN apt-get update && \
 RUN mkdir -p /app/.android && \
   chmod 777 /app/.android
 
+# RUN chown -R $(whoami) ./
 # Set the working directory inside the container
 
 # Clone the GitHub repository (replace <repository_url> with actual repo URL)
