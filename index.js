@@ -41,7 +41,6 @@ const options = (token) => {
 
 
 // let today_credits_left = 40
-
 // // fetch device
 // let did = 6650;
 let credit = 16;
