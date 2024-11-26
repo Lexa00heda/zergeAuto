@@ -49,8 +49,6 @@ RUN mkdir -p /app/.android && \
 # RUN chown -R $(whoami) ./
 # Set the working directory inside the container
 
-# Clone the GitHub repository (replace <repository_url> with actual repo URL)
-
 RUN chown -R $(whoami):$(whoami) /app
 RUN chmod 777 /app/user.json
 RUN chmod 777 /app/cookies/cookies*.txt
