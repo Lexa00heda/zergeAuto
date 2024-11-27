@@ -1,0 +1,4 @@
+kubeadm init --apiserver-advertise-address $(hostname -i)
+
+kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s-1.11.yaml
+kubectl exec -it <pod-name> -- /bin/bash
