@@ -59,7 +59,7 @@ const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0,4,6)
-const ignoreDevice = getLocationsName(1,6)
+const ignoreDevice = getLocationsName(0,6)
 let devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 let local_websocket;

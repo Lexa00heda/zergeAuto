@@ -16,9 +16,7 @@ spec:
       containers:
       - name: my-app-container
         image: filim54595/my-app:latest  # Docker image built with tmux and node
-        args: 
-          - "5"  # Argument to pass to node index.js
-        command: ["/bin/bash", "-c", "/app/initializeDocker.sh && tmux new-session -d -s 4 'node index.js $1' && sleep infinity"]
+        command: ["/bin/bash", "-c", "/app/initializeDocker.sh && tmux new-session -d -s 2 'node index.js $1' && sleep infinity"]
         ports:
             - containerPort: 5037
               protocol: TCP
