@@ -62,7 +62,7 @@ ENV ADB_PORT=5037
 # RUN  ./initialize.sh
 
 # Default command to run the initialize script and node index.js
-ENTRYPOINT ["bash", "-c", "/app/initializecentos.sh && tmux new-session -d -s 4 'node index.js $1' && sleep infinity"]
+ENTRYPOINT ["bash", "-c", "/app/initializeDocker.sh && tmux new-session -d -s 4 'node index.js $1' && sleep infinity"]
 
 # # Allow the user to pass arguments to the container (overrides default CMD)
 # CMD ["--defaultArgument=value"]

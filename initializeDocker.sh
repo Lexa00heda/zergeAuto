@@ -14,6 +14,6 @@
 # # tmux attach-session -t 1
 ./pull.sh
 tmux new-session -d -s 1 'bash -c "./rdb &";bash'
-tmux new-session -d -s 2 'bash'
-tmux new-session -d -s 3 'bash'
+# tmux new-session -d -s 2 'bash'
+# tmux new-session -d -s 3 'bash'
 # tmux attach-session -t 1
