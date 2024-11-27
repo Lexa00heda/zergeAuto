@@ -1,6 +1,27 @@
 {
-  "cookies": "locale=en-US; sa_trace=7cki4k7m7377uur0to85za3jfjj7m85s; sa_did=ntbqv9dtfaxqu20vyqva; datadome=MXdWWh~teEMPsCW_Jow5roo7tZh0k6OFG5eHiUpizkvPBSbH9QYm8Qa_LIoRbqnHhuNd_slyWI9U7_Au7R2Dwq9RCt5ikYA0hIxA2KFQyKuG~jE7mpOephUJlSM1dZUt; sa_id=73cbc37e6a4fd9600422057e1ca33c4a6776842a87e0a98040a67f59246db364268090d97875f25375c13dcf9408e3f5b267cb9c462569f07e10c48fb88c99d89170a823bb6e22740dd7cd4a6c8d5014180be527f555b1da3686659600e10650adaae8f43a418d1754be3009b13f0ec78f61485ccceaff6cf9f4f5006480e49e171df4d2de7ba2272ab3afa3ce09c652814528c82dc356c60661de920fedde40e70c1b3199bbe050f0aeb170135bc3e87c711441d71f83c22b5a4edf16b20c3c9b6bccf17a09192a5276867596714f565cbee6c6a45cf1180f9203a1b2c942c88f2dd4572a9a9acc2a7e44d08eb2ab5faab08c1425751591fac709acdec6dc5a; sa_state=XTQhVmORlj2EYA830Q5j43Zw1Noyyeq5; SD_PORTAL_SSID=NByhVA9WEpoEhNcwUbjZfYCQ%2F38W2CtLLccxVMF13XZNzkV0gD%2F2fOoQueezLUSH5wi1i5xwHN0NfPaQ69oj8HWrux8QiY8DMyeMlAOi2C5skbNZQIaYyC7z7q2WCvLkwnSmkMHzifD20mdj%2BguoDU126ylqbd9q4Cc6J8EORzGJVfrgZmDix0qjfLGmonB22qLHP0Y13wTnQVPaNYCt9BUUMPR1ZTSWk5RNwAseuOYphTocEw5027xClG%2FlgTDJPw8SII0GJZevcrA5EVW%2BR8rTJOxkgikIMcQ5jZlZxaBQhq%2BKbSw76djV7fSdFe7lIosczuV1Pz47i8E%2BG%2B4PaHx16wfX%2Fgs4wQxcsbd07WyVkrdyDDB8bIw8wpNcUIeH; sdp_samsung_com_jwt=AMwnkt5xbhgH9cWp1aot59sojnGJ3q7jCJGb%2FyPxeprUdBLNBAmHv8cHLnoxUf%2BgF4bUvtMhYEKwuJ87adWQrUCK5%2BpMK314aHIu9pUVm2DuyI0fVIJZ1XxIAk3OzXGxXAB4xonTRODoUjajls8xI053qTPSEju4mMokE5wX%2BRTQSdQ42OkaA4mluv%2BUe5JYC5lGA1UXPlO4MbrOLNbcAPE%2BuEGm6jP5x8kdedfCe%2BxshUwvVaFFtmlQSeOecTxQSq2wdyKZ1p1lzNTmOxE5pz3VKnlmC4BucUb03eWpSs5fIQZ6hZAzc97LackYgWSMadYNxwYZEO6dpRdaFcZPzNBDDK8EU0GNRhODz%2F%2BrC3ctU4WJ64iQcE%2BuQTWvvVGJjSB7BPj2uTLmT%2BkEBqCGlabmwGnfBFAvHI5X0KW3MokNePATntJeZ%2FBXRNeyRY0XPj4UsmrCmk%2B9DOSxA5sKkS0SqD7uhKlmTS%2F3wsCpr2QoZVJub07Q0tlEU7iWFWsP; _ga=GA1.1.1903307243.1732640651; _ga_LCSMK6BNH8=GS1.1.1732640651.1.1.1732640754.60.0.0; RTL-XSRF-TOKEN=455c0527-da05-4d41-8b32-5d7278354a8d; RTL-XSRF-TOKEN-SIG=508d8a02232d64b22d29d655616c6e3c; RTL_FRONT_SESSIONID=YjM3ODAwZmEtM2VhNi00MWVjLWI1ZTctODFlMTgzZTNkMDAy; WEB_CLIENT_DATA=R3CTA0NKBMT; WEB_CLIENT_GATEWAY_R3CTA0NKBMT=ru-moscow07-rtl.developer.samsung.com:443; WEB_CLIENT_TOKEN_R3CTA0NKBMT=FA536C03624F24DEEAC73D221C357EAE; WEB_CLIENT_NAME_R3CTA0NKBMT=SM-M146B-RU2",
+  "cookies": "locale=en-US; sa_trace=7cki4k7m7377uur0to85za3jfjj7m85s; sa_did=ntbqv9dtfaxqu20vyqva; datadome=MXdWWh~teEMPsCW_Jow5roo7tZh0k6OFG5eHiUpizkvPBSbH9QYm8Qa_LIoRbqnHhuNd_slyWI9U7_Au7R2Dwq9RCt5ikYA0hIxA2KFQyKuG~jE7mpOephUJlSM1dZUt; sa_id=73cbc37e6a4fd9600422057e1ca33c4a6776842a87e0a98040a67f59246db364268090d97875f25375c13dcf9408e3f5b267cb9c462569f07e10c48fb88c99d89170a823bb6e22740dd7cd4a6c8d5014180be527f555b1da3686659600e10650adaae8f43a418d1754be3009b13f0ec78f61485ccceaff6cf9f4f5006480e49e171df4d2de7ba2272ab3afa3ce09c652814528c82dc356c60661de920fedde40e70c1b3199bbe050f0aeb170135bc3e87c711441d71f83c22b5a4edf16b20c3c9b6bccf17a09192a5276867596714f565cbee6c6a45cf1180f9203a1b2c942c88f2dd4572a9a9acc2a7e44d08eb2ab5faab08c1425751591fac709acdec6dc5a; sa_state=XTQhVmORlj2EYA830Q5j43Zw1Noyyeq5; SD_PORTAL_SSID=NByhVA9WEpoEhNcwUbjZfYCQ%2F38W2CtLLccxVMF13XZNzkV0gD%2F2fOoQueezLUSH5wi1i5xwHN0NfPaQ69oj8HWrux8QiY8DMyeMlAOi2C5skbNZQIaYyC7z7q2WCvLkwnSmkMHzifD20mdj%2BguoDU126ylqbd9q4Cc6J8EORzGJVfrgZmDix0qjfLGmonB22qLHP0Y13wTnQVPaNYCt9BUUMPR1ZTSWk5RNwAseuOYphTocEw5027xClG%2FlgTDJPw8SII0GJZevcrA5EVW%2BR8rTJOxkgikIMcQ5jZlZxaBQhq%2BKbSw76djV7fSdFe7lIosczuV1Pz47i8E%2BG%2B4PaHx16wfX%2Fgs4wQxcsbd07WyVkrdyDDB8bIw8wpNcUIeH; sdp_samsung_com_jwt=AMwnkt5xbhgH9cWp1aot59sojnGJ3q7jCJGb%2FyPxeprUdBLNBAmHv8cHLnoxUf%2BgF4bUvtMhYEKwuJ87adWQrUCK5%2BpMK314aHIu9pUVm2DuyI0fVIJZ1XxIAk3OzXGxXAB4xonTRODoUjajls8xI053qTPSEju4mMokE5wX%2BRTQSdQ42OkaA4mluv%2BUe5JYC5lGA1UXPlO4MbrOLNbcAPE%2BuEGm6jP5x8kdedfCe%2BxshUwvVaFFtmlQSeOecTxQSq2wdyKZ1p1lzNTmOxE5pz3VKnlmC4BucUb03eWpSs5fIQZ6hZAzc97LackYgWSMadYNxwYZEO6dpRdaFcZPzNBDDK8EU0GNRhODz%2F%2BrC3ctU4WJ64iQcE%2BuQTWvvVGJjSB7BPj2uTLmT%2BkEBqCGlabmwGnfBFAvHI5X0KW3MokNePATntJeZ%2FBXRNeyRY0XPj4UsmrCmk%2B9DOSxA5sKkS0SqD7uhKlmTS%2F3wsCpr2QoZVJub07Q0tlEU7iWFWsP; _ga=GA1.1.1903307243.1732640651; _ga_LCSMK6BNH8=GS1.1.1732640651.1.1.1732640754.60.0.0; RTL-XSRF-TOKEN=e0e9c1a1-be3b-4544-8b9e-84d35a090191; RTL-XSRF-TOKEN-SIG=fe738f39992b6cdc0a6d9368537f2677; RTL_FRONT_SESSIONID=OTg2ZTQwOGItMjE2ZC00MjRiLWJiNGYtMGY2MDA2NjI5MGNi; WEB_CLIENT_DATA=R3CN50P87F; WEB_CLIENT_GATEWAY_R3CN50P87F=kr-gumi53-rtl.developer.samsung.com:443; WEB_CLIENT_TOKEN_R3CN50P87F=E910953A44E8D5F186F3494569450F22; WEB_CLIENT_NAME_R3CN50P87F=SM-N986N-KR6",
   "device": {
+    "5019": {
+      "device": "R38N406WMJF",
+      "base_url": "vn-hanoi15-rtl.developer.samsung.com:443",
+      "token": "3A503D882C54CF4162E3AB6039759056",
+      "name": "SM-N985F-VN1",
+      "credit": 16,
+      "maxTime": "4hr",
+      "checked": true,
+      "reservation_Id": 8693749,
+      "error": true,
+      "finished": true,
+      "termux": false,
+      "created_on": "11/27/2024, 1:28:06 AM",
+      "force_cancel": true,
+      "isMining": false,
+      "cancelled": true,
+      "location": "Vietnam",
+      "finished_on": "11/27/2024, 1:32:21 AM",
+      "finished_Timestamp": 1732651341139,
+      "errorCount": 2
+    },
     "5020": {
       "device": "R58N657T95M",
       "base_url": "vn-hanoi15-rtl.developer.samsung.com:443",
@@ -20,6 +41,25 @@
       "location": "Vietnam",
       "finished_on": "11/26/2024, 11:45:12 PM",
       "finished_Timestamp": 1732644912413
+    },
+    "5200": {
+      "device": "R58N657TDYP",
+      "base_url": "ru-moscow07-rtl.developer.samsung.com:443",
+      "token": "BFF5ACF59BBADC7267DFC39B138B6683",
+      "name": "SM-N985F-RU1",
+      "credit": 16,
+      "maxTime": "4hr",
+      "checked": true,
+      "reservation_Id": 8693687,
+      "error": true,
+      "finished": false,
+      "termux": false,
+      "created_on": "11/27/2024, 1:33:48 AM",
+      "force_cancel": true,
+      "isMining": false,
+      "cancelled": true,
+      "location": "Russia",
+      "errorCount": 2
     },
     "5204": {
       "device": "R58N657TDGV",
@@ -60,6 +100,24 @@
       "location": "Korea",
       "errorCount": 2
     },
+    "5542": {
+      "device": "R3CN50P87F",
+      "base_url": "kr-gumi53-rtl.developer.samsung.com:443",
+      "token": "E910953A44E8D5F186F3494569450F22",
+      "name": "SM-N986N-KR6",
+      "credit": 16,
+      "maxTime": "4hr",
+      "checked": true,
+      "reservation_Id": 8696268,
+      "error": false,
+      "finished": false,
+      "termux": false,
+      "created_on": "11/27/2024, 8:14:23 AM",
+      "force_cancel": false,
+      "isMining": false,
+      "cancelled": false,
+      "location": "Korea"
+    },
     "5543": {
       "device": "R3CMA0GDYQ",
       "base_url": "kr-gumi53-rtl.developer.samsung.com:443",
@@ -98,6 +156,26 @@
       "location": "Russia",
       "finished_on": "11/26/2024, 11:39:27 PM",
       "finished_Timestamp": 1732644567400
+    },
+    "6723": {
+      "device": "R38N503ATGP",
+      "base_url": "ru-moscow07-rtl.developer.samsung.com:443",
+      "token": "14E8944B080240BBEB49E5910B242AB3",
+      "name": "SM-M515F-RU4",
+      "credit": 16,
+      "maxTime": "4hr",
+      "checked": true,
+      "reservation_Id": 8693521,
+      "error": false,
+      "finished": true,
+      "termux": false,
+      "created_on": "11/27/2024, 1:24:09 AM",
+      "force_cancel": true,
+      "isMining": false,
+      "cancelled": true,
+      "location": "Russia",
+      "finished_on": "11/27/2024, 1:27:20 AM",
+      "finished_Timestamp": 1732651040088
     },
     "6724": {
       "device": "R38N503AACE",
@@ -208,14 +286,17 @@
       "maxTime": "4hr",
       "checked": true,
       "reservation_Id": 8693423,
-      "error": false,
-      "finished": false,
+      "error": true,
+      "finished": true,
       "termux": false,
       "created_on": "11/27/2024, 1:12:43 AM",
-      "force_cancel": false,
+      "force_cancel": true,
       "isMining": false,
-      "cancelled": false,
-      "location": "Russia"
+      "cancelled": true,
+      "location": "Russia",
+      "finished_on": "11/27/2024, 1:22:40 AM",
+      "finished_Timestamp": 1732650760613,
+      "errorCount": 2
     },
     "11771": {
       "device": "R3CRB0YPTYL",
@@ -238,19 +319,19 @@
       "finished_Timestamp": 1732646974289
     }
   },
-  "last_device": 11398,
+  "last_device": 5542,
   "user": "sjsggcwmshskssz+farnsworth@gmail.com",
-  "totalCredit": 33,
-  "today_credits_left": 28,
-  "Totalcount": 12,
-  "finishCount": 9,
+  "totalCredit": 4,
+  "today_credits_left": -5,
+  "Totalcount": 16,
+  "finishCount": 12,
   "startCredit": 65,
   "finishList": {
     "Russia": {
-      "count": 6
+      "count": 8
     },
     "Vietnam": {
-      "count": 2
+      "count": 3
     },
     "Poland": {
       "count": 1
@@ -259,6 +340,12 @@
   "deadList": {
     "Korea": {
       "count": 2
+    },
+    "Russia": {
+      "count": 2
+    },
+    "Vietnam": {
+      "count": 1
     }
   }
 }

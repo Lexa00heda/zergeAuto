@@ -166,6 +166,15 @@ while(i<condition):
         except:
             print("cookie page")
             pass
+        try:
+            updated_policy_text = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[contains(text(), 'SAMSUNG and Cookies')]"))).text
+            if updated_policy_text:
+                print("SAMSUNG and Cookies")
+                wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[contains(text(), 'Continue without accepting')])[1]"))).click()
+            else:
+                print("auth page")
+        except:
+            print("auth page")
         time.sleep(1)
         started = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="desktop-btn"]')))
         started.click()
