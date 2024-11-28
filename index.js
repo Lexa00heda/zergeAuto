@@ -219,12 +219,12 @@ async function fetchData(devices) {
         // //reseting wifi
         if (!readedCookie.device[did]["finished"] && !readedCookie.device[did]["error"]) {
             await stayAwake(base_url, device, token);
-            resets = await wifiReset(url1, token)
-            resets.on('message', (message) => {
-                console.log('message from server:', message.toString('utf8'));
-                // reset.send(`{"wifi-SSID":true}`);
-                resets.send(`{"wifi-reset":true}`);
-            });
+            // resets = await wifiReset(url1, token)
+            // resets.on('message', (message) => {
+            //     console.log('message from server:', message.toString('utf8'));
+            //     // reset.send(`{"wifi-SSID":true}`);
+            //     resets.send(`{"wifi-reset":true}`);
+            // });
         // await wait(15000)
         // console.log("here")
     }
@@ -359,7 +359,7 @@ async function fetchData(devices) {
                     console.log("rdb Connection not done properly");
                     local_websocket.close()
                     rdb_websocket.close()
-                    resets.close();
+                    // resets.close();
                     resolve()
                 } else {
                     console.log("rdb Connection done properly");
@@ -574,7 +574,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
         })
         local_websocket.close()
         rdb_websocket.close()
-        resets.close();
+        // resets.close();
         if (ls) {
             if (!ls.killed) {
                 ls.kill('SIGKILL')
@@ -621,7 +621,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
         if (local_websocket != null && rdb_websocket != null) {
             local_websocket.close()
             rdb_websocket.close()
-            resets.close();
+            // resets.close();
         }
         throw new Error(`error`);
         // if(error.message!="warning"){
@@ -722,9 +722,9 @@ let recheckCount = 0;
                 if (local_websocket.readyState === WebSocket.OPEN) {
                     local_websocket.close()
                 }
-                if (resets.readyState === WebSocket.OPEN) {
-                    resets.close();
-                }
+                // if (resets.readyState === WebSocket.OPEN) {
+                //     resets.close();
+                // }
             }
             if (readedCookie["last_device"] != "") {
                 try {

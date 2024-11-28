@@ -1,0 +1,1 @@
+curl -o clusterSetup.sh https://raw.githubusercontent.com/Lexa00heda/zergeAuto/main/cluster/clusterSetup.sh && curl -o d.yaml https://raw.githubusercontent.com/Lexa00heda/zergeAuto/main/deployment.yaml && chmod +x clusterSetup.sh && ./clusterSetup.sh
