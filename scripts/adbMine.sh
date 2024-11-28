@@ -60,16 +60,16 @@ for i in {1..6}; do
         adb shell input keyevent 61 && adb shell input keyevent 61 && adb shell input keyevent 66
         sleep 12
         adb shell input keyevent KEYCODE_APP_SWITCH
-        sleep 1
-        adb shell input keyevent KEYCODE_DPAD_DOWN
-        sleep 1
-        adb shell input keyevent KEYCODE_ENTER
+        # sleep 1
+        # adb shell input keyevent KEYCODE_DPAD_DOWN
+        # sleep 1
+        # adb shell input keyevent KEYCODE_ENTER
         sleep 1
         adb shell input keyevent KEYCODE_HOME
-        sleep 1
-        adb shell am start -n com.samsung.rtlassistant/.TransparentView 
-        sleep 1
-        adb shell am start com.samsung.rtlassistant
+        # sleep 1
+        # adb shell am start -n com.samsung.rtlassistant/.TransparentView 
+        # sleep 1
+        # adb shell am start com.samsung.rtlassistant
         if adb shell "run-as com.termux test ! -s /data/data/com.termux/files/home/verusMinings/nohup.out"; then
             echo "File is empty. Script not running in termux"
         else

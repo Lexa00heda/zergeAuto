@@ -10,13 +10,9 @@ export async function wifiReset(url, key) {
             console.log('WebSocket connection established.');
             console.log('Connection Details:');
             console.log('URL:', socket.url);
-            console.log('Ready State:', socket.readyState);
-            console.log('Protocol:', socket.protocol);
-            console.log('Buffered Amount:', socket.bufferedAmount);
-
             // You can send messages here if needed
             socket.send(`{"wifi-SSID":true}`);
-            socket.send(`{"wifi-reset":true}`);
+            // socket.send(`{"wifi-reset":true}`);
             console.log("Messages sent");
 
             resolve(socket); // Resolve the promise with the socket instance

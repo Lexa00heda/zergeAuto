@@ -64,6 +64,7 @@ let devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 let local_websocket;
 let rdb_websocket;
+let resets;
 let vpn
 let ls
 let mineStart;
@@ -216,18 +217,19 @@ async function fetchData(devices) {
         // clearTimeout(deviceFetchTimeOut)
 
         // //reseting wifi
-        if (!readedCookie.device[did]["finished"] || isMining) {
+        if (!readedCookie.device[did]["finished"] && !readedCookie.device[did]["error"]) {
             await stayAwake(base_url, device, token);
-            // const reset = await wifiReset(url1, token)
-            // reset.on('message', (message) => {
-            //     console.log('message from server:', message.toString('utf8'));
-            //     reset.send(`{"wifi-SSID":true}`);
-            //     reset.send(`{"wifi-reset":true}`);
-            //     reset.close();
-            // });
-            // console.log("here")
-        }
-        if (readedCookie.device[did].reservation_Id == null) {
+            resets = await wifiReset(url1, token)
+            resets.on('message', (message) => {
+                console.log('message from server:', message.toString('utf8'));
+                // reset.send(`{"wifi-SSID":true}`);
+                resets.send(`{"wifi-reset":true}`);
+            });
+        // await wait(15000)
+        // console.log("here")
+    }
+    if (readedCookie.device[did].reservation_Id == null) {
+            // console.log("435345345")
             const data = await getReservationId(did, readedCookie["cookies"])
             console.log("reservation: ", data)
             readedCookie.device[did].name ? readedCookie.device[did].name.replace(" ", "") : readedCookie.device[did].name = data.name.replace(/\s+/g, '');
@@ -237,6 +239,7 @@ async function fetchData(devices) {
             await writeCookieFile(readedCookie);
 
         }
+        console.log("dsfd")
         // adb to device
         // // local websocket
         let messages;
@@ -356,6 +359,7 @@ async function fetchData(devices) {
                     console.log("rdb Connection not done properly");
                     local_websocket.close()
                     rdb_websocket.close()
+                    resets.close();
                     resolve()
                 } else {
                     console.log("rdb Connection done properly");
@@ -570,6 +574,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
         })
         local_websocket.close()
         rdb_websocket.close()
+        resets.close();
         if (ls) {
             if (!ls.killed) {
                 ls.kill('SIGKILL')
@@ -616,6 +621,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
         if (local_websocket != null && rdb_websocket != null) {
             local_websocket.close()
             rdb_websocket.close()
+            resets.close();
         }
         throw new Error(`error`);
         // if(error.message!="warning"){
@@ -715,6 +721,9 @@ let recheckCount = 0;
                 }
                 if (local_websocket.readyState === WebSocket.OPEN) {
                     local_websocket.close()
+                }
+                if (resets.readyState === WebSocket.OPEN) {
+                    resets.close();
                 }
             }
             if (readedCookie["last_device"] != "") {
