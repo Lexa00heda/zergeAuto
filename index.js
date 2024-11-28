@@ -106,6 +106,7 @@ async function fetchData(devices) {
 
         } else {
             readedCookie["user"] = userData["email"]
+            readedCookie["indexCookie"] = process.argv[2]
             readedCookie["totalCredit"] = userData["point"]
             readedCookie["startCredit"] = userData["point"]
             readedCookie["device"] = {}
@@ -239,7 +240,6 @@ async function fetchData(devices) {
             await writeCookieFile(readedCookie);
 
         }
-        console.log("dsfd")
         // adb to device
         // // local websocket
         let messages;
