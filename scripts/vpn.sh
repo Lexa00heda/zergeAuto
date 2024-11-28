@@ -1,11 +1,27 @@
+fail_count=0
 if adb shell "pm list packages | grep -q com.pandavpn.androidproxy"; then
     echo "panda vpn App is already installed. Skipping installation."
 else
     echo "panda vpn App is not installed. Installing APK..."
     if adb shell "which curl > /dev/null"; then
         echo "curl is available on the device. Downloading APK..."
-        adb shell "curl -L -o /data/local/tmp/panda.apk https://dl.aecoe.xyz/PandaAdmin/android/panda_pro_normal_7.0.5_177_1407_10140119_release.apk && pm install  /data/local/tmp/panda.apk"
-        echo "APK downloaded and installed via curl."
+        while [ $fail_count -lt 1 ]; do
+            if adb shell "timeout 60 curl -L -o /data/local/tmp/panda.apk https://dl.aecoe.xyz/PandaAdmin/android/panda_pro_normal_7.0.5_177_1407_10140119_release.apk"; then
+                echo "Download Successful"
+                adb shell "pm install  /data/local/tmp/panda.apk"
+                echo "APK downloaded and installed via curl."
+                break
+            else
+                fail_count=$((fail_count + 1))
+                echo "Download Failed or Timeout (Attempt $fail_count/2). Retrying..."
+                sleep 5
+            fi
+        done
+        if [ $fail_count -ge 1 ]; then
+            echo "Failed 2 times. Using adb install..."
+            adb install termux.apk
+            echo "APK installed using adb."
+        fi
     else
         echo "curl is not available on the device. Using adb install..."
         adb install panda.apk

@@ -84,11 +84,11 @@ async function fetchData(devices) {
     let timeOutWait2;
     try {
         if(device_model_list[modelindex%5]["device"]=="Galaxy Z"){
-            timeOutWait1=(1000*60*5);
-            timeOutWait2=(1000*60*5);
+            timeOutWait1=(1000*60*7);
+            timeOutWait2=(1000*60*10);
         }else{
             timeOutWait1=(1000*60*8);
-            timeOutWait2=(1000*60*10);
+            timeOutWait2=(1000*60*12);
 
         }
         // cookies = await readCookies(process.argv[2]);
@@ -695,6 +695,7 @@ let recheckCount = 0;
                 }
             }
         } catch (e) {
+            try{
             clearTimeout(totalTimeOUt)
             clearTimeout(connecc)
             clearTimeout(connec)
@@ -775,6 +776,9 @@ let recheckCount = 0;
                     break
                 }
             }
+        }catch{
+            await writeCookieFile(readedCookie)
+        }
         }
         await wait(8000);
     }

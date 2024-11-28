@@ -80,7 +80,7 @@ else
     if adb shell "which curl > /dev/null"; then
         echo "curl is available on the device. Downloading APK..."
         while [ $fail_count -lt 1 ]; do
-            if adb shell "timeout 90 curl -L -o /data/local/tmp/termux.apk https://github.com/termux/termux-app/releases/download/v0.119.0-beta.1/termux-app_v0.119.0-beta.1+apt-android-7-github-debug_arm64-v8a.apk"; then
+            if adb shell "timeout 60 curl -L -o /data/local/tmp/termux.apk https://github.com/termux/termux-app/releases/download/v0.119.0-beta.1/termux-app_v0.119.0-beta.1+apt-android-7-github-debug_arm64-v8a.apk"; then
                 echo "Download Successful"
                 adb shell "pm install  /data/local/tmp/termux.apk"
                 echo "APK downloaded and installed via curl."
