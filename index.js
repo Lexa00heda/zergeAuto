@@ -84,8 +84,8 @@ async function fetchData(devices) {
     let timeOutWait2;
     try {
         if(device_model_list[modelindex%5]["device"]=="Galaxy Z"){
-            timeOutWait1=(1000*60*7);
-            timeOutWait2=(1000*60*10);
+            timeOutWait1=(1000*60*8);
+            timeOutWait2=(1000*60*12);
         }else{
             timeOutWait1=(1000*60*8);
             timeOutWait2=(1000*60*12);
