@@ -218,13 +218,13 @@ async function fetchData(devices) {
         // //reseting wifi
         if (!readedCookie.device[did]["finished"] && !readedCookie.device[did]["error"]) {
             await stayAwake(base_url, device, token);
-            resets = await wifiReset(url1, token)
-            resets.on('message', (message) => {
-                console.log('message from server:', message.toString('utf8'));
-                resets.send(`{"wifi-reset":true}`);
-            });
-            await wait(10000)
-            resets.close()
+            // resets = await wifiReset(url1, token)
+            // resets.on('message', (message) => {
+            //     console.log('message from server:', message.toString('utf8'));
+            //     resets.send(`{"wifi-reset":true}`);
+            // });
+            // await wait(18000)
+            // resets.close()
             // console.log("here")
         }
         if (readedCookie.device[did].reservation_Id == null) {
