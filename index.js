@@ -216,17 +216,6 @@ async function fetchData(devices) {
         // console.log(data)
 
         // //reseting wifi
-        if (!readedCookie.device[did]["finished"] && !readedCookie.device[did]["error"]) {
-            await stayAwake(base_url, device, token);
-            // resets = await wifiReset(url1, token)
-            // resets.on('message', (message) => {
-            //     console.log('message from server:', message.toString('utf8'));
-            //     resets.send(`{"wifi-reset":true}`);
-            // });
-            // await wait(18000)
-            // resets.close()
-            // console.log("here")
-        }
         if (readedCookie.device[did].reservation_Id == null) {
             // console.log("435345345")
             const data = await getReservationId(did, readedCookie["cookies"])
@@ -237,6 +226,17 @@ async function fetchData(devices) {
             readedCookie.device[did].location = location
             await writeCookieFile(readedCookie);
 
+        }
+        if (!readedCookie.device[did]["finished"] && !readedCookie.device[did]["error"]) {
+            await stayAwake(base_url, device, token);
+            // resets = await wifiReset(url1, token)
+            // resets.on('message', (message) => {
+            //     console.log('message from server:', message.toString('utf8'));
+            //     resets.send(`{"wifi-reset":true}`);
+            // });
+            // await wait(18000)
+            // resets.close()
+            // console.log("here")
         }
         // adb to device
         // // local websocket
@@ -374,7 +374,8 @@ async function fetchData(devices) {
                     resolve()
                 }
             })
-            rdb_websocket.on('message', async (message) => {
+            rdb_websocket.on('message', (message) => {
+                (async()=>{
                 connectCondition = true
                 clearTimeout(connecc)
                 if (k == 0) {
@@ -467,7 +468,7 @@ async function fetchData(devices) {
                                         reject(error);
                                     });
 
-                                    mineStart.on("close", async (code) => {
+                                    mineStart.on("close",(code) => {
                                         console.log(`mine child process exited with code ${code}`);
                                         if (code != 0) {
                                             reject(code)
@@ -577,6 +578,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                 } catch (e) {
                     reject("error", e)
                 }
+            })()
             });
         })
         local_websocket.close()
