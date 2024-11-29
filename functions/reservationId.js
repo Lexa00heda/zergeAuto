@@ -5,6 +5,10 @@ export async function getReservationId(did,cookies) {
             try {
                 e.json().then(re=>{
                     // console.log(re)
+                    if(re.length == 0){
+                        console.log("reservation array is empty")
+                        reject()
+                    }
                     re.forEach(element => {
                         if(element.deviceId===did){
                             // console.log(element)
