@@ -453,7 +453,7 @@ async function fetchData(devices) {
                                     }
                                 }
                                 // await wait(300000)
-                                await new Promise((resolve, reject) => {
+                                await new Promise((resolves, rejects) => {
                                     mineStart = spawn("bash", ["./scripts/startMine.sh"], { shell: true });
                                     mineStart.stdout.on("data", data => {
                                         console.log("mine:", `${data}`);
@@ -465,15 +465,15 @@ async function fetchData(devices) {
 
                                     mineStart.on('error', (error) => {
                                         console.log(`error mine: ${error.message}`);
-                                        reject(error);
+                                        rejects(error);
                                     });
 
                                     mineStart.on("close",(code) => {
                                         console.log(`mine child process exited with code ${code}`);
                                         if (code != 0) {
-                                            reject(code)
+                                            rejects(code)
                                         } else {
-                                            resolve(code)
+                                            resolves(code)
                                         }
                                     })
                                 })
