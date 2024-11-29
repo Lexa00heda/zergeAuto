@@ -704,8 +704,6 @@ let recheckCount = 0;
                 }
             }
         } catch (e) {
-            console.log("ooook")
-            await wait(10000)
             try {
                 clearTimeout(totalTimeOUt)
                 clearTimeout(connecc)
@@ -734,11 +732,13 @@ let recheckCount = 0;
                     if (local_websocket.readyState === WebSocket.OPEN) {
                         local_websocket.close()
                     }
-                    if (resets.readyState === WebSocket.OPEN) {
-                        resets.close();
-                    }
+                    // if (resets.readyState === WebSocket.OPEN) {
+                    //     resets.close();
+                    // }
                 }
                 if (readedCookie["last_device"] != "") {
+                    console.log("ooook")
+            await wait(10000)
                     try {
                         console.log("error: ", e)
                         if (readedCookie.device[readedCookie["last_device"]].error == false) {
