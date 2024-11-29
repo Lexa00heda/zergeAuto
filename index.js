@@ -752,12 +752,12 @@ let recheckCount = 0;
                                 } catch {
                                     try{
                                         const data = await getReservationId(readedCookie["last_device"], readedCookie["cookies"])
+                                        readedCookie.device[readedCookie["last_device"]].reservation_Id = data.reserve
+                                        await cancelReservation(readedCookie["last_device"], readedCookie.device[readedCookie["last_device"]]["reservation_Id"])
                                     }catch{
                                         console.log("cant able to get reservation id,cancelling...")
                                         readedCookie.device[readedCookie["last_device"]]["cancelled"] = true
                                     }
-                                    readedCookie.device[readedCookie["last_device"]].reservation_Id = data.reserve
-                                    await cancelReservation(readedCookie["last_device"], readedCookie.device[readedCookie["last_device"]]["reservation_Id"])
                                 }
                                 readedCookie.device[readedCookie["last_device"]]["force_cancel"] = true
                                 cookies = await readCookies(process.argv[2]);

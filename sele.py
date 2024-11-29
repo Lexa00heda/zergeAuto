@@ -176,8 +176,11 @@ while(i<condition):
         except:
             print("auth page")
         time.sleep(1)
-        started = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="desktop-btn"]')))
-        started.click()
+        try:
+            started = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="desktop-btn"]')))
+            started.click()
+        except:
+            pass
         cookies = driver.get_cookies()
         if(len(sys.argv) > 1):
             if(args=="-1"):
