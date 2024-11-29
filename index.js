@@ -610,12 +610,10 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
         clearTimeout(totalTimeOUt)
         clearTimeout(connecc)
         clearTimeout(connec)
-        console.log("ooook")
-        await wait(10000)
         if (ls) {
             if (!ls.killed) {
                 ls.kill('SIGKILL')
-
+                
             }
         }
         if (vpn) {
@@ -626,7 +624,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
         if (mineStart) {
             if (!mineStart.killed) {
                 mineStart.kill('SIGKILL')
-
+                
             }
         }
         if (local_websocket != null && rdb_websocket != null) {
@@ -636,9 +634,9 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
         }
         throw new Error(`error`);
         // if(error.message!="warning"){
-        // }
+            // }
+        }
     }
-}
 
 let count = 0;
 let recheckCount = 0;
@@ -706,6 +704,8 @@ let recheckCount = 0;
                 }
             }
         } catch (e) {
+            console.log("ooook")
+            await wait(10000)
             try {
                 clearTimeout(totalTimeOUt)
                 clearTimeout(connecc)
