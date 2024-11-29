@@ -54,6 +54,10 @@ else
             break
         else
             echo "Device is not connected to Wi-Fi."
+            if [ $i -eq 5 ]; then
+                echo "Exiting script due to Device is not connected to Wi-Fi. $i attempts."
+                exit 1
+            fi
             adb shell svc wifi enable
         fi
     done

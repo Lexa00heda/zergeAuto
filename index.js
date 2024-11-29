@@ -21,6 +21,8 @@ import path from 'path';
 import WebSocket from 'ws';
 import { cancelPrevReservation } from './functions/cancelPrevReservation.js';
 import { error } from 'console';
+import { screenZ } from './websocket/screenZ.js';
+import { runExec } from './functions/runExec.js';
 
 // import myJson from './user.json' assert { type: 'json' };
 const productUrl = `https://developer.samsung.com/remotetestlab/rtl/api/v1/products?os=125`;
@@ -83,12 +85,12 @@ async function fetchData(devices) {
     let timeOutWait1;
     let timeOutWait2;
     try {
-        if(device_model_list[modelindex%5]["device"]=="Galaxy Z"){
-            timeOutWait1=(1000*60*15);
-            timeOutWait2=(1000*60*15);
-        }else{
-            timeOutWait1=(1000*60*15);
-            timeOutWait2=(1000*60*15);
+        if (device_model_list[modelindex % 5]["device"] == "Galaxy Z") {
+            timeOutWait1 = (1000 * 60 * 15);
+            timeOutWait2 = (1000 * 60 * 15);
+        } else {
+            timeOutWait1 = (1000 * 60 * 15);
+            timeOutWait2 = (1000 * 60 * 15);
 
         }
         // cookies = await readCookies(process.argv[2]);
@@ -211,25 +213,21 @@ async function fetchData(devices) {
             throw new Error(`HTTP error! Status: ${initial.status}`);
         }
         const data = await initial.json();
-        // console.log(data);
-
-        //device fetched sucessfully
-        // deviceFetched = true
-        // clearTimeout(deviceFetchTimeOut)
+        // console.log(data)
 
         // //reseting wifi
         if (!readedCookie.device[did]["finished"] && !readedCookie.device[did]["error"]) {
             await stayAwake(base_url, device, token);
-            // resets = await wifiReset(url1, token)
-            // resets.on('message', (message) => {
-            //     console.log('message from server:', message.toString('utf8'));
-            //     // reset.send(`{"wifi-SSID":true}`);
-            //     resets.send(`{"wifi-reset":true}`);
-            // });
-        // await wait(15000)
-        // console.log("here")
-    }
-    if (readedCookie.device[did].reservation_Id == null) {
+            resets = await wifiReset(url1, token)
+            resets.on('message', (message) => {
+                console.log('message from server:', message.toString('utf8'));
+                resets.send(`{"wifi-reset":true}`);
+            });
+            await wait(10000)
+            resets.close()
+            // console.log("here")
+        }
+        if (readedCookie.device[did].reservation_Id == null) {
             // console.log("435345345")
             const data = await getReservationId(did, readedCookie["cookies"])
             console.log("reservation: ", data)
@@ -406,7 +404,6 @@ async function fetchData(devices) {
                                 if (isMining) {
                                     console.log("Device is already in mining")
                                 }
-
                                 if (eventAliveLocation.includes(readedCookie.device[did]["location"])) {
                                     //create event websocket to keep alive (test)
                                     const childs = spawn('node', [path.join(process.cwd(), '/websocket/eventAlive.js'), readedCookie.device[did]["device"], readedCookie.device[did]["base_url"], readedCookie.device[did]["token"]], {
@@ -445,6 +442,16 @@ async function fetchData(devices) {
                                 //     reject()
                                 // }
                                 await wait(3000)
+                                if (device_model_list[modelindex % 5]["device"] == "Galaxy Z") {
+                                    const adbCommand = 'adb shell cmd device_state state 3';
+                                    try {
+                                        await runExec(adbCommand);  // Wait for the command to finish
+                                        console.log('display state changed output:');
+                                    } catch (error) {
+                                        console.error('Error:', error);
+                                    }
+                                }
+                                // await wait(300000)
                                 await new Promise((resolve, reject) => {
                                     mineStart = spawn("bash", ["./scripts/startMine.sh"], { shell: true });
                                     mineStart.stdout.on("data", data => {
@@ -508,23 +515,23 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                         exit_code = code
                                         if (code != 0) {
                                             reject(code)
-                                        }else{
+                                        } else {
                                             // // vpn setup
                                             if (vpn_locations.includes(location)) {
                                                 vpn = spawn("bash", ["./scripts/vpn.sh"], { shell: true });
                                                 vpn.stdout.on("data", data => {
                                                     console.log(`stdout vpn: ${data}`);
                                                 });
-    
+
                                                 vpn.stderr.on("data", data => {
                                                     console.log(`stderr vpn: ${data}`);
                                                 });
-    
+
                                                 vpn.on('error', (error) => {
                                                     console.log(`error vpn: ${error.message}`);
                                                     reject(error);
                                                 });
-    
+
                                                 vpn.on("close", code => {
                                                     if (code != 0) {
                                                         exit_code = code
@@ -537,7 +544,7 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                                         resolve(code)
                                                     }
                                                 });
-                                            }else{
+                                            } else {
                                                 resolve(exit_code)
                                             }
 
@@ -636,7 +643,7 @@ let recheckCount = 0;
         try {
             console.log("count: ", count, "length: ", devices.length)
             if ((readedCookie["last_device"] != "" && readedCookie.device[readedCookie["last_device"]].cancelled) || readedCookie["last_device"] == "") {
-                if (count > devices.length || devices.length==0) {
+                if (count > devices.length || devices.length == 0) {
                     recheckCount = recheckCount + 1
                     if (recheckCount > 4) {
                         console.log("recheckCount: ", recheckCount)
@@ -648,7 +655,7 @@ let recheckCount = 0;
                     let i
                     if (devices.length == 0) {
                         for (i = 0; i < 5; i++) {
-                            console.log("no device is available for ",device_model_list[modelindex % 5]["device"],"for locations other than",ignoreDevice.join(", "),".retrying ", i, "...")
+                            console.log("no device is available for ", device_model_list[modelindex % 5]["device"], "for locations other than", ignoreDevice.join(", "), ".retrying ", i, "...")
                             devices = await getDevice(device_model_id, ignoreDevice)
                             if (devices.length != 0) {
                                 count = 0
@@ -672,7 +679,7 @@ let recheckCount = 0;
             }
             // await cancelPrevReservation(readedCookie["last_device"], readedCookie["cookies"])
             await cancelPrevReservation(readedCookie["last_device"], cookies)
-            if(devices.length!=0){
+            if (devices.length != 0) {
                 if (readedCookie["last_device"] != "") {
                     if (!readedCookie.device[readedCookie["last_device"]].cancelled) {
                         console.log("prevoius device: ", readedCookie["last_device"])
@@ -695,91 +702,91 @@ let recheckCount = 0;
                 }
             }
         } catch (e) {
-            try{
-            clearTimeout(totalTimeOUt)
-            clearTimeout(connecc)
-            clearTimeout(connec)
-            if (ls) {
-                if (!ls.killed) {
-                    ls.kill('SIGKILL')
+            try {
+                clearTimeout(totalTimeOUt)
+                clearTimeout(connecc)
+                clearTimeout(connec)
+                if (ls) {
+                    if (!ls.killed) {
+                        ls.kill('SIGKILL')
 
-                }
-            }
-            if (vpn) {
-                if (!vpn.killed) {
-                    vpn.kill('SIGKILL')
-                }
-            }
-            if (mineStart) {
-                if (!mineStart.killed) {
-                    mineStart.kill('SIGKILL')
-
-                }
-            }
-            if (rdb_websocket != null) {
-                if (rdb_websocket.readyState === WebSocket.OPEN) {
-                    rdb_websocket.close()
-                }
-                if (local_websocket.readyState === WebSocket.OPEN) {
-                    local_websocket.close()
-                }
-                // if (resets.readyState === WebSocket.OPEN) {
-                //     resets.close();
-                // }
-            }
-            if (readedCookie["last_device"] != "") {
-                try {
-                    console.log("error: ", e)
-                    if (readedCookie.device[readedCookie["last_device"]].error == false) {
-                        readedCookie.device[readedCookie["last_device"]].error = true
-                        readedCookie.device[readedCookie["last_device"]].errorCount = 1
-                        await writeCookieFile(readedCookie)
-                    } else {
-                        if (readedCookie.device[readedCookie["last_device"]].errorCount > 1) {
-                            readedCookie["cookies"] = await readCookiesWithSession(process.argv[2])
-                            await wait(4000)
-                            try {
-                                await cancelReservation(readedCookie["last_device"], readedCookie.device[readedCookie["last_device"]]["reservation_Id"])
-                            } catch {
-                                const data = await getReservationId(readedCookie["last_device"], readedCookie["cookies"])
-                                readedCookie.device[readedCookie["last_device"]].reservation_Id = data.reserve
-                                await cancelReservation(readedCookie["last_device"], readedCookie.device[readedCookie["last_device"]]["reservation_Id"])
-                            }
-                            readedCookie.device[readedCookie["last_device"]]["force_cancel"] = true
-                            cookies = await readCookies(process.argv[2]);
-                            const user = await fetch("https://developer.samsung.com/remotetestlab/rtl/api/v1/users/me", { method: 'GET', headers: { 'Cookie': cookies }, });
-                            try {
-                                readedCookie.deadList[readedCookie.device[readedCookie["last_device"]]["location"]]["count"] = readedCookie.deadList[readedCookie.device[readedCookie["last_device"]]["location"]]["count"] + 1
-                            } catch {
-                                readedCookie.deadList[readedCookie.device[readedCookie["last_device"]]["location"]] = { "count": 1 }
-                            }
-                            count = count + 1
-                            const userData = await user.json()
-                            readedCookie.device[readedCookie["last_device"]]["cancelled"] = true
-                            console.log(userData)
-                            console.log(`points before:${readedCookie["totalCredit"]}, points after:${userData["point"]}`)
-                            readedCookie["today_credits_left"] = daily_limit - (readedCookie["startCredit"] - userData["point"])
-                            await writeCookieFile(readedCookie)
-                            console.log("reservation cancelled")
-                        } else {
-                            if (readedCookie.device[readedCookie["last_device"]].errorCount == null) {
-                                readedCookie.device[readedCookie["last_device"]].errorCount = 1
-                            }
-                            readedCookie.device[readedCookie["last_device"]].errorCount = readedCookie.device[readedCookie["last_device"]].errorCount + 1
-                        }
                     }
-                } catch {
+                }
+                if (vpn) {
+                    if (!vpn.killed) {
+                        vpn.kill('SIGKILL')
+                    }
+                }
+                if (mineStart) {
+                    if (!mineStart.killed) {
+                        mineStart.kill('SIGKILL')
 
+                    }
                 }
-            } else {
-                if (readedCookie["today_credits_left"] < credit || readedCookie["startCredit"] < credit) {
-                    break
+                if (rdb_websocket != null) {
+                    if (rdb_websocket.readyState === WebSocket.OPEN) {
+                        rdb_websocket.close()
+                    }
+                    if (local_websocket.readyState === WebSocket.OPEN) {
+                        local_websocket.close()
+                    }
+                    if (resets.readyState === WebSocket.OPEN) {
+                        resets.close();
+                    }
                 }
+                if (readedCookie["last_device"] != "") {
+                    try {
+                        console.log("error: ", e)
+                        if (readedCookie.device[readedCookie["last_device"]].error == false) {
+                            readedCookie.device[readedCookie["last_device"]].error = true
+                            readedCookie.device[readedCookie["last_device"]].errorCount = 1
+                            await writeCookieFile(readedCookie)
+                        } else {
+                            if (readedCookie.device[readedCookie["last_device"]].errorCount > 1) {
+                                readedCookie["cookies"] = await readCookiesWithSession(process.argv[2])
+                                await wait(4000)
+                                try {
+                                    await cancelReservation(readedCookie["last_device"], readedCookie.device[readedCookie["last_device"]]["reservation_Id"])
+                                } catch {
+                                    const data = await getReservationId(readedCookie["last_device"], readedCookie["cookies"])
+                                    readedCookie.device[readedCookie["last_device"]].reservation_Id = data.reserve
+                                    await cancelReservation(readedCookie["last_device"], readedCookie.device[readedCookie["last_device"]]["reservation_Id"])
+                                }
+                                readedCookie.device[readedCookie["last_device"]]["force_cancel"] = true
+                                cookies = await readCookies(process.argv[2]);
+                                const user = await fetch("https://developer.samsung.com/remotetestlab/rtl/api/v1/users/me", { method: 'GET', headers: { 'Cookie': cookies }, });
+                                try {
+                                    readedCookie.deadList[readedCookie.device[readedCookie["last_device"]]["location"]]["count"] = readedCookie.deadList[readedCookie.device[readedCookie["last_device"]]["location"]]["count"] + 1
+                                } catch {
+                                    readedCookie.deadList[readedCookie.device[readedCookie["last_device"]]["location"]] = { "count": 1 }
+                                }
+                                count = count + 1
+                                const userData = await user.json()
+                                readedCookie.device[readedCookie["last_device"]]["cancelled"] = true
+                                console.log(userData)
+                                console.log(`points before:${readedCookie["totalCredit"]}, points after:${userData["point"]}`)
+                                readedCookie["today_credits_left"] = daily_limit - (readedCookie["startCredit"] - userData["point"])
+                                await writeCookieFile(readedCookie)
+                                console.log("reservation cancelled")
+                            } else {
+                                if (readedCookie.device[readedCookie["last_device"]].errorCount == null) {
+                                    readedCookie.device[readedCookie["last_device"]].errorCount = 1
+                                }
+                                readedCookie.device[readedCookie["last_device"]].errorCount = readedCookie.device[readedCookie["last_device"]].errorCount + 1
+                            }
+                        }
+                    } catch {
+
+                    }
+                } else {
+                    if (readedCookie["today_credits_left"] < credit || readedCookie["startCredit"] < credit) {
+                        break
+                    }
+                }
+            } catch {
+                await writeCookieFile(readedCookie)
+                count = count + 1
             }
-        }catch{
-            await writeCookieFile(readedCookie)
-            count = count + 1
-        }
         }
         await wait(8000);
     }
