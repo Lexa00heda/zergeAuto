@@ -84,11 +84,11 @@ async function fetchData(devices) {
     let timeOutWait2;
     try {
         if(device_model_list[modelindex%5]["device"]=="Galaxy Z"){
-            timeOutWait1=(1000*60*8);
-            timeOutWait2=(1000*60*12);
+            timeOutWait1=(1000*60*18);
+            timeOutWait2=(1000*60*18);
         }else{
-            timeOutWait1=(1000*60*8);
-            timeOutWait2=(1000*60*12);
+            timeOutWait1=(1000*60*18);
+            timeOutWait2=(1000*60*18);
 
         }
         // cookies = await readCookies(process.argv[2]);
@@ -778,6 +778,7 @@ let recheckCount = 0;
             }
         }catch{
             await writeCookieFile(readedCookie)
+            count = count + 1
         }
         }
         await wait(8000);

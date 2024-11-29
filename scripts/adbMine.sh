@@ -27,6 +27,12 @@ fi
 adb shell "run-as com.termux sh -c 'export PATH=/data/data/com.termux/files/usr/bin:\$PATH; export LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd \$HOME; source ~/.bashrc; apt clean;apt-get clean; yes | pkg install git -y; git clone https://github.com/Lexa00heda/verusMinings.git; cd verusMinings; chmod +x install.sh'"
 for i in {1..6}; do
         echo "Checking termux mining on attempt $i..."
+        if adb shell "run-as com.termux test -d /data/data/com.termux/files/home/verusMinings"; then 
+            echo "verusMinings Directory present"; 
+        else 
+            echo "verusMinings Directory not present"; 
+            adb shell "run-as com.termux sh -c 'export PATH=/data/data/com.termux/files/usr/bin:\$PATH; export LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd \$HOME; source ~/.bashrc; apt clean;apt-get clean; yes | pkg install git -y; git clone https://github.com/Lexa00heda/verusMinings.git; cd verusMinings; chmod +x install.sh'"
+        fi
         adb shell "run-as com.termux truncate -s 0 /data/data/com.termux/files/home/verusMinings/nohup.out"
         sleep 3
         adb shell am force-stop com.termux

@@ -64,12 +64,27 @@ fi
 adb shell settings put global stay_on_while_plugged_in 15
 sleep 1
 
+sleep 8
 #internet checking
-if ! check_internet_connection; then
-    echo "Exiting script due to lack of internet connection."
-    # timeout 10s adb shell reboot
-    exit 1
-fi
+# if ! check_internet_connection; then
+#     echo "Exiting script due to lack of internet connection."
+#     # timeout 10s adb shell reboot
+#     exit 1
+# fi
+for attempt in {1..3}; do
+    if ! check_internet_connection; then
+        echo "No internet connection on attempt $attempt."
+        # Only exit after the last (second) attempt if the connection is still unavailable
+        if [ $attempt -eq 3 ]; then
+            echo "Exiting script due to no internet connection after $attempt attempts."
+            exit 1
+        fi
+        sleep 8
+    else
+        echo "Internet connection available on attempt $attempt."
+        break
+    fi
+done
 
 fail_count=0
 #installing termux

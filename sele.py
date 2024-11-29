@@ -212,7 +212,8 @@ while(i<condition):
             i = i % len(account)
             condition = condition % len(account)
         driver.quit()
-        if(sys.argv[1]!="0" and sys.argv[1]!="-1"):
+        if(sys.argv[1]!="0" and sys.argv[1]!="-1"):    
+            print("cool...")
             break
     finally:
         # driver.quit()
