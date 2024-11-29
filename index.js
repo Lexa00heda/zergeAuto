@@ -737,8 +737,6 @@ let recheckCount = 0;
                     // }
                 }
                 if (readedCookie["last_device"] != "") {
-                    console.log("ooook")
-            await wait(10000)
                     try {
                         console.log("error: ", e)
                         if (readedCookie.device[readedCookie["last_device"]].error == false) {
