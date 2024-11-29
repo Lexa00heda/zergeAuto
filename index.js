@@ -610,6 +610,8 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
         clearTimeout(totalTimeOUt)
         clearTimeout(connecc)
         clearTimeout(connec)
+        console.log("ooook")
+        await wait(10000)
         if (ls) {
             if (!ls.killed) {
                 ls.kill('SIGKILL')
