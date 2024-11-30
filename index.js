@@ -54,11 +54,11 @@ const daily_limit = 40
 
 const locations = { 0: "Russia", 1: "India", 2: "Korea", 3: "Brazil", 4: "Vietnam", 5: "UK", 6: "USA", 7: "Poland" }
 const device_model_list = { 0: { "device": "Galaxy A", "id": 124 }, 1: { "device": "Galaxy S", "id": 125 }, 2: { "device": "Galaxy Z", "id": 126 }, 3: { "device": "Galaxy F&M", "id": 127 }, 4: { "device": "Galaxy TAB", "id": 128 } }
-// let modelindex = (Number(process.argv[2]) - 1) % 5;
-let modelindex = 3;
+let modelindex = (Number(process.argv[2]) - 1) % 5;
+// let modelindex = 3;
 let device_model_id = device_model_list[modelindex]["id"]
-const device_model_id = device_model_list[1]["id"]
-// const vpn_locations = getLocationsName(3)
+// const device_model_id = device_model_list[1]["id"]
+const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0, 1, 3, 4, 5, 6, 7)
