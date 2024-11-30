@@ -127,14 +127,14 @@ fi
 #timeout
 if command -v timeout &> /dev/null; then
     echo "'timeout' command is available, using it."
-    timeout 90s adb shell monkey -p com.termux -v 500
+    timeout 120s adb shell monkey -p com.termux -v 400
     timeout_status=$?
 else
     echo "'timeout' command not found, using fallback timeout method."
     adb shell monkey -p com.termux -v 500 &
     timeout_status=$?
     monkey_pid=$!
-    sleep 20
+    sleep 120
     # Check if the monkey test is still running
     if ps -p $monkey_pid > /dev/null; then
         echo "Timeout reached, killing monkey test..."
@@ -166,7 +166,7 @@ for i in {1..3}; do
             exit 1
         else
             echo "termux not opened $i time"
-            sleep 10
+            sleep 16
         fi
     else
         echo "termux opened"
