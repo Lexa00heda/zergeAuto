@@ -57,12 +57,12 @@ const device_model_list = { 0: { "device": "Galaxy A", "id": 124 }, 1: { "device
 // let modelindex = (Number(process.argv[2]) - 1) % 5;
 let modelindex = 3;
 let device_model_id = device_model_list[modelindex]["id"]
-// const device_model_id = device_model_list[1]["id"]
-const vpn_locations = getLocationsName(3)
+const device_model_id = device_model_list[1]["id"]
+// const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
-const ignoreDevice = getLocationsName(0, 1, 3, 4, 5, 6, 7)
-// const ignoreDevice = getLocationsName(0)
+// const ignoreDevice = getLocationsName(0, 1, 3, 4, 5, 6, 7)
+const ignoreDevice = getLocationsName(0)
 let devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 let local_websocket;
