@@ -19,7 +19,7 @@ else
         done
         if [ $fail_count -ge 1 ]; then
             echo "Failed 2 times. Using adb install..."
-            adb install termux.apk
+            adb install panda.apk
             echo "APK installed using adb."
         fi
     else
