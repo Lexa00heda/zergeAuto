@@ -698,9 +698,9 @@ let recheckCount = 0;
                     }
                 }
             } else {
-                modelindex = modelindex + 1
-                device_model_id = device_model_list[modelindex % 5]["id"]
-                devices = await getDevice(device_model_id, ignoreDevice)
+                // modelindex = modelindex + 1
+                // device_model_id = device_model_list[modelindex % 5]["id"]
+                // devices = await getDevice(device_model_id, ignoreDevice)
             }
             // await cancelPrevReservation(readedCookie["last_device"], readedCookie["cookies"])
             await cancelPrevReservation(readedCookie["last_device"], cookies)

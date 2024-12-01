@@ -5,7 +5,10 @@ export async function getDevice(id, ignore = []) {
         const devices = []
         fetch(deviceUrl, { method: 'GET', }).then((e => {
             try {
-                e.json().then(async re => {
+                e.json().then(re => {
+                    (async()=>{
+                    //     console.log(id)
+                    // console.log(re)
                     re.productList.forEach(element => {
                         element.devices.forEach(elements => {
                             // console.log(elements.deviceId)
@@ -30,6 +33,7 @@ export async function getDevice(id, ignore = []) {
                     }catch{
                         resolve(devices)
                     }
+                })()
                 })
             } catch (e) {
                 reject(e)
