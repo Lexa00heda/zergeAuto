@@ -195,12 +195,16 @@ async function fetchData(devices) {
         }
         //handled if fetch not done
         async function fetchDataWithTimeout(url, option) {
-            return new Promise((resolve, reject) => {
+            return new Promise((resolves, rejects) => {
+                try{
+                    const deviceFetchTimeOut = setTimeout(() => {
+                        rejects(new Error("Timeout occurred"));
+                    }, 20000);
+                    fetch(url, option).then((e) => { clearTimeout(deviceFetchTimeOut); resolves(e) }).catch(e => { rejects(e) });
+                }catch(e){
+                    rejects(e)
+                }
                 // Set the timeout to reject the promise after 1000ms if not resolved
-                const deviceFetchTimeOut = setTimeout(() => {
-                    reject(new Error("Timeout occurred"));
-                }, 20000);
-                fetch(url, option).then((e) => { clearTimeout(deviceFetchTimeOut); resolve(e) }).catch(e => { reject(e) });
             });
         }
         const url = `https://${base_url}/device/${device}`;
@@ -249,15 +253,20 @@ async function fetchData(devices) {
         let connectCondition = false
         let totalTimeOUtCondition = false
         let conditionMet = false;
-        await new Promise((resolve, reject) => {
+        await new Promise((resolves, rejects) => {
             (async () => {
+                try{
                 const deviceFetchTimeOut = setTimeout(() => {
-                    reject(new Error("Timeout occurred"));
+                    rejects(new Error("Timeout occurred"));
                 }, 20000);
                 local_websocket = await localWebsocket()
-                rdb_websocket = await rdbSocket(`wss://${base_url}/channels/${device}/rdb`, token)
+                
+                    rdb_websocket = await rdbSocket(`wss://${base_url}/channels/${device}/rdb`, token)
                 clearTimeout(deviceFetchTimeOut);
-                resolve()
+                resolves()
+            }catch(e){
+                rejects(e)
+            }
             })()
         })
         //getting reservation id
