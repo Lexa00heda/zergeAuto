@@ -1,6 +1,105 @@
 {
-  "cookies": "locale=en-US; sa_trace=pjuk31lqb4x3y4brl2kasbluu6okfi86; sa_did=o9jty5agfyh9tip6xwhk; datadome=374r4g0XuEJ7sQdbGlPC9Qdm2m3vsfoC5bS1E1TNWQzdp5yIFRpjsnPLqlmw7YUaJ3qcX~ySnZFTnHf6718MwhiN9wy79Nem08SA5zzGFtPP~2InOuDA~YajuIWOflBM; sa_id=ef23332d1723656b467976d803358331c3522bac9ecaf63169103af64d1e8153b7d31358ff8ddffbff103ebe8e02e93ef979da337f70b8716f11348934c215c7f6fa426ed3fae0343b23b4ca3a94d3f835068d1ba6e60021196a63cc6c61cb92c98432ca1fe20b1c63677949cd39072443458559670c423108212e495368e19ca79d69183d5f9d46462521a7557dd4320cf0e9d1ded4cf0af10cf630cb1753193b847d346dc1a02f5cf8397aaf5680c5e0282cb56171e9ccbe5efa567e3480e6eaae15259fab9571e618839a71f7ce9b71cd778c9ce64ac7df66b382d4f2cca732c29d9905b8f73e2aa7f7f0feb4307c2126ed376a335ce1adb667aa60ccf68d; sa_state=YiuD07w5xGU0ByFlVhw3y3Q6CDh3J75A; SD_PORTAL_SSID=NByhVA9WEpoEhNcwUbjZfVySqLjipDnmvP3zFJgUg2A8sARKXpsZ9aRAsT0FISETpg9WPsB21ViriFrEOrSM%2FI29Iu1pVCDiZbU7YYtF%2Fkc%2Fef6Uo4rncavvPcPVFGJ8cMYF8QRm%2BvpDIuHSynlWcROQMxS%2FTvZYw5be3KU0%2FYDq3Pwe4J5WfQAEMGa94y0y1DUGq8JjOMwKzgZlmqAUJnwZ5oKerh7DsnrLRLm%2FpDVEF79iPDv0eEXJPQNfAcNMt%2B3WqL9Diqd7HzIQiO2Osj0M4YOSf9oTPULqBUX%2FRzeQ%2F487rbBuJtGaxj%2B2zBOOFBddfia0OdiWJ%2BEzgT40%2FV13qpYpd5enWa20%2Fhxn%2FZpP9GV%2B0bjH7ZheAMqs7zDW; sdp_samsung_com_jwt=BSLRixYq2tBjjVWuDLAzA45%2B71XFlbXNTD5wulh0MHLXaYXb64Dnq2N1Ctl33ZUE1oNuUd8rSrOwO27CxhuN7xSjJHM%2FwweBj%2FkRMr1LWpwzoVDWm5coFuoIXA0RaU8jMiuS0lBODLi37ebC%2FSO2jsfvbDNeJGjE2w4ERujqszJtma5XqOQrt9sAB5Q%2FRcvEfShewGO5UljRfNh%2FuphIlX9FAsdf0j6S0a3tlQxVDAeShJdF62bRRCVayrF2OPoAtAXaQQcVRI2yq4FkUe4VtLPTX4RGIXXR9upubvUSeuZfHaxJqbMu1pxaBzHtwHa8vkypktjqciRDjWEFjyGIubcE5hN%2FjV9zhFWfbXuTn0PJINh5HA3FA%2BcpXSys6nR0b20mvJRRRQkqN87r4pnvpD%2F9l3dwrPnx87R9yjlyRPt5D0xqbbNL6aqzqWXoPo3m9n1NoQ6Cjhhj6Q8BFL5FC9aetRXpc7Wwhkw1JrrBt8I%3D; _ga=GA1.1.483103960.1733061310; _ga_LCSMK6BNH8=GS1.1.1733061310.1.1.1733061406.54.0.0; RTL-XSRF-TOKEN=18a9e5bc-ecde-4f34-8e7b-6a53a934bb75; RTL-XSRF-TOKEN-SIG=93da2bc322b1e1fd4f1ef294145bfda1; RTL_FRONT_SESSIONID=YzU4ZDdhMmMtMWYxZC00YWEyLThlNDktNjc3Nzg3N2YzNzU5",
+  "cookies": "locale=en-US; sa_trace=pjuk31lqb4x3y4brl2kasbluu6okfi86; sa_did=o9jty5agfyh9tip6xwhk; datadome=374r4g0XuEJ7sQdbGlPC9Qdm2m3vsfoC5bS1E1TNWQzdp5yIFRpjsnPLqlmw7YUaJ3qcX~ySnZFTnHf6718MwhiN9wy79Nem08SA5zzGFtPP~2InOuDA~YajuIWOflBM; sa_id=ef23332d1723656b467976d803358331c3522bac9ecaf63169103af64d1e8153b7d31358ff8ddffbff103ebe8e02e93ef979da337f70b8716f11348934c215c7f6fa426ed3fae0343b23b4ca3a94d3f835068d1ba6e60021196a63cc6c61cb92c98432ca1fe20b1c63677949cd39072443458559670c423108212e495368e19ca79d69183d5f9d46462521a7557dd4320cf0e9d1ded4cf0af10cf630cb1753193b847d346dc1a02f5cf8397aaf5680c5e0282cb56171e9ccbe5efa567e3480e6eaae15259fab9571e618839a71f7ce9b71cd778c9ce64ac7df66b382d4f2cca732c29d9905b8f73e2aa7f7f0feb4307c2126ed376a335ce1adb667aa60ccf68d; sa_state=YiuD07w5xGU0ByFlVhw3y3Q6CDh3J75A; SD_PORTAL_SSID=NByhVA9WEpoEhNcwUbjZfVySqLjipDnmvP3zFJgUg2A8sARKXpsZ9aRAsT0FISETpg9WPsB21ViriFrEOrSM%2FI29Iu1pVCDiZbU7YYtF%2Fkc%2Fef6Uo4rncavvPcPVFGJ8cMYF8QRm%2BvpDIuHSynlWcROQMxS%2FTvZYw5be3KU0%2FYDq3Pwe4J5WfQAEMGa94y0y1DUGq8JjOMwKzgZlmqAUJnwZ5oKerh7DsnrLRLm%2FpDVEF79iPDv0eEXJPQNfAcNMt%2B3WqL9Diqd7HzIQiO2Osj0M4YOSf9oTPULqBUX%2FRzeQ%2F487rbBuJtGaxj%2B2zBOOFBddfia0OdiWJ%2BEzgT40%2FV13qpYpd5enWa20%2Fhxn%2FZpP9GV%2B0bjH7ZheAMqs7zDW; sdp_samsung_com_jwt=BSLRixYq2tBjjVWuDLAzA45%2B71XFlbXNTD5wulh0MHLXaYXb64Dnq2N1Ctl33ZUE1oNuUd8rSrOwO27CxhuN7xSjJHM%2FwweBj%2FkRMr1LWpwzoVDWm5coFuoIXA0RaU8jMiuS0lBODLi37ebC%2FSO2jsfvbDNeJGjE2w4ERujqszJtma5XqOQrt9sAB5Q%2FRcvEfShewGO5UljRfNh%2FuphIlX9FAsdf0j6S0a3tlQxVDAeShJdF62bRRCVayrF2OPoAtAXaQQcVRI2yq4FkUe4VtLPTX4RGIXXR9upubvUSeuZfHaxJqbMu1pxaBzHtwHa8vkypktjqciRDjWEFjyGIubcE5hN%2FjV9zhFWfbXuTn0PJINh5HA3FA%2BcpXSys6nR0b20mvJRRRQkqN87r4pnvpD%2F9l3dwrPnx87R9yjlyRPt5D0xqbbNL6aqzqWXoPo3m9n1NoQ6Cjhhj6Q8BFL5FC9aetRXpc7Wwhkw1JrrBt8I%3D; _ga=GA1.1.483103960.1733061310; _ga_LCSMK6BNH8=GS1.1.1733061310.1.1.1733061406.54.0.0; RTL-XSRF-TOKEN=7a0928a0-1b59-4d63-98f5-a30dd76c6091; RTL-XSRF-TOKEN-SIG=9c51fa427452b20b72aa7a020fd6ff2c; RTL_FRONT_SESSIONID=M2RlOGNkZmUtZGI0ZS00NGI0LWFiMmEtYzg3ZGM1Yzg0NDdi",
   "device": {
+    "4936": {
+      "device": "R3CN70VJQ9H",
+      "base_url": "vn-hanoi08-rtl.developer.samsung.com:443",
+      "token": "A84A990D7CC7F9397A6AE01BE7206FD6",
+      "name": "SM-F916B-VN3",
+      "credit": 16,
+      "maxTime": "4hr",
+      "checked": true,
+      "reservation_Id": 8745206,
+      "error": true,
+      "finished": false,
+      "termux": false,
+      "created_on": "12/1/2024, 8:20:32 PM",
+      "force_cancel": false,
+      "isMining": false,
+      "cancelled": false,
+      "location": "Vietnam",
+      "errorCount": 3
+    },
+    "6740": {
+      "device": "R3CR60AP41N",
+      "base_url": "kr-gumi03-rtl.developer.samsung.com:443",
+      "token": "B6CA110FBE6B8AB7DD188B66C2EA7F56",
+      "name": "SM-F926N-KR2",
+      "credit": 16,
+      "maxTime": "4hr",
+      "checked": true,
+      "reservation_Id": 8745153,
+      "error": false,
+      "finished": true,
+      "termux": false,
+      "created_on": "12/1/2024, 8:04:59 PM",
+      "force_cancel": true,
+      "isMining": false,
+      "cancelled": true,
+      "location": "Korea",
+      "finished_on": "12/1/2024, 8:10:17 PM",
+      "finished_Timestamp": 1733064017479
+    },
+    "6743": {
+      "device": "R3CR60AP3JD",
+      "base_url": "kr-gumi03-rtl.developer.samsung.com:443",
+      "token": "FC412DCEE62D0340034F06EB92EA028A",
+      "name": "SM-F926N-KR5",
+      "credit": 16,
+      "maxTime": "4hr",
+      "checked": true,
+      "reservation_Id": 8745058,
+      "error": false,
+      "finished": true,
+      "termux": false,
+      "created_on": "12/1/2024, 7:53:13 PM",
+      "force_cancel": true,
+      "isMining": false,
+      "cancelled": true,
+      "location": "Korea",
+      "finished_on": "12/1/2024, 7:58:45 PM",
+      "finished_Timestamp": 1733063325470
+    },
+    "6793": {
+      "device": "R3CR60CBA1Y",
+      "base_url": "pl-warsaw13-rtl.developer.samsung.com:443",
+      "token": "483F8E67BBF2F432BC38143BE6B050DF",
+      "name": "SM-F926B-PL03",
+      "credit": 16,
+      "maxTime": "4hr",
+      "checked": true,
+      "reservation_Id": 8745195,
+      "error": false,
+      "finished": true,
+      "termux": false,
+      "created_on": "12/1/2024, 8:10:59 PM",
+      "force_cancel": true,
+      "isMining": false,
+      "cancelled": true,
+      "location": "Poland",
+      "finished_on": "12/1/2024, 8:19:50 PM",
+      "finished_Timestamp": 1733064590703
+    },
+    "7485": {
+      "device": "R3CR60AP3VP",
+      "base_url": "kr-gumi03-rtl.developer.samsung.com:443",
+      "token": "BBA858245C0ABD11316FA9CE640B60A3",
+      "name": "SM-F926N-KR7",
+      "credit": 16,
+      "maxTime": "4hr",
+      "checked": true,
+      "reservation_Id": 8745102,
+      "error": false,
+      "finished": true,
+      "termux": false,
+      "created_on": "12/1/2024, 7:59:29 PM",
+      "force_cancel": true,
+      "isMining": false,
+      "cancelled": true,
+      "location": "Korea",
+      "finished_on": "12/1/2024, 8:04:17 PM",
+      "finished_Timestamp": 1733063657627
+    },
     "8144": {
       "device": "R3CT30H5NFH",
       "base_url": "kr-gumi02-rtl.developer.samsung.com:443",
@@ -21,6 +120,45 @@
       "finished_on": "12/1/2024, 7:35:00 PM",
       "finished_Timestamp": 1733061900225
     },
+    "8432": {
+      "device": "R3CT40K2MMA",
+      "base_url": "us-texas10-rtl.developer.samsung.com:443",
+      "token": "F2536EBD075DC9DE52E63D6D29E8D4BC",
+      "name": "SM-F936U-US03",
+      "credit": 16,
+      "maxTime": "4hr",
+      "checked": true,
+      "reservation_Id": 8745131,
+      "error": true,
+      "finished": false,
+      "termux": false,
+      "created_on": "12/1/2024, 7:42:43 PM",
+      "force_cancel": true,
+      "isMining": false,
+      "cancelled": true,
+      "location": "USA",
+      "errorCount": 3
+    },
+    "8434": {
+      "device": "R3CT40K2LJA",
+      "base_url": "us-texas10-rtl.developer.samsung.com:443",
+      "token": "48E53B79733D972B01653AF8883F787A",
+      "name": "SM-F936U-US05",
+      "credit": 16,
+      "maxTime": "4hr",
+      "checked": true,
+      "reservation_Id": 8745113,
+      "error": false,
+      "finished": true,
+      "termux": false,
+      "created_on": "12/1/2024, 7:49:40 PM",
+      "force_cancel": true,
+      "isMining": false,
+      "cancelled": true,
+      "location": "USA",
+      "finished_on": "12/1/2024, 7:52:26 PM",
+      "finished_Timestamp": 1733062946377
+    },
     "9574": {
       "device": "R3CT40K2MZZ",
       "base_url": "us-texas10-rtl.developer.samsung.com:443",
@@ -34,25 +172,35 @@
       "finished": false,
       "termux": false,
       "created_on": "12/1/2024, 7:35:42 PM",
-      "force_cancel": false,
+      "force_cancel": true,
       "isMining": false,
-      "cancelled": false,
+      "cancelled": true,
       "location": "USA",
-      "errorCount": 1
+      "errorCount": 3
     }
   },
-  "last_device": 9574,
+  "last_device": 4936,
   "user": "svbdjekshskv+girard@gmail.com",
-  "totalCredit": 75,
-  "today_credits_left": 39,
-  "Totalcount": 2,
-  "finishCount": 1,
+  "totalCredit": 68,
+  "today_credits_left": 32,
+  "Totalcount": 9,
+  "finishCount": 6,
   "startCredit": 92,
   "finishList": {
     "Korea": {
+      "count": 4
+    },
+    "USA": {
+      "count": 1
+    },
+    "Poland": {
       "count": 1
     }
   },
-  "deadList": {},
+  "deadList": {
+    "USA": {
+      "count": 2
+    }
+  },
   "indexCookie": "13"
 }

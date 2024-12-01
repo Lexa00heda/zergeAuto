@@ -664,7 +664,7 @@ let recheckCount = 0;
         try {
             console.log("count: ", count, "length: ", devices.length)
             if ((readedCookie["last_device"] != "" && readedCookie.device[readedCookie["last_device"]].cancelled) || readedCookie["last_device"] == "") {
-                if (count > devices.length || devices.length == 0) {
+                if (count >= devices.length || devices.length == 0) {
                     recheckCount = recheckCount + 1
                     if (recheckCount > 4) {
                         console.log("recheckCount: ", recheckCount)
@@ -697,10 +697,6 @@ let recheckCount = 0;
                         count = 0
                     }
                 }
-            } else {
-                // modelindex = modelindex + 1
-                // device_model_id = device_model_list[modelindex % 5]["id"]
-                // devices = await getDevice(device_model_id, ignoreDevice)
             }
             // await cancelPrevReservation(readedCookie["last_device"], readedCookie["cookies"])
             await cancelPrevReservation(readedCookie["last_device"], cookies)
