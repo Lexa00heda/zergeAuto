@@ -54,14 +54,14 @@ const daily_limit = 40
 
 const locations = { 0: "Russia", 1: "India", 2: "Korea", 3: "Brazil", 4: "Vietnam", 5: "UK", 6: "USA", 7: "Poland" }
 const device_model_list = { 0: { "device": "Galaxy A", "id": 124 }, 1: { "device": "Galaxy S", "id": 125 }, 2: { "device": "Galaxy Z", "id": 126 }, 3: { "device": "Galaxy F&M", "id": 127 }, 4: { "device": "Galaxy TAB", "id": 128 } }
-let modelindex = (Number(process.argv[2]) - 1) % 5;
-// let modelindex = 3;
+// let modelindex = (Number(process.argv[2]) - 1) % 5;
+let modelindex = 3;
 let device_model_id = device_model_list[modelindex]["id"]
 const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
-// const ignoreDevice = getLocationsName(0, 1, 3, 4, 5, 6, 7)
-const ignoreDevice = getLocationsName(0)
+const ignoreDevice = getLocationsName(0, 1, 3, 4, 5, 6, 7)
+// const ignoreDevice = getLocationsName(0)
 let devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 let local_websocket;
@@ -495,7 +495,7 @@ async function fetchData(devices) {
                                             }
                                         })
                                     })
-                                    await wait(2000);
+                                    await wait(8000);
                                     await new Promise((resolve, reject) => {
                                         exec(`adb shell "run-as com.termux files/usr/bin/sh -lic 'export PATH=/data/data/com.termux/files/usr/bin:$PATH; export
 LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd \$HOME; echo \"export device='${name}'\" >> ~/.bashrc && echo \"export did='${did}'\" >> ~/.bashrc && ping -c 1 8.8.8.8'"`, async (error, stdout, stderr) => {
