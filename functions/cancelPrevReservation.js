@@ -6,30 +6,32 @@ export async function cancelPrevReservation(did, cookies) {
         fetch(reservationurl, { method: 'GET', headers: { 'Cookie': cookies, } }).then((e => {
             try {
                 e.json().then(re => {
-                    console.log(re)
-                    if (did != "") {
-                        re.forEach(async (element) => {
-                            try{
-                                if (element.deviceId != did) {
-                                    // console.log(element.deviceId)
-                                    // await cancelReservation(element.deviceId, element.reservationId)
-                                    await cancelReservationCookie(element.deviceId, element.reservationId,cookies)
-                                    console.log(`Reservation not previous device of id ${element.deviceId} cancelled`)
-    
+                    if(Array.isArray(re)){  
+                        console.log(re)
+                        if (did != "") {
+                            re.forEach(async (element) => {
+                                try{
+                                    if (element.deviceId != did) {
+                                        // console.log(element.deviceId)
+                                        // await cancelReservation(element.deviceId, element.reservationId)
+                                        await cancelReservationCookie(element.deviceId, element.reservationId,cookies)
+                                        console.log(`Reservation not previous device of id ${element.deviceId} cancelled`)
+        
+                                    }
+                                }catch{
+                                    reject()
                                 }
-                            }catch{
-                                reject()
-                            }
-                        });
-                    }
-                    else {
-                        // re.forEach(async (element) => {
-                        //     try{
-                        //     // console.log(element.deviceId)
-                        //     await cancelReservationCookie(element.deviceId, element.reservationId,cookies)
-                        //     console.log(`Reservation not previous device of id ${element.deviceId} cancelled`)
-
-                        // });
+                            });
+                        }
+                        else {
+                            // re.forEach(async (element) => {
+                            //     try{
+                            //     // console.log(element.deviceId)
+                            //     await cancelReservationCookie(element.deviceId, element.reservationId,cookies)
+                            //     console.log(`Reservation not previous device of id ${element.deviceId} cancelled`)
+    
+                            // });
+                        }
                     }
                     resolve()
                 })
