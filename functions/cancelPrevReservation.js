@@ -32,8 +32,10 @@ export async function cancelPrevReservation(did, cookies) {
     
                             // });
                         }
+                        resolve()
+                    }else{
+                        reject()
                     }
-                    resolve()
                 })
             } catch (e) {
                 reject(e)
