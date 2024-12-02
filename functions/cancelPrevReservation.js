@@ -9,23 +9,27 @@ export async function cancelPrevReservation(did, cookies) {
                     console.log(re)
                     if (did != "") {
                         re.forEach(async (element) => {
-
-                            if (element.deviceId != did) {
-                                // console.log(element.deviceId)
-                                // await cancelReservation(element.deviceId, element.reservationId)
-                                await cancelReservationCookie(element.deviceId, element.reservationId,cookies)
-                                console.log(`Reservation not previous device of id ${element.deviceId} cancelled`)
-
+                            try{
+                                if (element.deviceId != did) {
+                                    // console.log(element.deviceId)
+                                    // await cancelReservation(element.deviceId, element.reservationId)
+                                    await cancelReservationCookie(element.deviceId, element.reservationId,cookies)
+                                    console.log(`Reservation not previous device of id ${element.deviceId} cancelled`)
+    
+                                }
+                            }catch{
+                                reject()
                             }
                         });
                     }
                     else {
-                        re.forEach(async (element) => {
-                            // console.log(element.deviceId)
-                            await cancelReservationCookie(element.deviceId, element.reservationId,cookies)
-                            console.log(`Reservation not previous device of id ${element.deviceId} cancelled`)
+                        // re.forEach(async (element) => {
+                        //     try{
+                        //     // console.log(element.deviceId)
+                        //     await cancelReservationCookie(element.deviceId, element.reservationId,cookies)
+                        //     console.log(`Reservation not previous device of id ${element.deviceId} cancelled`)
 
-                        });
+                        // });
                     }
                     resolve()
                 })

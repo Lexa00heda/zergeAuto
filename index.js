@@ -57,7 +57,6 @@ const device_model_list = { 0: { "device": "Galaxy A", "id": 124 }, 1: { "device
 let modelindex = (Number(process.argv[2]) - 1) % 5;
 // let modelindex = 3;
 let device_model_id = device_model_list[modelindex]["id"]
-// const device_model_id = device_model_list[1]["id"]
 const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
@@ -234,13 +233,13 @@ async function fetchData(devices) {
         }
         if (!readedCookie.device[did]["finished"] && !readedCookie.device[did]["error"]) {
             await stayAwake(base_url, device, token);
-            // resets = await wifiReset(url1, token)
-            // resets.on('message', (message) => {
-            //     console.log('message from server:', message.toString('utf8'));
-            //     resets.send(`{"wifi-reset":true}`);
-            // });
-            // await wait(18000)
-            // resets.close()
+            resets = await wifiReset(url1, token)
+            resets.on('message', (message) => {
+                console.log('message from server:', message.toString('utf8'));
+                resets.send(`{"wifi-reset":true}`);
+            });
+            await wait(18000)
+            resets.close()
             // console.log("here")
         }
         // adb to device
