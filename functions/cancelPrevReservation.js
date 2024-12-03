@@ -7,7 +7,7 @@ export async function cancelPrevReservation(did, cookies) {
             try {
                 e.json().then(re => {
                     console.log("reservation:",re)
-                    if (did != "" && re.length!=0) {
+                    if (did != "" && re.length!=0 && e.status != 401) {
                         re.forEach((element) => {
                             try{
                                 (async()=>{
