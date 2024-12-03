@@ -53,15 +53,16 @@ const daily_limit = 40
 // cancel = true
 
 const locations = { 0: "Russia", 1: "India", 2: "Korea", 3: "Brazil", 4: "Vietnam", 5: "UK", 6: "USA", 7: "Poland" }
+const locationsArray = getLocationsName(0,1,2,3,4,5,6,7)
 const device_model_list = { 0: { "device": "Galaxy A", "id": 124 }, 1: { "device": "Galaxy S", "id": 125 }, 2: { "device": "Galaxy Z", "id": 126 }, 3: { "device": "Galaxy F&M", "id": 127 }, 4: { "device": "Galaxy TAB", "id": 128 } }
-let modelindex = (Number(process.argv[2]) - 1) % 5;
-// let modelindex = 3;
+// let modelindex = (Number(process.argv[2]) - 1) % 5;
+let modelindex = 3;
 let device_model_id = device_model_list[modelindex]["id"]
 const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
-// const ignoreDevice = getLocationsName(0, 1, 3, 4, 5, 6, 7)
-const ignoreDevice = getLocationsName(0)
+const ignoreDevice = getLocationsName(0, 1, 3, 4, 5, 6, 7)
+// const ignoreDevice = getLocationsName(0)
 let devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 let local_websocket;
@@ -417,7 +418,7 @@ async function fetchData(devices) {
                             local_websocket.send(message)
                             c = c + 1
                             if (c == 1) {
-                                // await wait(1000000000)
+                                await wait(1000000000)
                                 if (readedCookie.device[did]["finished"] && !readedCookie.device[did]["cancelled"] || isMining) {
                                     console.log("Work already done")
                                     if (isMining) {
@@ -675,7 +676,7 @@ let recheckCount = 0;
                     let i
                     if (devices.length == 0) {
                         for (i = 0; i < 5; i++) {
-                            console.log("no device is available for ", device_model_list[modelindex % 5]["device"], "for locations other than", ignoreDevice.join(", "), ".retrying ", i, "...")
+                            console.log("no device is available for ", device_model_list[modelindex % 5]["device"], "for locations in", locationsArray.filter(ele=>!ignoreDevice.includes(ele)).join(", "), ".retrying ", i, "...")
                             devices = await getDevice(device_model_id, ignoreDevice)
                             if (devices.length != 0) {
                                 count = 0
@@ -699,7 +700,7 @@ let recheckCount = 0;
             }
             // await cancelPrevReservation(readedCookie["last_device"], readedCookie["cookies"])
             await cancelPrevReservation(readedCookie["last_device"], cookies)
-            if (devices.length != 0) {
+            if (devices.length != 0 || !readedCookie.device[readedCookie["last_device"]].cancelled) {
                 if (readedCookie["last_device"] != "") {
                     if (!readedCookie.device[readedCookie["last_device"]].cancelled) {
                         console.log("prevoius device: ", readedCookie["last_device"])
