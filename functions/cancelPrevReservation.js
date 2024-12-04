@@ -6,22 +6,30 @@ export async function cancelPrevReservation(did, cookies) {
         fetch(reservationurl, { method: 'GET', headers: { 'Cookie': cookies, } }).then((e => {
             try {
                 e.json().then(re => {
-                    console.log("reservation:",re)
-                    if (did != "" && re.length!=0 && e.status != 401) {
-                        re.forEach((element) => {
-                            try{
-                                (async()=>{
-                                if (element.deviceId != did) {
-                                    // console.log(element.deviceId)
-                                    // await cancelReservation(element.deviceId, element.reservationId)
-                                    await cancelReservationCookie(element.deviceId, element.reservationId,cookies)
-                                    console.log(`Reservation not previous device of id ${element.deviceId} cancelled`)
-                                    resolve()
-                                }else{
-                                    resolve()
-                                }
-                            })()
-                            }catch{
+                    console.log("reservation:", re)
+                    if (re.length != 0 && e.status != 401) {
+                        re.forEach((element,index) => {
+                            try {
+                                (async () => {
+                                    if (did != "") {
+                                        if (element.deviceId != did) {
+                                            // console.log(element.deviceId)
+                                            // await cancelReservation(element.deviceId, element.reservationId)
+                                            await cancelReservationCookie(element.deviceId, element.reservationId, cookies)
+                                            console.log(`Reservation not previous device of id ${element.deviceId} cancelled`)
+                                            if(index>=re.length-1){
+                                                resolve()
+                                            }
+                                        }
+                                    } else {
+                                        await cancelReservationCookie(element.deviceId, element.reservationId, cookies)
+                                        console.log(`Reservation not previous device of id ${element.deviceId} cancelled`)
+                                        if(index>=re.length-1){
+                                            resolve()
+                                        }
+                                    }
+                                })()
+                            } catch {
                                 reject()
                             }
                         });

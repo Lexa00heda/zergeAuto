@@ -55,16 +55,18 @@ const daily_limit = 40
 const locations = { 0: "Russia", 1: "India", 2: "Korea", 3: "Brazil", 4: "Vietnam", 5: "UK", 6: "USA", 7: "Poland" }
 const locationsArray = getLocationsName(0,1,2,3,4,5,6,7)
 const device_model_list = { 0: { "device": "Galaxy A", "id": 124 }, 1: { "device": "Galaxy S", "id": 125 }, 2: { "device": "Galaxy Z", "id": 126 }, 3: { "device": "Galaxy F&M", "id": 127 }, 4: { "device": "Galaxy TAB", "id": 128 } }
-// let modelindex = (Number(process.argv[2]) - 1) % 5;
-let modelindex = 3;
+let modelindex = (Number(process.argv[2]) - 1) % 5;
+// let modelindex = 3;
 let device_model_id = device_model_list[modelindex]["id"]
 const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
 // let ignoreDevice = getLocationsName(0, 1, 3, 4, 5, 6, 7)
 let ignoreDevice = getLocationsName(0)
+const ignoreDeviceFirst  = ignoreDevice
 let devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
+const implementSecurity = true;
 let local_websocket;
 let rdb_websocket;
 let resets;
@@ -74,6 +76,10 @@ let mineStart;
 let totalTimeOUt;
 let connecc;
 let connec;
+if (device_model_list[modelindex % 5]["device"] == "Galaxy F&M" && implementSecurity) {
+    ignoreDevice = [...new Set([...ignoreDevice, ...getLocationsName(2)])];
+    console.log("ignored device: ",ignoreDevice)
+}
 async function fetchData(devices) {
     const did = Number(devices)
     let device
@@ -93,12 +99,6 @@ async function fetchData(devices) {
             timeOutWait1 = (1000 * 60 * 15);
             timeOutWait2 = (1000 * 60 * 15);
 
-        }
-        if (device_model_list[modelindex % 5]["device"] == "Galaxy F&M") {
-            if(!ignoreDevice.includes(getLocationsName(2))){
-                ignoreDevice = ignoreDevice.concat(getLocationsName(2))
-            }
-            console.log("ignored device: ",ignoreDevice)
         }
         // cookies = await readCookies(process.argv[2]);
         const user = await fetch("https://developer.samsung.com/remotetestlab/rtl/api/v1/users/me", { method: 'GET', headers: { 'Cookie': cookies }, });
@@ -163,11 +163,17 @@ async function fetchData(devices) {
             }
         } catch {
             console.log("new device...")
-            isMining = await checkMining(did)
+            try{
+                isMining = await checkMining(did)
+            }catch{
+                console.log("Error while checking mining Nicehash.May be maintainance")
+                isMining = false
+            }
             if (isMining) {
                 console.log("Already mining... Select another device")
                 return
             }
+            console.log(did)
             const startUrl = `https://developer.samsung.com/remotetestlab/rtl/api/v1/devices/webclient/start?did=${did}&tsg=${credit}&_ts=${Date.now()}`;
             const start = await fetch(startUrl, { method: 'POST', headers: optionCookie });
             try {
@@ -677,6 +683,11 @@ let recheckCount = 0;
                         modelindex = modelindex + 1
                         device_model_id = device_model_list[modelindex % 5]["id"]
                         recheckCount = 0
+                        if (device_model_list[modelindex % 5]["device"] == "Galaxy F&M" && implementSecurity) {
+                            ignoreDevice = [...new Set([...ignoreDevice, ...getLocationsName(2)])];
+                            console.log("ignored device: ",ignoreDevice)
+                        }
+                        // ignoreDevice = ignoreDeviceFirst
                     }
                     devices = await getDevice(device_model_id, ignoreDevice)
                     let i
@@ -697,6 +708,11 @@ let recheckCount = 0;
                             device_model_id = device_model_list[modelindex % 5]["id"]
                             console.log("device model changed to ", device_model_list[modelindex % 5]["device"])
                             count = 0
+                            if (device_model_list[modelindex % 5]["device"] == "Galaxy F&M" && implementSecurity) {
+                                ignoreDevice = [...new Set([...ignoreDevice, ...getLocationsName(2)])];
+                                console.log("ignored device: ",ignoreDevice)
+                            }
+                            // ignoreDevice = ignoreDeviceFirst
                             // process.exit(0);
                         }
                     } else {
