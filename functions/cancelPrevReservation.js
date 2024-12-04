@@ -20,6 +20,11 @@ export async function cancelPrevReservation(did, cookies) {
                                             if(index>=re.length-1){
                                                 resolve()
                                             }
+                                        }else{
+                                            if(index>=re.length-1){
+                                                resolve()
+                                            }
+
                                         }
                                     } else {
                                         await cancelReservationCookie(element.deviceId, element.reservationId, cookies)
