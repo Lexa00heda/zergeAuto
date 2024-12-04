@@ -7,9 +7,9 @@ export async function cancelPrevReservation(did, cookies) {
             try {
                 e.json().then(re => {
                     console.log("reservation:", re)
-                    if (re.length != 0 && e.status != 401) {
+                    if (re.length != 0) {
+                        try {
                         re.forEach((element,index) => {
-                            try {
                                 (async () => {
                                     if (did != "") {
                                         if (element.deviceId != did) {
@@ -34,10 +34,10 @@ export async function cancelPrevReservation(did, cookies) {
                                         }
                                     }
                                 })()
-                            } catch {
-                                reject()
-                            }
-                        });
+                            });
+                        } catch {
+                            reject()
+                        }
                     }
                     else {
                         resolve()
