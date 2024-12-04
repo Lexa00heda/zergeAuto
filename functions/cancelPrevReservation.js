@@ -36,7 +36,7 @@ export async function cancelPrevReservation(did, cookies) {
                                 })()
                             });
                         } catch {
-                            reject()
+                            resolve()
                         }
                     }
                     else {
@@ -44,7 +44,7 @@ export async function cancelPrevReservation(did, cookies) {
                     }
                 })
             } catch (e) {
-                reject(e)
+                resolve(e)
             }
 
         })).catch((e) => {
