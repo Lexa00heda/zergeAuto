@@ -62,7 +62,7 @@ const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
 // let ignoreDevice = getLocationsName(0, 1, 3, 4, 5, 6, 7)
-let ignoreDevice = getLocationsName(0)
+let ignoreDevice = getLocationsName(0,3)
 const ignoreDeviceFirst  = ignoreDevice
 let devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
@@ -472,7 +472,7 @@ async function fetchData(devices) {
                                     // if (code != 0) {
                                     //     reject()
                                     // }
-                                    // await wait(1000000000)
+                                    await wait(1000000000)
                                     await wait(3000)
                                     if (device_model_list[modelindex % 5]["device"] == "Galaxy Z") {
                                         const adbCommand = 'adb shell cmd device_state state 3';
