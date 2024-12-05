@@ -472,7 +472,7 @@ async function fetchData(devices) {
                                     // if (code != 0) {
                                     //     reject()
                                     // }
-                                    await wait(1000000000)
+                                    // await wait(1000000000)
                                     await wait(3000)
                                     if (device_model_list[modelindex % 5]["device"] == "Galaxy Z") {
                                         const adbCommand = 'adb shell cmd device_state state 3';
