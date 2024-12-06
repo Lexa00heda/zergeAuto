@@ -1,9 +1,10 @@
 adb install bear.apk
 sleep 2
 # adb shell "am start -n com.packetshare.appv2/.welcome.WelcomeActivity"
+adb shell am force-stop com.packetshare.appv2
+sleep 2
 adb shell monkey -p com.packetshare.appv2 -v 2
 sleep 12
-adb shell am force-stop com.packetshare.appv2
 if adb shell wm size | grep -q "Override size"; then
     echo "Override size is set."
     adb shell input tap $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '/Override size/ {print $3}' | cut -d'x' -f2) -250))
