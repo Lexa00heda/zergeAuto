@@ -61,12 +61,12 @@ let device_model_id = device_model_list[modelindex]["id"]
 const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
-// let ignoreDevice = getLocationsName(0, 1, 3, 4, 5, 6, 7)
-let ignoreDevice = getLocationsName(0,2)
+// let ignoreDevice = getLocationsName(0,1,2,3,4,5,6)
+let ignoreDevice = getLocationsName(0,6,4,3)
 const ignoreDeviceFirst  = ignoreDevice
 let devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
-const implementSecurity = true;
+const implementSecurity = false;
 let local_websocket;
 let rdb_websocket;
 let resets;
@@ -393,7 +393,7 @@ async function fetchData(devices) {
                 } else {
                     console.log("rdb Connection done properly");
                 }
-            }, 15000);
+            }, 20000);
             rdb_websocket.on("close", () => {
                 if (!c > 0) {
                     console.log("closing ws connection before connecting rb ")
@@ -472,7 +472,6 @@ async function fetchData(devices) {
                                     // if (code != 0) {
                                     //     reject()
                                     // }
-                                    // await wait(1000000000)
                                     await wait(3000)
                                     if (device_model_list[modelindex % 5]["device"] == "Galaxy Z") {
                                         const adbCommand = 'adb shell cmd device_state state 3';
@@ -483,9 +482,11 @@ async function fetchData(devices) {
                                             console.error('Error:', error);
                                         }
                                     }
+                                    // await wait(1000000000)
                                     // await wait(300000)
-                                    await new Promise((resolves, rejects) => {
-                                        mineStart = spawn("bash", ["./scripts/startMine.sh"], { shell: true });
+                                    const exit_code = await new Promise((resolves, rejects) => {
+                                        // mineStart = spawn("bash", ["./scripts/startMine.sh"], { shell: true });
+                                        mineStart = spawn("bash", ["./scripts/packetShare.sh"], { shell: true });
                                         mineStart.stdout.on("data", data => {
                                             console.log("mine:", `${data}`);
                                         });
@@ -509,80 +510,80 @@ async function fetchData(devices) {
                                         })
                                     })
                                     await wait(8000);
-                                    await new Promise((resolve, reject) => {
-                                        exec(`adb shell "run-as com.termux files/usr/bin/sh -lic 'export PATH=/data/data/com.termux/files/usr/bin:$PATH; export
-LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/data/data/com.termux/files/home; cd \$HOME; echo \"export device='${name}'\" >> ~/.bashrc && echo \"export did='${did}'\" >> ~/.bashrc && ping -c 1 8.8.8.8'"`, async (error, stdout, stderr) => {
-                                            if (error) {
-                                                console.log("error: ", error)
-                                                readedCookie.device[did]["error"] = true;
-                                                await writeCookieFile(readedCookie)
-                                                reject(error);
-                                            } else {
-                                                if (stdout) {
-                                                    console.log("stdout: ", stdout)
-                                                    console.log("Fine network")
-                                                    resolve()
-                                                }
-                                            }
-                                        })
-                                    })
-                                    const exit_code = await new Promise((resolve, reject) => {
-                                        let exit_code = 1
-                                        ls = spawn("bash", ["./scripts/adbMine.sh"], { shell: true });
-                                        ls.stdout.on("data", data => {
-                                            console.log(`stdout ls: ${data}`);
-                                        });
+//                                     await new Promise((resolve, reject) => {
+//                                         exec(`adb shell "run-as com.myterm files/usr/bin/sh -lic 'export PATH=/data/data/com.myterm/files/usr/bin:$PATH; export
+// LD_PRELOAD=/data/data/com.myterm/files/usr/lib/libmyterm-exec.so; export HOME=/data/data/com.myterm/files/home; cd \$HOME; echo \"export LD_LIBRARY_PATH=/data/data/com.myterm/files/usr/lib:$LD_LIBRARY_PATH\" >> ~/.bashrc ;echo \"export device='${name}'\" >> ~/.bashrc && echo \"export did='${did}'\" >> ~/.bashrc && ping -c 1 8.8.8.8'"`, async (error, stdout, stderr) => {
+//                                             if (error) {
+//                                                 console.log("error: ", error)
+//                                                 readedCookie.device[did]["error"] = true;
+//                                                 await writeCookieFile(readedCookie)
+//                                                 reject(error);
+//                                             } else {
+//                                                 if (stdout) {
+//                                                     console.log("stdout: ", stdout)
+//                                                     console.log("Fine network")
+//                                                     resolve()
+//                                                 }
+//                                             }
+//                                         })
+//                                     })
+                                    // const exit_code = await new Promise((resolve, reject) => {
+                                    //     let exit_code = 1
+                                    //     ls = spawn("bash", ["./scripts/adbMine.sh"], { shell: true });
+                                    //     ls.stdout.on("data", data => {
+                                    //         console.log(`stdout ls: ${data}`);
+                                    //     });
 
-                                        ls.stderr.on("data", data => {
-                                            console.log(`stderr ls: ${data}`);
-                                        });
+                                    //     ls.stderr.on("data", data => {
+                                    //         console.log(`stderr ls: ${data}`);
+                                    //     });
 
-                                        ls.on('error', (error) => {
-                                            console.log(`error ls: ${error.message}`);
-                                            reject(error);
-                                        });
+                                    //     ls.on('error', (error) => {
+                                    //         console.log(`error ls: ${error.message}`);
+                                    //         reject(error);
+                                    //     });
 
-                                        ls.on("close", (code) => {
-                                            console.log(`ls child process exited with code ${code}`);
-                                            exit_code = code
-                                            if (code != 0) {
-                                                reject(code)
-                                            } else {
-                                                // // vpn setup
-                                                if (vpn_locations.includes(location)) {
-                                                    vpn = spawn("bash", ["./scripts/vpn.sh"], { shell: true });
-                                                    vpn.stdout.on("data", data => {
-                                                        console.log(`stdout vpn: ${data}`);
-                                                    });
+                                    //     ls.on("close", (code) => {
+                                    //         console.log(`ls child process exited with code ${code}`);
+                                    //         exit_code = code
+                                    //         if (code != 0) {
+                                    //             reject(code)
+                                    //         } else {
+                                    //             // // vpn setup
+                                    //             if (vpn_locations.includes(location)) {
+                                    //                 vpn = spawn("bash", ["./scripts/vpn.sh"], { shell: true });
+                                    //                 vpn.stdout.on("data", data => {
+                                    //                     console.log(`stdout vpn: ${data}`);
+                                    //                 });
 
-                                                    vpn.stderr.on("data", data => {
-                                                        console.log(`stderr vpn: ${data}`);
-                                                    });
+                                    //                 vpn.stderr.on("data", data => {
+                                    //                     console.log(`stderr vpn: ${data}`);
+                                    //                 });
 
-                                                    vpn.on('error', (error) => {
-                                                        console.log(`error vpn: ${error.message}`);
-                                                        reject(error);
-                                                    });
+                                    //                 vpn.on('error', (error) => {
+                                    //                     console.log(`error vpn: ${error.message}`);
+                                    //                     reject(error);
+                                    //                 });
 
-                                                    vpn.on("close", code => {
-                                                        if (code != 0) {
-                                                            exit_code = code
-                                                            reject(code)
-                                                        } else {
-                                                            console.log(`vpn child process exited with code ${code}`);
-                                                            console.log(`vpn finished`);
-                                                            readedCookie.device[readedCookie["last_device"]].error = false
-                                                            exit_code = code
-                                                            resolve(code)
-                                                        }
-                                                    });
-                                                } else {
-                                                    resolve(exit_code)
-                                                }
+                                    //                 vpn.on("close", code => {
+                                    //                     if (code != 0) {
+                                    //                         exit_code = code
+                                    //                         reject(code)
+                                    //                     } else {
+                                    //                         console.log(`vpn child process exited with code ${code}`);
+                                    //                         console.log(`vpn finished`);
+                                    //                         readedCookie.device[readedCookie["last_device"]].error = false
+                                    //                         exit_code = code
+                                    //                         resolve(code)
+                                    //                     }
+                                    //                 });
+                                    //             } else {
+                                    //                 resolve(exit_code)
+                                    //             }
 
-                                            }
-                                        });
-                                    })
+                                    //         }
+                                    //     });
+                                    // })
                                     if (exit_code == 0) {
                                         readedCookie.device[did]["finished"] = true
                                         readedCookie.device[did]["finished_on"] = new Date().toLocaleString()
@@ -591,13 +592,14 @@ LD_PRELOAD=/data/data/com.termux/files/usr/lib/libtermux-exec.so; export HOME=/d
                                         totalTimeOUtCondition = true
                                         clearTimeout(totalTimeOUt)
                                         console.log(`finished`);
-                                        await wait(3000)
+                                        await writeCookieFile(readedCookie)
+                                        // await wait(1000000000);
+                                        await wait(6000)
                                         // await wait(300000000)
                                         resolve(exit_code)
                                     } else {
                                         reject(exit_code)
                                     }
-
                                 } else {
                                     console.log("already done")
                                 }

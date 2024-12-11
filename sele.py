@@ -48,8 +48,8 @@ while(i<condition):
         sign_in.click()
         wait = WebDriverWait(driver, 10)
         time.sleep(14)
-        # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptLgnPlnID"]')))
-        email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="account"]')))
+        email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptLgnPlnID"]')))
+        # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="account"]')))
         email_input.click()
         # email_input.send_keys(mail)
         email_input.send_keys(account[i].split(":")[0])
@@ -58,8 +58,8 @@ while(i<condition):
         sign_in_button.click()
         wait = WebDriverWait(driver, 10)
         time.sleep(14)
-        # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptLgnPlnPD"]')))
-        email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="password"]')))
+        email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptLgnPlnPD"]')))
+        # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="password"]')))
         email_input.click()
         email_input.send_keys('Lexa@heda12')
         # sign_in_button =  driver.find_element(By.XPATH, '//*[@id="signInButton"]')
@@ -100,14 +100,14 @@ while(i<condition):
         except:
             print("cookie page")
             pass
-        # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptAuthNum"]')))
-        email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="otp"]')))
+        email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="iptAuthNum"]')))
+        # email_input = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="otp"]')))
         totp = pyotp.TOTP(fact.replace(" ",""))
         email_input.click()
         email_input.send_keys(totp.now())
-        # sign_in_button =  driver.find_element(By.XPATH, '//*[@id="btnNext"]')
-        # sign_in_button.click()
-        wait.until(EC.element_to_be_clickable((By.XPATH,  "//button[text()='Verify']"))).click()
+        sign_in_button =  driver.find_element(By.XPATH, '//*[@id="btnNext"]')
+        sign_in_button.click()
+        # wait.until(EC.element_to_be_clickable((By.XPATH,  "//button[text()='Verify']"))).click()
         wait = WebDriverWait(driver, 10)
         time.sleep(3)
         try:
@@ -163,6 +163,32 @@ while(i<condition):
                     wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[contains(text(), 'Agree')])[1]"))).click()
                 except:
                     pass
+        except:
+            print("cookie page")
+            pass
+        try:
+            updated_policy_text = wait.until(EC.element_to_be_clickable((By.XPATH, "//*[contains(text(), 'Samsung account policies updated')]"))).text
+            if updated_policy_text:
+                print("Samsung account policies updated")
+                time.sleep(3)
+                # time.sleep(100000)
+                try:
+                    wait.until(EC.element_to_be_clickable((By.XPATH,"(//*[contains(text(), 'Terms and Conditions')])[3]"))).click()
+                except:
+                    pass
+                try:
+                    wait.until(EC.element_to_be_clickable((By.XPATH,"(//*[contains(text(), 'Special terms')])[1]"))).click()
+                except:
+                    pass
+                try:
+                    wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[contains(text(), 'I agree to Samsung using my registered phone number for verification and customer support.')])[1]"))).click()
+                except:
+                    pass
+                try:
+                    wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[contains(text(), 'Agree')])[1]"))).click()
+                except:
+                    pass
+                # wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Agree']"))).click()
         except:
             print("cookie page")
             pass
