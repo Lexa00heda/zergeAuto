@@ -202,7 +202,7 @@ async function fetchData(devices) {
             readedCookie["totalCredit"] = readedCookie["totalCredit"]
             console.log("isMining: ", isMining)
             readedCookie["totalCredit"] = readedCookie["totalCredit"] - credit
-            readedCookie.device[did] = { "device": device, "base_url": base_url, "token": token, "name": name, "credit": credit, "maxTime": `${credit * (1 / 4)}hr`, "checked": true, "reservation_Id": reserve, "error": false, "finished": false, "termux": false, "created_on": new Date().toLocaleString(), "force_cancel": false, "isMining": isMining, "cancelled": false, "error": false }
+            readedCookie.device[did] = { "device": device, "base_url": base_url, "token": token, "name": name, "credit": credit, "maxTime": `${credit * (1 / 4)}hr`, "checked": true, "reservation_Id": reserve, "error": false, "finished": false, "termux": false, "created_on": new Date().toLocaleString(), "force_cancel": false, "isMining": isMining, "cancelled": false, "error": false,"unlocked":false }
             await writeCookieFile(readedCookie);
         }
         //handled if fetch not done
@@ -484,6 +484,36 @@ async function fetchData(devices) {
                                     }
                                     // await wait(1000000000)
                                     // await wait(300000)
+                                    if(!readedCookie.device[did]["unlocked"]){
+                                        const exit = await new Promise((resolves, rejects) => {
+                                            mineStart = spawn("bash", ["./scripts/unlock.sh"], { shell: true });
+                                            mineStart.stdout.on("data", data => {
+                                                console.log("mine:", `${data}`);
+                                            });
+    
+                                            mineStart.stderr.on("data", data => {
+                                                console.log(`stderr mine: ${data}`);
+                                            });
+    
+                                            mineStart.on('error', (error) => {
+                                                console.log(`error mine: ${error.message}`);
+                                                rejects(error);
+                                            });
+    
+                                            mineStart.on("close", (code) => {
+                                                console.log(`mine child process exited with code ${code}`);
+                                                if (code != 0) {
+                                                    rejects(code)
+                                                } else {
+                                                    readedCookie.device[did]["unlocked"] = true
+                                                    resolves(code)
+                                                }
+                                            })
+                                        })
+                                        if(exit==0){
+                                            await writeCookieFile(readedCookie)
+                                        }
+                                    }
                                     const exit_code = await new Promise((resolves, rejects) => {
                                         // mineStart = spawn("bash", ["./scripts/startMine.sh"], { shell: true });
                                         mineStart = spawn("bash", ["./scripts/packetShare.sh"], { shell: true });
