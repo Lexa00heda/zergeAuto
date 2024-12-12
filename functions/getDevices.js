@@ -1,4 +1,5 @@
 import { getMiningDevices } from "./checkUsed.js";
+import { shuffleArray } from "./shuffleArray.js";
 export async function getDevice(id, ignore = []) {
     return new Promise((resolve, reject) => {
         const deviceUrl = `https://developer.samsung.com/remotetestlab/rtl/api/v1/products?os=${id}`;
@@ -27,9 +28,10 @@ export async function getDevice(id, ignore = []) {
                         devices.reverse()
                     }
                     try{
-                        const miningDevices = await getMiningDevices();
-                        const arr = devices.filter(item => !miningDevices.includes(item));
-                        resolve(arr)
+
+                        // const miningDevices = await getMiningDevices();
+                        // const arr = devices.filter(item => !miningDevices.includes(item));
+                        resolve(shuffleArray(devices))
                     }catch{
                         resolve(devices)
                     }

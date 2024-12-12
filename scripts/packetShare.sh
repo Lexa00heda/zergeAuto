@@ -5,6 +5,15 @@
 #     echo "Override size is not set."
 #     adb shell input tap $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f1) / 2)) $(($(adb shell wm size | awk '{print $3}' | cut -d'x' -f2) - 250))
 # fi
+adb shell uiautomator dump /sdcard/window_dump.xml && adb shell cat /sdcard/window_dump.xml | grep -qi "balance\|Equivalent" > /dev/null
+if [ $? -eq 0 ]; then
+    echo "Found 'balance' or 'connected' in the UI dump."
+    exit 0
+else
+    echo "Neither 'balance' nor 'connected' found in the UI dump."
+    sleep 1
+fi
+
 check_internet_connection() {
     # Try to ping Google's DNS server (8.8.8.8)
     if adb shell "ping -c 1 8.8.8.8 > /dev/null 2>&1"; then
@@ -103,6 +112,7 @@ adb shell input keyevent 66
 sleep 2
 # adb shell input keyevent 61
 adb shell input text "lexa31heda@gmail.com"
+# adb shell input text "sumeeshsubeesh@gmail.com"
 adb shell input keyevent 61
 adb shell input text "kajas5612"
 adb shell input keyevent 61 && adb shell input keyevent 61 && adb shell input keyevent 61
@@ -127,3 +137,12 @@ adb shell input keyevent 61
 sleep 1
 adb shell input keyevent 61
 adb shell input keyevent 66
+sleep 8
+adb shell uiautomator dump /sdcard/window_dump.xml && adb shell cat /sdcard/window_dump.xml | grep -qi "balance\|Equivalent" > /dev/null
+if [ $? -eq 0 ]; then
+    echo "Found 'balance' or 'connected' in the UI dump."
+    exit 0
+else
+    echo "Neither 'balance' nor 'connected' found in the UI dump."
+    exit 1
+fi
