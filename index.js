@@ -91,6 +91,9 @@ async function fetchData(devices) {
     let isMining;
     let timeOutWait1;
     let timeOutWait2;
+    let exit_code_packet_share =0
+    let exit_code_repocket =0
+    let exit_code_pawns = 0
     try {
         if (device_model_list[modelindex % 5]["device"] == "Galaxy Z") {
             timeOutWait1 = (1000 * 60 * 15);
@@ -202,7 +205,7 @@ async function fetchData(devices) {
             readedCookie["totalCredit"] = readedCookie["totalCredit"]
             console.log("isMining: ", isMining)
             readedCookie["totalCredit"] = readedCookie["totalCredit"] - credit
-            readedCookie.device[did] = { "device": device, "base_url": base_url, "token": token, "name": name, "credit": credit, "maxTime": `${credit * (1 / 4)}hr`, "checked": true, "reservation_Id": reserve, "error": false, "finished": false, "termux": false, "created_on": new Date().toLocaleString(), "force_cancel": false, "isMining": isMining, "cancelled": false, "error": false,"unlocked":false }
+            readedCookie.device[did] = { "device": device, "base_url": base_url, "token": token, "name": name, "credit": credit, "maxTime": `${credit * (1 / 4)}hr`, "checked": true, "reservation_Id": reserve, "error": false, "finished": false, "termux": false, "created_on": new Date().toLocaleString(), "force_cancel": false, "isMining": isMining, "cancelled": false, "error": false,"unlocked":false,"packetShare":false,"repocket":false,"pawns":false,"honeygain":false }
             await writeCookieFile(readedCookie);
         }
         //handled if fetch not done
@@ -514,32 +517,112 @@ async function fetchData(devices) {
                                             await writeCookieFile(readedCookie)
                                         }
                                     }
-                                    const exit_code = await new Promise((resolves, rejects) => {
-                                        // mineStart = spawn("bash", ["./scripts/startMine.sh"], { shell: true });
-                                        mineStart = spawn("bash", ["./scripts/packetShare.sh"], { shell: true });
-                                        mineStart.stdout.on("data", data => {
-                                            console.log("mine:", `${data}`);
-                                        });
-
-                                        mineStart.stderr.on("data", data => {
-                                            console.log(`stderr mine: ${data}`);
-                                        });
-
-                                        mineStart.on('error', (error) => {
-                                            console.log(`error mine: ${error.message}`);
-                                            rejects(error);
-                                        });
-
-                                        mineStart.on("close", (code) => {
-                                            console.log(`mine child process exited with code ${code}`);
-                                            if (code != 0) {
-                                                rejects(code)
-                                            } else {
-                                                resolves(code)
-                                            }
-                                        })
-                                    })
-                                    await wait(8000);
+                                    // await wait(100000000)
+                                    //packetsharing
+                                    if(!readedCookie.device[did]["packetShare"]){
+                                        try{
+                                            exit_code_packet_share = await new Promise((resolves, rejects) => {
+                                                // mineStart = spawn("bash", ["./scripts/startMine.sh"], { shell: true });
+                                                mineStart = spawn("bash", ["./scripts/packetShare.sh"], { shell: true });
+                                                mineStart.stdout.on("data", data => {
+                                                    console.log("mine:", `${data}`);
+                                                });
+        
+                                                mineStart.stderr.on("data", data => {
+                                                    console.log(`stderr mine: ${data}`);
+                                                });
+        
+                                                mineStart.on('error', (error) => {
+                                                    console.log(`error mine: ${error.message}`);
+                                                    rejects(error);
+                                                });
+        
+                                                mineStart.on("close", (code) => {
+                                                    console.log(`mine child process exited with code ${code}`);
+                                                    if (code != 0) {
+                                                        rejects(code)
+                                                    } else {
+                                                        resolves(code)
+                                                    }
+                                                })
+                                            })
+                                            readedCookie.device[did]["packetShare"] = true
+                                            await writeCookieFile(readedCookie)
+                                        }catch{
+                                            exit_code_packet_share = 1
+                                        }
+                                        await wait(2000);
+                                    }
+                                    //repocket
+                                    if(!readedCookie.device[did]["repocket"]){
+                                        try{
+                                            exit_code_repocket = await new Promise((resolves, rejects) => {
+                                                // mineStart = spawn("bash", ["./scripts/startMine.sh"], { shell: true });
+                                                mineStart = spawn("bash", ["./scripts/repocket.sh"], { shell: true });
+                                                mineStart.stdout.on("data", data => {
+                                                    console.log("mine:", `${data}`);
+                                                });
+        
+                                                mineStart.stderr.on("data", data => {
+                                                    console.log(`stderr mine: ${data}`);
+                                                });
+        
+                                                mineStart.on('error', (error) => {
+                                                    console.log(`error mine: ${error.message}`);
+                                                    rejects(error);
+                                                });
+        
+                                                mineStart.on("close", (code) => {
+                                                    console.log(`mine child process exited with code ${code}`);
+                                                    if (code != 0) {
+                                                        rejects(code)
+                                                    } else {
+                                                        resolves(code)
+                                                    }
+                                                })
+                                            })
+                                            readedCookie.device[did]["repocket"] = true
+                                            await writeCookieFile(readedCookie)
+                                        }catch{
+                                            exit_code_repocket = 1
+                                        }
+                                        await wait(2000);
+                                    }
+                                    // pawns
+                                    if(!readedCookie.device[did]["pawns"]){
+                                        try{
+                                            exit_code_pawns = await new Promise((resolves, rejects) => {
+                                                // mineStart = spawn("bash", ["./scripts/startMine.sh"], { shell: true });
+                                                mineStart = spawn("bash", ["./scripts/pawns.sh"], { shell: true });
+                                                mineStart.stdout.on("data", data => {
+                                                    console.log("mine:", `${data}`);
+                                                });
+        
+                                                mineStart.stderr.on("data", data => {
+                                                    console.log(`stderr mine: ${data}`);
+                                                });
+        
+                                                mineStart.on('error', (error) => {
+                                                    console.log(`error mine: ${error.message}`);
+                                                    rejects(error);
+                                                });
+        
+                                                mineStart.on("close", (code) => {
+                                                    console.log(`mine child process exited with code ${code}`);
+                                                    if (code != 0) {
+                                                        rejects(code)
+                                                    } else {
+                                                        resolves(code)
+                                                    }
+                                                })
+                                            })
+                                            readedCookie.device[did]["pawns"] = true
+                                            await writeCookieFile(readedCookie)
+                                        }catch{
+                                            exit_code_pawns=1
+                                        }
+                                        await wait(2000);
+                                    }
 //                                     await new Promise((resolve, reject) => {
 //                                         exec(`adb shell "run-as com.myterm files/usr/bin/sh -lic 'export PATH=/data/data/com.myterm/files/usr/bin:$PATH; export
 // LD_PRELOAD=/data/data/com.myterm/files/usr/lib/libmyterm-exec.so; export HOME=/data/data/com.myterm/files/home; cd \$HOME; echo \"export LD_LIBRARY_PATH=/data/data/com.myterm/files/usr/lib:$LD_LIBRARY_PATH\" >> ~/.bashrc ;echo \"export device='${name}'\" >> ~/.bashrc && echo \"export did='${did}'\" >> ~/.bashrc && ping -c 1 8.8.8.8'"`, async (error, stdout, stderr) => {
@@ -614,7 +697,7 @@ async function fetchData(devices) {
                                     //         }
                                     //     });
                                     // })
-                                    if (exit_code == 0) {
+                                    if (exit_code_packet_share == 0 && exit_code_repocket == 0 && exit_code_pawns == 0) {
                                         readedCookie.device[did]["finished"] = true
                                         readedCookie.device[did]["finished_on"] = new Date().toLocaleString()
                                         readedCookie.device[did]["finished_Timestamp"] = Date.now();
@@ -625,10 +708,9 @@ async function fetchData(devices) {
                                         await writeCookieFile(readedCookie)
                                         // await wait(1000000000);
                                         await wait(6000)
-                                        // await wait(300000000)
-                                        resolve(exit_code)
+                                        resolve(0)
                                     } else {
-                                        reject(exit_code)
+                                        reject(1)
                                     }
                                 } else {
                                     console.log("already done")
@@ -639,6 +721,7 @@ async function fetchData(devices) {
                             local_websocket.send(message)
                         }
                     } catch (e) {
+                        // await wait(1000000000);
                         reject("error", e)
                     }
                 })()
