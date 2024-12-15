@@ -7,7 +7,10 @@
 # fi
 if adb shell "pm list packages | grep -q com.packetshare.appv2" || adb shell pm path com.packetshare.appv2 > /dev/null 2>&1 ; then
     echo "packet share App is already installed....already working"
+    adb shell input keyevent KEYCODE_HOME
+    sleep 1
     adb shell "am start -n com.packetshare.appv2/.welcome.WelcomeActivity"
+    sleep 1
     adb shell uiautomator dump /sdcard/window_dump.xml && adb shell cat /sdcard/window_dump.xml | grep -qi "balance\|Equivalent\|consumption\|share to friends\|Home\|congratulation" > /dev/null
     if [ $? -eq 0 ]; then
         echo "Found 'balance' or 'connected' in the UI dump."
@@ -87,6 +90,8 @@ adb shell input keyevent 61
 sleep 1
 adb shell input keyevent 66
 sleep 8
+adb shell input keyevent KEYCODE_HOME
+sleep 1
 adb shell "am start -n com.packetshare.appv2/.welcome.WelcomeActivity"
 sleep 2
 adb shell uiautomator dump /sdcard/window_dump.xml && adb shell cat /sdcard/window_dump.xml | grep -qi "balance\|Equivalent to\|consumption\|share to friends\|Home\|congratulation" > /dev/null

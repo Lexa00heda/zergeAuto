@@ -24,6 +24,18 @@ import { error } from 'console';
 import { screenZ } from './websocket/screenZ.js';
 import { runExec } from './functions/runExec.js';
 
+
+
+// import readline from'readline';
+// const rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout
+// });
+// function askQuestion(question) {
+//   return new Promise((resolve) => rl.question(question, resolve));
+// }
+
+
 // import myJson from './user.json' assert { type: 'json' };
 const productUrl = `https://developer.samsung.com/remotetestlab/rtl/api/v1/products?os=125`;
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
@@ -62,7 +74,7 @@ const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
 let ignoreDevice = getLocationsName(0,6,4,3)
-// let ignoreDevice = getLocationsName(0,1,3,4,5,6,7)
+// let ignoreDevice = getLocationsName(0,1,2,3,4,5,6,7)
 const ignoreDeviceFirst  = ignoreDevice
 let devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
@@ -553,6 +565,7 @@ async function fetchData(devices) {
                                         }
                                         await wait(2000);
                                     }
+                                    // const q1 = await askQuestion("continue to repocket? ");
                                     //repocket
                                     if(!readedCookie.device[did]["repocket"]){
                                         try{
@@ -588,6 +601,7 @@ async function fetchData(devices) {
                                         }
                                         await wait(2000);
                                     }
+                                    // const q2 = await askQuestion("continue to pawns? ");
                                     // pawns
                                     if(!readedCookie.device[did]["pawns"]){
                                         try{
@@ -623,6 +637,7 @@ async function fetchData(devices) {
                                         }
                                         await wait(2000);
                                     }
+                                    // const q3 = await askQuestion("continue to finish? ");
 //                                     await new Promise((resolve, reject) => {
 //                                         exec(`adb shell "run-as com.myterm files/usr/bin/sh -lic 'export PATH=/data/data/com.myterm/files/usr/bin:$PATH; export
 // LD_PRELOAD=/data/data/com.myterm/files/usr/lib/libmyterm-exec.so; export HOME=/data/data/com.myterm/files/home; cd \$HOME; echo \"export LD_LIBRARY_PATH=/data/data/com.myterm/files/usr/lib:$LD_LIBRARY_PATH\" >> ~/.bashrc ;echo \"export device='${name}'\" >> ~/.bashrc && echo \"export did='${did}'\" >> ~/.bashrc && ping -c 1 8.8.8.8'"`, async (error, stdout, stderr) => {
