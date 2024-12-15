@@ -497,7 +497,6 @@ async function fetchData(devices) {
                                             console.error('Error:', error);
                                         }
                                     }
-                                    // await wait(1000000000)
                                     // await wait(300000)
                                     if(!readedCookie.device[did]["unlocked"]){
                                         const exit = await new Promise((resolves, rejects) => {
@@ -529,7 +528,7 @@ async function fetchData(devices) {
                                             await writeCookieFile(readedCookie)
                                         }
                                     }
-                                    // await wait(100000000)
+                                    await wait(100000000)
                                     //packetsharing
                                     if(!readedCookie.device[did]["packetShare"]){
                                         try{
