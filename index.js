@@ -74,11 +74,13 @@ const vpn_locations = getLocationsName(3)
 const eventAliveLocation = getLocationsName(0)
 // const ignoreDevice = getLocationsName(0)
 let ignoreDevice = getLocationsName(0,6,4,3)
-// let ignoreDevice = getLocationsName(0,1,2,3,4,5,6,7)
+// let ignoreDevice = getLocationsName(0,1,2,3,4,6)
 const ignoreDeviceFirst  = ignoreDevice
 let devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 const implementSecurity = false;
+const wantRepocket = false;
+const wantEarnfm = false;
 let local_websocket;
 let rdb_websocket;
 let resets;
@@ -566,7 +568,7 @@ async function fetchData(devices) {
                                     }
                                     // const q1 = await askQuestion("continue to repocket? ");
                                     //repocket
-                                    if(!readedCookie.device[did]["repocket"]){
+                                    if(!readedCookie.device[did]["repocket"] && wantRepocket){
                                         try{
                                             exit_code_repocket = await new Promise((resolves, rejects) => {
                                                 // mineStart = spawn("bash", ["./scripts/startMine.sh"], { shell: true });
@@ -602,7 +604,7 @@ async function fetchData(devices) {
                                     }
                                     // const q2 = await askQuestion("continue to pawns? ");
                                     // pawns
-                                    if(!readedCookie.device[did]["pawns"]){
+                                    if(!readedCookie.device[did]["pawns"] && wantEarnfm){
                                         try{
                                             exit_code_pawns = await new Promise((resolves, rejects) => {
                                                 // mineStart = spawn("bash", ["./scripts/startMine.sh"], { shell: true });
@@ -914,7 +916,7 @@ let recheckCount = 0;
                             readedCookie.device[readedCookie["last_device"]].errorCount = 1
                             await writeCookieFile(readedCookie)
                         } else {
-                            if (readedCookie.device[readedCookie["last_device"]].errorCount > 2) {
+                            if (readedCookie.device[readedCookie["last_device"]].errorCount > 1) {
                                 readedCookie["cookies"] = await readCookiesWithSession(process.argv[2])
                                 await wait(4000)
                                 try {

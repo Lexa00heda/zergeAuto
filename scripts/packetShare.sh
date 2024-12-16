@@ -10,7 +10,7 @@ if adb shell "pm list packages | grep -q com.packetshare.appv2" || adb shell pm 
     adb shell input keyevent KEYCODE_HOME
     sleep 1
     adb shell "am start -n com.packetshare.appv2/.welcome.WelcomeActivity"
-    sleep 1
+    sleep 4
     adb shell uiautomator dump /sdcard/window_dump.xml && adb shell cat /sdcard/window_dump.xml | grep -qi "balance\|Equivalent\|consumption\|share to friends\|Home\|congratulation" > /dev/null
     if [ $? -eq 0 ]; then
         echo "Found 'balance' or 'connected' in the UI dump."
@@ -95,7 +95,7 @@ sleep 8
 adb shell input keyevent KEYCODE_HOME
 sleep 1
 adb shell "am start -n com.packetshare.appv2/.welcome.WelcomeActivity"
-sleep 2
+sleep 4
 adb shell uiautomator dump /sdcard/window_dump.xml && adb shell cat /sdcard/window_dump.xml | grep -qi "balance\|Equivalent to\|consumption\|share to friends\|Home\|congratulation" > /dev/null
 if [ $? -eq 0 ]; then
     echo "Found 'balance' or 'connected' in the UI dump."
