@@ -24,7 +24,7 @@ sleep 1
 adb shell input keyevent 61
 sleep 1
 adb shell input keyevent 66
-sleep 1
+sleep 3
 adb shell uiautomator dump /sdcard/window_dump.xml
 adb shell cat /sdcard/window_dump.xml | sed 's/\(text="Done"[^"]*\)/\n\1/g' | grep 'text="Done"' -A 1 | tail -n 1 | awk -F'bounds="' '{print $2}' | awk -F'"' '{print $1}' | sed 's/\[\([^,]*\),\([^]]*\)\]\[\([^,]*\),\([^]]*\)\]/\1 \2 \3 \4/' | awk '{print ($1 + $3)/2, ($2 + $4)/2}' | xargs -I {} adb shell input tap {}
 sleep 2

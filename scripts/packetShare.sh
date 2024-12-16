@@ -20,16 +20,18 @@ if adb shell "pm list packages | grep -q com.packetshare.appv2" || adb shell pm 
         sleep 1
     fi
 else
-    echo "packet share App is not installed before...may be new device or deleting"
-fi
-#install
-if adb shell "pm list packages | grep -q com.packetshare.appv2" || adb shell pm path com.packetshare.appv2 > /dev/null 2>&1 ; then
-    echo "packetshare App is already installed. Skipping installation."
-else
-    echo "packershare is not installed. Installing APK..."
+    echo "packetshare App is not installed before...may be new device or deleting"
     adb install packet.apk
     echo "APK installed."
 fi
+#install
+# if adb shell "pm list packages | grep -q com.packetshare.appv2" || adb shell pm path com.packetshare.appv2 > /dev/null 2>&1 ; then
+#     echo "packetshare App is already installed. Skipping installation."
+# else
+#     echo "packershare is not installed. Installing APK..."
+#     adb install packet.apk
+#     echo "APK installed."
+# fi
 sleep 2
 adb shell settings put system accelerometer_rotation 0
 # adb shell monkey -p com.packetshare.appv2 -v 2

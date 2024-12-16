@@ -528,7 +528,7 @@ async function fetchData(devices) {
                                             await writeCookieFile(readedCookie)
                                         }
                                     }
-                                    await wait(100000000)
+                                    // await wait(100000000)
                                     //packetsharing
                                     if(!readedCookie.device[did]["packetShare"]){
                                         try{
@@ -606,7 +606,7 @@ async function fetchData(devices) {
                                         try{
                                             exit_code_pawns = await new Promise((resolves, rejects) => {
                                                 // mineStart = spawn("bash", ["./scripts/startMine.sh"], { shell: true });
-                                                mineStart = spawn("bash", ["./scripts/pawns.sh"], { shell: true });
+                                                mineStart = spawn("bash", ["./scripts/earnfm.sh"], { shell: true });
                                                 mineStart.stdout.on("data", data => {
                                                     console.log("mine:", `${data}`);
                                                 });
