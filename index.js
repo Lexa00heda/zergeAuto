@@ -79,7 +79,7 @@ const ignoreDeviceFirst  = ignoreDevice
 let devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 const implementSecurity = false;
-const wantRepocket = false;
+const wantRepocket = true;
 const wantEarnfm = false;
 let local_websocket;
 let rdb_websocket;
@@ -572,7 +572,7 @@ async function fetchData(devices) {
                                         try{
                                             exit_code_repocket = await new Promise((resolves, rejects) => {
                                                 // mineStart = spawn("bash", ["./scripts/startMine.sh"], { shell: true });
-                                                mineStart = spawn("bash", ["./scripts/repocket.sh"], { shell: true });
+                                                mineStart = spawn("bash", ["./scripts/traff.sh"], { shell: true });
                                                 mineStart.stdout.on("data", data => {
                                                     console.log("mine:", `${data}`);
                                                 });
