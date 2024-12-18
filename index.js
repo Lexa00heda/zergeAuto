@@ -181,7 +181,9 @@ async function fetchData(devices) {
         } catch {
             console.log("new device...")
             try{
-                isMining = await checkMining(did)
+                // isMining = await checkMining(did)
+                isMining = false
+
             }catch{
                 console.log("Error while checking mining Nicehash.May be maintainance")
                 isMining = false
