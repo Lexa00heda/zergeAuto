@@ -42,7 +42,7 @@ while(i<condition):
     fact = account[i].split(":")[1]
     driver = webdriver.Firefox(service=service)
     driver.get('https://developer.samsung.com/remote-test-lab')
-    input("continue? ")
+    # input("continue? ")
     try:
         wait = WebDriverWait(driver, 10)
         try:
