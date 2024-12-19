@@ -9,6 +9,7 @@
       "credit": 16,
       "maxTime": "4hr",
       "checked": true,
+      "reservation_Id": 8922637,
       "error": false,
       "finished": false,
       "termux": false,
@@ -16,11 +17,12 @@
       "force_cancel": false,
       "isMining": false,
       "cancelled": false,
-      "unlocked": false,
+      "unlocked": true,
       "packetShare": false,
       "repocket": false,
       "pawns": false,
-      "honeygain": false
+      "honeygain": false,
+      "location": "Poland"
     }
   },
   "last_device": 10838,
