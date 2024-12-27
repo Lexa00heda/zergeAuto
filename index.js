@@ -79,7 +79,7 @@ const ignoreDeviceFirst  = ignoreDevice
 let devices = await getDevice(device_model_id, ignoreDevice)
 const readedCookie = await readCookiesFile()
 const implementSecurity = false;
-const wantRepocket = true;
+const wantRepocket = false;
 const wantEarnfm = false;
 let local_websocket;
 let rdb_websocket;
