@@ -65,8 +65,8 @@ adb shell input keyevent 61 && adb shell input keyevent 61 && adb shell input ke
 adb shell input keyevent 66
 sleep 2
 # adb shell input keyevent 61
-adb shell input text "lexa31heda@gmail.com"
-# adb shell input text "sumeeshsubeesh@gmail.com"
+# adb shell input text "lexa31heda@gmail.com"
+adb shell input text "sumeeshsubeesh@gmail.com"
 adb shell input keyevent 61
 adb shell input text "kajas5612"
 adb shell input keyevent 61 && adb shell input keyevent 61 && adb shell input keyevent 61
