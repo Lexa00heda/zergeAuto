@@ -532,7 +532,7 @@ async function fetchData(devices) {
                                             await writeCookieFile(readedCookie)
                                         }
                                     }
-                                    // await wait(100000000)
+                                    await wait(100000000)
                                     //packetsharing
                                     if(!readedCookie.device[did]["packetShare"]){
                                         try{
