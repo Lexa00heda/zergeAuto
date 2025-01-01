@@ -1,67 +1,14 @@
 {
-  "cookies": "locale=en-US; sa_did=Q6qV2PqowmsjhfuLrIeyX86JMH97oJfR; sa_id=c263a0bf39c631ef3f0e20aad2b750be193151de5322fa89b92cc4f0cee292cd8c23c18edc0c75ea957c9e011bd1b9229e86c15235b72030121454b683609e50957c70ddcae681ee0d75a4726eca904d110dbf7ca57993ccf1294c6443fbe8479b80cce749957b65386ff99ba35440d347e1bde88e5c9f059ff00ed7cd0502fb599a8a80366f77c3332bf36ae07e3729b4b2abf41adbfa86b3eaf6dbe5677f6989c328f87977aefc18814dddec6b56ddc3487226b991e3baa213802224a81e4e576ba2115b544599527c39e8924589345b4a8f5c690a4b911de3b8459ccd0d3b9e4b204a50345eb16ef2cc160f1594270d937ba577d045250972f4bced984406; sa_state=hMNFnXcxBtc0GIKFEJN2Aj1Shsq7o5pS; SD_PORTAL_SSID=NByhVA9WEpoEhNcwUbjZfcAHx6GD%2B7aMCEbGU40cuxzVoMGN8rvJATRO1r0aI5Tb2p9h%2F58rSMRCsfMJVr7kTOIyw%2BS03VPNAeS81N3uEKcLWu5D%2BDovtr3bdBBuSnoVxI%2BoClkbPXM2xa%2ByVv7M9DROM2eNv4NEZURvQPHwdCeLBsVJ%2FKir%2FT1zIj2LPiz4%2BTNOY8VgspfnMPjP05rNjwnQs9X9jk8oJrqkiCYTIAJXPiYyjp1uXJwJfgFCRAoTg9rVTL5qFGJHSb%2Bpc5XGwgRyZp79UbfdgMsL9r68a0i6tMIdOEN0J0kp9ZSLfu%2FgfsINwwqrneslFxncB%2Bm2L2FIZ50jZoLwOrH4vmkRj50v9fScQTDCVYn8u%2B%2FFX38i; sdp_samsung_com_jwt=7tXjtAXsiWZ3Of3Y7M7DW3YoSElFqBUI%2F6E1At0Yd%2FGS86NQLQheCCa3nY39V4xo7l%2FNhIU0EFkcIPWffeg0LTEqBZcw8%2Fx%2FMK2Nj4nb6Yb%2FxLqNzV29XJW%2F3qEvvHftfP5%2FsgVAsFSfuzbg4jEiIGFO7l20IaKdHG64X3q3AWH1gJ43CTWxsNaXjy0JeLWdRjmrH7xaBGTgCp%2Bna91yUsS9BtPagD2QRiTRjSxTiSOkdXl3Yy4yoQDdh9iYmQZpdcx9oKkCt%2B9P%2B7SRtb6IkI83hLuehhOpJuiyjVTsdJXuvc5FHChzVvRBFGSbOcUo6SPsDry4B3gg3D7LWnxMLT79dcAyYqehahDyfmw4FxRhEo6GGlIFAR7kFmDlB0X%2FaQx8wGagv%2BA8YnfG2U6sbP4exAe1t7z3qmug9VvtW%2B8R94MnrDifx6E8coM25V0Vtim94MsKtExfJ2o1jnD8aPLprAdNra5RjSiXVowt2Go%3D; _ga=GA1.1.1794237805.1735714289; _ga_LCSMK6BNH8=GS1.1.1735714289.1.1.1735714384.60.0.0; RTL-XSRF-TOKEN=42c14cf8-d7af-476d-9af6-baf95fd050f9; RTL-XSRF-TOKEN-SIG=627e8439085cbf75b89a509ec3b4f32c; RTL_FRONT_SESSIONID=NzljMGRiNzMtZjFkMy00Njg3LTlmZmEtYjAxMTYyYWMwNzJj",
-  "device": {
-    "12104": {
-      "device": "R3CX30DX6NH",
-      "base_url": "kr-gumi19-rtl.developer.samsung.com:443",
-      "token": "4663AC9AD390FE2B85E8071D117F3467",
-      "name": "SM-F741U-KR9",
-      "credit": 16,
-      "maxTime": "4hr",
-      "checked": true,
-      "reservation_Id": 9028985,
-      "error": true,
-      "finished": false,
-      "termux": false,
-      "created_on": "1/1/2025, 12:34:06 PM",
-      "force_cancel": false,
-      "isMining": false,
-      "cancelled": false,
-      "unlocked": true,
-      "packetShare": false,
-      "repocket": false,
-      "pawns": false,
-      "honeygain": false,
-      "location": "Korea",
-      "errorCount": 2
-    },
-    "12154": {
-      "device": "R3CX30HEW3X",
-      "base_url": "in-noida08-rtl.developer.samsung.com:443",
-      "token": "1B58BBD3DFE172554928B37CD89F9E42",
-      "name": "SM-F956B_IN1",
-      "credit": 16,
-      "maxTime": "4hr",
-      "checked": true,
-      "reservation_Id": 9029092,
-      "error": true,
-      "finished": false,
-      "termux": false,
-      "created_on": "1/1/2025, 12:32:14 PM",
-      "force_cancel": true,
-      "isMining": false,
-      "cancelled": true,
-      "unlocked": false,
-      "packetShare": false,
-      "repocket": false,
-      "pawns": false,
-      "honeygain": false,
-      "location": "India",
-      "errorCount": 2
-    }
-  },
-  "last_device": 12104,
-  "today_credits_left": 39,
-  "Totalcount": 2,
+  "cookies": "locale=en-US; sa_did=sCIueEzmqaWfImrr38rnDLs9K035W1eC; sa_id=d98a57d9ec23fa8ff5691cb493ebeca9e432f532b089b21b0da706c7a4d8bb5477dcb7eff36c7ff6edfe565a5bf408290c24bd56093d3da35cc7562be304410417f1a473db9e19de40039abce9a11e30fa902eaa8a85c078d81b9eb41dd6b7fbf56f6b11ee55cd99810aa585ff51a0c80b9bb52700d360fafc0c07ab4aaf1281acffdb6560171cae5b65c013e2a2030648e563ae5f3eaec09c0144e77900e23ae6b4fd5d2406be793f76106d33421c9bbaa9ef9425a9b3dbe847376f633e11e64f80fda45b689c5d423c68f557a439cf64975354df116b928b69497ba19965cb7abc2664ef6e53786052b3db2e15bdb05501263c456bd34e2d21179c3184a0ac; sa_state=HvsJeN6DnqTEMZenwiMrLNkuoT1SYi9o; SD_PORTAL_SSID=NByhVA9WEpoEhNcwUbjZfd7z8GSdve0%2BQLkUgHsJUG2nn0I7wKznCYJokxHv81DCuouvjrOE1120MiJ22sLHL8xN2uWqFw0iA1qU8Gc92nrLzI0mCy%2FtEt9yrJBbxvz3gtXAdp8cbPn7hkwYwAb5CSNoxwVXyDorvHhtW2JRG7CqGCyYABMFM%2FfZ6nNptawVyjCLoqR%2B0xtH5rKRR%2BzXUXWl8pNJauy2o5CG8OtQuzGXLe7FecpEm%2BQ7bpkUEqPa%2FXTr48ABVZLnwDXLHh3A8BMYtyhGgjtL%2BJMOGMIFArEw8jajVLCJwUcUNZz3%2FpYuNfzVVr0SPi0XeT6aLXMUDV5nt83JB30%2Bs8sZtvGDEVoxTF8WrKpftZQVtJi2ffys; sdp_samsung_com_jwt=YZQnIQKu7AsqmYGLw775RuLSs%2F16np584ecTQy5PaJzQXcZvJCOAah1T%2Bi6uGjIXRGv0cGWwxSB7zMLv0r3qos7G12QY9ezWjxbEL%2BT7M%2F%2Frt15mopT7dW8h0avmReMyLZpfjU39dmY672tRlZdbJ%2FIhE8rp37aq4i5fOqe47id3q%2Fn7dA%2BbHwIGvcIW2mMgcLXyrWjOSyB828KkpHQREesYl1hX3JibLequSNSCoGhYT7o4gbdCshvOJPYoxvr3zRM83Y1o17CEsn5LDumR81uoPomWPCbdDrL6sTvQOzxHYgJJSc3050lEjdPR8n8ccixGbyD%2FOK4ZLjEnsqJSr0b3nAQLzSR25uZUL5%2FFAjJ1EzU87YoxmDNwlI2yenGydLne%2FaLyFS3ThjGVu8cacf5aDrAgDglvTanfWc8a9ksV6AE9dnI%2BQdVZfPLn5l5lBoSmItKyFauj%2F0MM%2FrUAqQ%3D%3D; _ga=GA1.1.614227925.1735734604; _ga_LCSMK6BNH8=GS1.1.1735734603.1.1.1735734746.21.0.0; RTL-XSRF-TOKEN=af433ba2-802a-4250-8f4b-160b4a77d4b4; RTL-XSRF-TOKEN-SIG=0edea65e14a588fb02c4839cb6755ba2; RTL_FRONT_SESSIONID=ZTc0NDY4ZGMtNWZjZi00YjA3LThmMjUtNTMxMGMwM2RiZmIx",
+  "device": {},
+  "last_device": "",
+  "today_credits_left": 12,
+  "Totalcount": 0,
   "finishCount": 0,
   "finishList": {},
-  "deadList": {
-    "India": {
-      "count": 1
-    }
-  },
-  "indexCookie": "13",
-  "totalCredit": 198,
-  "user": "bulthuisavan+sherwood@googlemail.com",
-  "startCredit": 215
+  "deadList": {},
+  "indexCookie": "1",
+  "totalCredit": 264,
+  "user": "manichur644+grissom@gmail.com",
+  "startCredit": 264
 }
