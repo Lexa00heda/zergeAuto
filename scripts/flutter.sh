@@ -42,9 +42,9 @@ adb shell uiautomator dump /sdcard/window_dump.xml && adb shell cat /sdcard/wind
 if [ $? -eq 0 ]; then
     echo "Found 'balance' or 'connected' in the UI dump."
     sleep 4
-    adb shell svc wifi disable
-    sleep 2
-    adb shell svc wifi enable
+    # adb shell svc wifi disable
+    # sleep 2
+    # adb shell svc wifi enable
     sleep 2
     adb shell input keyevent KEYCODE_HOME
     exit 0
