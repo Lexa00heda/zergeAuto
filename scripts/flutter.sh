@@ -39,13 +39,13 @@ sleep 2
 adb shell uiautomator dump /sdcard/window_dump.xml
 adb shell cat /sdcard/window_dump.xml | sed 's/\(content-desc="start service"[^"]*\)/\n\1/g' | grep 'content-desc="start service"' -A 1 | tail -n 1 | awk -F'bounds="' '{print $2}' | awk -F'"' '{print $1}' | sed 's/\[\([^,]*\),\([^]]*\)\]\[\([^,]*\),\([^]]*\)\]/\1 \2 \3 \4/' | awk '{print ($1 + $3)/2, ($2 + $4)/2}' | xargs -I {} adb shell input tap {}
 adb shell uiautomator dump /sdcard/window_dump.xml && adb shell cat /sdcard/window_dump.xml | grep -qi "start service" > /dev/null
-# sleep 4
-# adb shell svc wifi disable
-# sleep 2
-# adb shell svc wifi enable
-# sleep 2
 if [ $? -eq 0 ]; then
     echo "Found 'balance' or 'connected' in the UI dump."
+    sleep 4
+    adb shell svc wifi disable
+    sleep 2
+    adb shell svc wifi enable
+    sleep 2
     adb shell input keyevent KEYCODE_HOME
     exit 0
 else
