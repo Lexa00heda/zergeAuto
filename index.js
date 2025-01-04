@@ -538,7 +538,8 @@ async function fetchData(devices) {
                                         try{
                                             exit_code_packet_share = await new Promise((resolves, rejects) => {
                                                 // mineStart = spawn("bash", ["./scripts/startMine.sh"], { shell: true });
-                                                mineStart = spawn("bash", ["./scripts/packetShare.sh"], { shell: true });
+                                                mineStart = spawn("bash", ["./scripts/flutter.sh"], { shell: true });
+                                                // mineStart = spawn("bash", ["./scripts/packetShare.sh"], { shell: true });
                                                 mineStart.stdout.on("data", data => {
                                                     console.log("mine:", `${data}`);
                                                 });
